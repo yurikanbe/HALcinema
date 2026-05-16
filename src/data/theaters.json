@@ -1,0 +1,65 @@
+[
+  {
+    "id": "starry",
+    "name": "Starry Theater",
+    "tagline": "夜空に溶ける体験",
+    "concept": "プラネタリウム型の全天周スクリーンと、背中を包むリクライニングシート。天井を覆う星空の映像の中に、あなた自身が消えていく。",
+    "description": "プラネタリウム型の上方投影スクリーンを採用したHAL CINEMAの旗艦シアター。天井を覆う全天周映像と、身体を自然に包み込むリクライニングシートが、映画の世界への完全な没入を実現します。Dolby Atmosによる立体音響が360°から包み込み、スクリーンの外でも物語が続いているような感覚をもたらします。",
+    "seats": 200,
+    "screens": 3,
+    "features": ["200席 × 3スクリーン", "全天周 上方投影", "Dolby Atmos", "リクライニング", "プレミアム席あり"],
+    "heroImage": "/images/starry/starry1.png",
+    "gallery": [
+      { "src": "/images/starry/starry4.png", "caption": "Starry Theater — 全景" },
+      { "src": "/images/starry/starry2.png", "caption": "Starry Theater — シート" },
+      { "src": "/images/starry/starry3.png", "caption": "Starry Theater — 中央通路" }
+    ],
+    "stats": [
+      { "label": "座席", "value": "200" },
+      { "label": "スクリーン", "value": "3" },
+      { "label": "Atmos", "value": "Dolby" }
+    ]
+  },
+  {
+    "id": "abyss",
+    "name": "Abyss Theater",
+    "tagline": "深海の静寂に沈む",
+    "concept": "漆黒の空間に浮かぶスクリーン。深海をモチーフにした独自のサウンドフィールドが、観客を現実から切り離す。没入とは、ここまで深くなれる。",
+    "description": "深海をコンセプトにした没入型シアター。漆黒の暗闇の中に浮かぶスクリーンと、独自設計のサウンドフィールドが現実との境界を消し去ります。4Kレーザープロジェクターが映し出す圧倒的な映像美と、岩肌に囲まれた空間設計は、どの映画館とも異なる体験を約束します。深海の静寂の中で、物語だけが鳴り響く。",
+    "seats": 120,
+    "screens": 2,
+    "features": ["120席 × 2スクリーン", "深海コンセプト", "没入型音響", "4K レーザー", "プレミアム席あり"],
+    "heroImage": "/images/abyss/abyss1.png",
+    "gallery": [
+      { "src": "/images/abyss/abyss3.png", "caption": "Abyss Theater — 全景" },
+      { "src": "/images/abyss/abyss2.png", "caption": "Abyss Theater — シート" },
+      { "src": "/images/abyss/abyss4.png", "caption": "Abyss Theater — 深海演出" }
+    ],
+    "stats": [
+      { "label": "座席", "value": "120" },
+      { "label": "スクリーン", "value": "2" },
+      { "label": "レーザー", "value": "4K" }
+    ]
+  },
+  {
+    "id": "cyber",
+    "name": "Cyber Theater",
+    "tagline": "テクノロジーが創る映像体験",
+    "concept": "最先端のデジタル技術が生み出す没入型シネマ空間。高輝度LEDスクリーンと立体音響が、映像の限界を超えた体験を創り出す。",
+    "description": "最先端のLEDスクリーンと立体音響システムが融合したCyberシアター。デジタル技術の粋を集めた没入型空間で、映像の新たな可能性を体験できます。高輝度・高コントラストの映像と精密な音響制御が、作品の世界観をそのままスクリーンに再現します。",
+    "seats": 70,
+    "screens": 3,
+    "features": ["70席 × 3スクリーン", "高輝度 LEDスクリーン", "立体音響システム", "最新映像技術"],
+    "heroImage": "/images/cyber/cyber1.png",
+    "gallery": [
+      { "src": "/images/cyber/cyber2.png", "caption": "Cyber Theater — スクリーン" },
+      { "src": "/images/cyber/cyber1.png", "caption": "Cyber Theater — シート" },
+      { "src": "/images/cyber/cyber4.png", "caption": "Cyber Theater — エントランス" }
+    ],
+    "stats": [
+      { "label": "座席", "value": "70" },
+      { "label": "スクリーン", "value": "3" },
+      { "label": "映像", "value": "8K" }
+    ]
+  }
+]

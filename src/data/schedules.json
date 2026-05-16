@@ -1,0 +1,74 @@
+[
+  {
+    "theaterId": "starry",
+    "screen": "Screen 1",
+    "shows": [
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "10:30", "duration": 138, "format": "吹替",    "seats": 68 },
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "14:20", "duration": 138, "format": "吹替",    "seats": 42 },
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "18:00", "duration": 138, "format": "吹替",    "taken": true },
+      { "movieId": "thank-you-chuck",         "title": "[字幕] サンキュー、チャック",   "start": "21:10", "duration": 118, "format": "字幕",    "seats": 115 }
+    ]
+  },
+  {
+    "theaterId": "starry",
+    "screen": "Screen 2",
+    "shows": [
+      { "movieId": "yoake-no-kokai",  "title": "夜明けの航海",               "start": "11:00", "duration": 122, "format": "吹替", "seats": 82 },
+      { "movieId": "yoake-no-kokai",  "title": "夜明けの航海",               "start": "15:30", "duration": 122, "format": "吹替", "seats": 71 },
+      { "movieId": "thank-you-chuck", "title": "[字幕] サンキュー、チャック", "start": "20:00", "duration": 118, "format": "字幕", "seats": 143 }
+    ]
+  },
+  {
+    "theaterId": "starry",
+    "screen": "Screen 3",
+    "shows": [
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "13:00", "duration": 138, "format": "字幕", "seats": 55 },
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "17:45", "duration": 138, "format": "字幕", "seats": 31 }
+    ]
+  },
+  {
+    "theaterId": "abyss",
+    "screen": "Screen 1",
+    "shows": [
+      { "movieId": "yoake-no-kokai", "title": "夜明けの航海", "start": "11:00", "duration": 112, "format": "吹替", "seats": 54 },
+      { "movieId": "yoake-no-kokai", "title": "夜明けの航海", "start": "15:45", "duration": 112, "format": "吹替", "seats": 21 },
+      { "movieId": "yoake-no-kokai", "title": "夜明けの航海", "start": "20:30", "duration": 112, "format": "吹替", "taken": true }
+    ]
+  },
+  {
+    "theaterId": "abyss",
+    "screen": "Screen 2",
+    "shows": [
+      { "movieId": "machikado-no-symphony",   "title": "街角の交響曲",                 "start": "10:30", "duration": 104, "format": "字幕", "seats": 88 },
+      { "movieId": "machikado-no-symphony",   "title": "街角の交響曲",                 "start": "14:30", "duration": 104, "format": "字幕", "seats": 62 },
+      { "movieId": "why-write-love-letters",  "title": "人はなぜラブレターを書くのか", "start": "19:30", "duration": 138, "format": "吹替", "seats": 74 }
+    ]
+  },
+  {
+    "theaterId": "cyber",
+    "screen": "Screen 1",
+    "shows": [
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "10:00", "duration": 138, "format": "字幕", "seats": 70 },
+      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "13:50", "duration": 138, "format": "字幕", "seats": 48 },
+      { "movieId": "yoake-no-kokai",          "title": "夜明けの航海",                "start": "18:30", "duration": 112, "format": "吹替", "seats": 26 }
+    ]
+  },
+  {
+    "theaterId": "cyber",
+    "screen": "Screen 2",
+    "shows": [
+      { "movieId": "yoake-no-kokai",       "title": "夜明けの航海",  "start": "11:30", "duration": 112, "format": "吹替", "seats": 43 },
+      { "movieId": "machikado-no-symphony", "title": "街角の交響曲",  "start": "15:00", "duration": 104, "format": "吹替", "seats": 55 },
+      { "movieId": "yoake-no-kokai",       "title": "夜明けの航海",  "start": "19:00", "duration": 112, "format": "吹替", "seats": 67 }
+    ]
+  },
+  {
+    "theaterId": "cyber",
+    "screen": "Screen 3",
+    "shows": [
+      { "movieId": "machikado-no-symphony", "title": "街角の交響曲",               "start": "12:00", "duration": 104, "format": "字幕・吹替", "taken": true },
+      { "movieId": "machikado-no-symphony", "title": "街角の交響曲",               "start": "16:30", "duration": 104, "format": "字幕・吹替", "seats": 34 },
+      { "movieId": "thank-you-chuck",       "title": "[字幕] サンキュー、チャック", "start": "20:00", "duration": 118, "format": "字幕",        "seats": 58 }
+    ]
+  }
+]

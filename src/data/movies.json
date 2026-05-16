@@ -1,0 +1,116 @@
+[
+  {
+    "id": "thank-you-chuck",
+    "title": "[字幕] サンキュー、チャック",
+    "category": "ミステリー",
+    "poster": "/images/thumbnail/thumb1.jpg",
+    "description": "世界の終わりに明かされる、愛すべき贈り物とは？スティーヴン・キングとマイク・フラナガンが仕掛ける感動のミステリー。普通の男チャックが残した謎めいた遺言が、様々な人々の人生を静かに変えていく。",
+    "duration": 118,
+    "year": 2025,
+    "rating": "G",
+    "formats": ["字幕"],
+    "cast": [],
+    "director": "マイク・フラナガン",
+    "status": "now_showing",
+    "colors": {
+      "solid": "#0c3e2c",
+      "fade": "rgba(12,62,44,0)"
+    }
+  },
+  {
+    "id": "why-write-love-letters",
+    "title": "人はなぜラブレターを書くのか",
+    "category": "ドラマ",
+    "poster": "/images/thumbnail/thumb2.jpg",
+    "description": "寺田ナズナ（綾瀬はるか）は、とある青年に手紙を書きはじめる。――24年前、17歳のナズナ（當真あみ）は、いつも同じ電車で見かける高校生・富久信介（細田佳央太）にひそかな想いを抱いていた。一方、信介は学校帰りにボクシングに夢中な生活を送り、プロボクサーを目指していた。そんな彼らに、運命の日、2000年3月8日が訪れる。――2024年、ナズナからの手紙を受け取った信介の父・隆治（佐藤浩市）。その手紙の中に亡くなった息子の生きた証を確かに感じ、知りえなかった信介の在りし日が明らかになっていく。そして、隆治はナズナに宛てて手紙を綴りはじめる。愛する者を亡くして生き続けた隆治とナズナとの邂逅により、24年前の真実とナズナが手紙を書いた理由が明らかになる。",
+    "duration": 138,
+    "year": 2025,
+    "rating": "G",
+    "formats": ["字幕", "吹替"],
+    "cast": ["綾瀬はるか", "佐藤浩市", "細田佳央太", "當真あみ", "青木崇高"],
+    "director": "廣木隆一",
+    "status": "now_showing",
+    "colors": {
+      "solid": "#4e1238",
+      "fade": "rgba(78,18,56,0)"
+    }
+  },
+  {
+    "id": "yoake-no-kokai",
+    "title": "夜明けの航海",
+    "category": "アドベンチャー",
+    "poster": "/images/thumbnail/thumb3.jpg",
+    "description": "海を渡る若者たちの群像劇。嵐の夜、小さな船に乗り合わせた五人が辿り着く先とは。青春と冒険が溶け合う映像詩。",
+    "duration": 122,
+    "year": 2025,
+    "rating": "G",
+    "formats": ["吹替"],
+    "cast": [],
+    "director": "",
+    "status": "now_showing",
+    "colors": {
+      "solid": "#0c2c56",
+      "fade": "rgba(12,44,86,0)"
+    }
+  },
+  {
+    "id": "machikado-no-symphony",
+    "title": "街角の交響曲",
+    "category": "音楽",
+    "poster": "/images/thumbnail/thumb4.jpg",
+    "description": "小さな町の大きな音楽の物語。廃れかけた楽団が再び息を吹き返す瞬間を、温かいまなざしで描く感動作。",
+    "duration": 104,
+    "year": 2025,
+    "rating": "G",
+    "formats": ["字幕", "吹替"],
+    "cast": [],
+    "director": "",
+    "status": "now_showing",
+    "colors": {
+      "solid": "#422006",
+      "fade": "rgba(66,32,6,0)"
+    }
+  },
+  {
+    "id": "yoake-no-atelier",
+    "title": "夜明けのアトリエ",
+    "category": "ドラマ",
+    "poster": "/images/thumbnail/thumb3.jpg",
+    "description": "才能に疑問を抱く若き画家が、廃村に残された老芸術家の遺品と出会い、自分だけの表現を探す旅に出る。",
+    "duration": 114,
+    "year": 2026,
+    "rating": "G",
+    "formats": ["吹替"],
+    "cast": [],
+    "director": "",
+    "status": "coming_soon"
+  },
+  {
+    "id": "shio-no-kiroku",
+    "title": "潮の記録",
+    "category": "ミステリー",
+    "poster": "/images/thumbnail/thumb4.jpg",
+    "description": "海辺の町で起きた連続失踪事件。元刑事の女性が波に刻まれた謎を解き明かそうとするとき、彼女自身の過去が浮かび上がる。",
+    "duration": 132,
+    "year": 2026,
+    "rating": "PG12",
+    "formats": ["字幕"],
+    "cast": [],
+    "director": "",
+    "status": "coming_soon"
+  },
+  {
+    "id": "wakusei-no-niwa",
+    "title": "惑星の庭",
+    "category": "音楽",
+    "poster": "/images/thumbnail/thumb5.jpg",
+    "description": "宇宙をテーマにした野外音楽フェスを夢見る若者たちが、資金不足と地域の反対を乗り越えながら奇跡の一夜を作り上げる。",
+    "duration": 108,
+    "year": 2026,
+    "rating": "G",
+    "formats": ["字幕", "吹替"],
+    "cast": [],
+    "director": "",
+    "status": "coming_soon"
+  }
+]
