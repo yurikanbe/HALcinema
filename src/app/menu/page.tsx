@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useState, useEffect, useRef } from 'react';
+import { Fragment, useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 const MENU_ITEMS = [
@@ -17,19 +17,37 @@ const MENU_ITEMS = [
 ];
 
 const TICKET_PRICES = [
-  { name: '一般',          sub: 'General',                      amount: '1,800' },
-  { name: '大学生等',      sub: 'University / College',          amount: '1,600' },
-  { name: '中学・高校生',  sub: 'Junior High / High School',    amount: '1,400' },
-  { name: '小学生・幼児',  sub: 'Children',                     amount: '1,000' },
+  { name: '一般',          sub: 'General',                   amount: '1,800' },
+  { name: '大学生等',      sub: 'University / College',       amount: '1,600' },
+  { name: '中学・高校生',  sub: 'Junior High / High School', amount: '1,400' },
+  { name: '小学生・幼児',  sub: 'Children',                  amount: '1,000' },
 ];
 
 const LOCAL_NAV = [
-  { href: '#section-ticket', label: 'チケット料金' },
-  { href: '#popcorn', label: 'ポップコーン' },
-  { href: '#drink', label: 'ドリンク' },
-  { href: '#food', label: 'フード' },
-  { href: '#sweets', label: 'スイーツ' },
-  { href: '#set', label: 'お得なセット' },
+  {
+    href: '#section-ticket', label: 'チケット料金',
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+  },
+  {
+    href: '#popcorn', label: 'ポップコーン',
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2v3m8-3v3"/><path d="M5 5h14l-1.5 14h-11z"/><path d="M9 11h6"/></svg>,
+  },
+  {
+    href: '#drink', label: 'ドリンク',
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg>,
+  },
+  {
+    href: '#food', label: 'フード',
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="2" x2="8" y2="22"/><path d="M5 2v7a3 3 0 0 0 6 0V2"/><line x1="17" y1="2" x2="17" y2="22"/></svg>,
+  },
+  {
+    href: '#sweets', label: 'スイーツ',
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+  },
+  {
+    href: '#set', label: 'お得なセット',
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  },
 ];
 
 const SCROLL_IDS = ['section-ticket', 'popcorn', 'drink', 'food', 'sweets', 'set'];
@@ -38,17 +56,17 @@ export default function MenuPage() {
   const [lbIndex, setLbIndex] = useState<number | null>(null);
   const [activeNav, setActiveNav] = useState('section-ticket');
   const [showBackTop, setShowBackTop] = useState(false);
+  const lbImgRef = useRef<HTMLImageElement>(null);
+  const animating = useRef(false);
 
   useEffect(() => { document.title = 'HAL CINEMA | 料金・メニュー'; }, []);
 
-  // Back to top visibility
   useEffect(() => {
     const onScroll = () => setShowBackTop(window.scrollY > 400);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Local nav IntersectionObserver
   useEffect(() => {
     const targets = SCROLL_IDS.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     const io = new IntersectionObserver(entries => {
@@ -60,18 +78,49 @@ export default function MenuPage() {
     return () => io.disconnect();
   }, []);
 
-  // Lightbox keyboard nav
+  const navigate = useCallback((dir: number) => {
+    if (animating.current) return;
+    const img = lbImgRef.current;
+    if (!img) return;
+
+    animating.current = true;
+    const outX = dir > 0 ? '-90px' : '90px';
+    const inX  = dir > 0 ?  '90px' : '-90px';
+
+    img.style.transition = 'transform 0.22s ease, opacity 0.22s ease';
+    img.style.transform  = `translateX(${outX})`;
+    img.style.opacity    = '0';
+
+    setTimeout(() => {
+      setLbIndex(i => i === null ? null : (i + dir + MENU_ITEMS.length) % MENU_ITEMS.length);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const el = lbImgRef.current;
+          if (!el) { animating.current = false; return; }
+          el.style.transition = 'none';
+          el.style.transform  = `translateX(${inX})`;
+          el.style.opacity    = '0';
+          el.offsetHeight;
+          el.style.transition = 'transform 0.22s ease, opacity 0.22s ease';
+          el.style.transform  = 'translateX(0)';
+          el.style.opacity    = '1';
+          setTimeout(() => { animating.current = false; }, 260);
+        });
+      });
+    }, 200);
+  }, []);
+
   useEffect(() => {
     if (lbIndex === null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape')     setLbIndex(null);
-      if (e.key === 'ArrowLeft')  setLbIndex(i => i === null ? null : (i - 1 + MENU_ITEMS.length) % MENU_ITEMS.length);
-      if (e.key === 'ArrowRight') setLbIndex(i => i === null ? null : (i + 1) % MENU_ITEMS.length);
+      if (e.key === 'ArrowLeft')  navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
     };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [lbIndex]);
+  }, [lbIndex, navigate]);
 
   const lbItem = lbIndex !== null ? MENU_ITEMS[lbIndex] : null;
 
@@ -90,9 +139,10 @@ export default function MenuPage() {
             <Fragment key={item.href}>
               {i === 1 && <div className="local-nav__sep" />}
               <a
-                className={`local-nav__item${activeNav === item.href.replace('#','') ? ' is-active' : ''}`}
+                className={`local-nav__item${activeNav === item.href.replace('#', '') ? ' is-active' : ''}`}
                 href={item.href}
               >
+                {item.icon}
                 {item.label}
               </a>
             </Fragment>
@@ -161,8 +211,8 @@ export default function MenuPage() {
             <div key={item.id} className="menu-section" id={item.id}>
               <h3 className="menu-section__title">{item.title}</h3>
               <div className="menu-section__body">
-                <div className="menu-img-card" onClick={() => setLbIndex(idx)} style={{ cursor: 'pointer' }}>
-                  <img src={item.src} alt={item.title} style={{ width: '650px', height: 'auto', display: 'block' }} />
+                <div className="menu-img-card" onClick={() => setLbIndex(idx)}>
+                  <img src={item.src} alt={item.title} />
                 </div>
                 <p className="menu-section__desc">
                   {item.desc.split('\n\n').map((p, i) => (
@@ -191,33 +241,20 @@ export default function MenuPage() {
 
       {/* Lightbox */}
       {lbItem && (
-        <div
-          className="lightbox is-open"
-          role="dialog"
-          aria-modal="true"
-          onClick={e => { if ((e.target as HTMLElement).id === 'lb-backdrop') setLbIndex(null); }}
-        >
-          <div id="lb-backdrop" className="lightbox__backdrop" onClick={() => setLbIndex(null)} />
+        <div className="lightbox is-open" role="dialog" aria-modal="true">
+          <div className="lightbox__backdrop" onClick={() => setLbIndex(null)} />
           <div className="lightbox__counter">{(lbIndex ?? 0) + 1} / {MENU_ITEMS.length}</div>
           <button className="lightbox__close" aria-label="閉じる" onClick={() => setLbIndex(null)}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
-          <button
-            className="lightbox__nav lightbox__nav--prev"
-            aria-label="前へ"
-            onClick={() => setLbIndex(i => i === null ? null : (i - 1 + MENU_ITEMS.length) % MENU_ITEMS.length)}
-          >
+          <button className="lightbox__nav lightbox__nav--prev" aria-label="前へ" onClick={() => navigate(-1)}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <button
-            className="lightbox__nav lightbox__nav--next"
-            aria-label="次へ"
-            onClick={() => setLbIndex(i => i === null ? null : (i + 1) % MENU_ITEMS.length)}
-          >
+          <button className="lightbox__nav lightbox__nav--next" aria-label="次へ" onClick={() => navigate(1)}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
           <div className="lightbox__inner">
-            <img className="lightbox__img" src={lbItem.src} alt={lbItem.title} />
+            <img ref={lbImgRef} className="lightbox__img" src={lbItem.src} alt={lbItem.title} />
             <div className="lightbox__caption">
               <span className="lightbox__caption-tag">{lbItem.tag}</span>
               <span className="lightbox__caption-dot"></span>

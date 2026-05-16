@@ -1624,8 +1624,87 @@ body::after {
 }
 .local-nav__item:hover { color: var(--ink-900); }
 .local-nav__item.is-active { color: var(--gold-600); border-bottom-color: var(--gold-500); font-weight: 600; }
+.local-nav__item svg { opacity: 0.65; transition: opacity 0.15s; }
+.local-nav__item:hover svg { opacity: 1; }
+.local-nav__item.is-active svg { opacity: 1; color: var(--gold-600); }
 .local-nav__sep { width: 1px; background: rgba(200,164,91,0.18); align-self: stretch; margin: 10px 4px; flex-shrink: 0; }
 #section-ticket, #section-menu, #popcorn, #drink, #food, #sweets, #set { scroll-margin-top: 148px; }
+
+/* ── Lightbox ────────────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+.lightbox.is-open { opacity: 1; pointer-events: all; }
+.lightbox__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(3, 7, 20, 0.92);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.lightbox__inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px; max-width: min(92vw, 960px);
+}
+.lightbox__img {
+  max-width: 100%; max-height: calc(85vh - 60px);
+  object-fit: contain; border-radius: 14px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.55);
+  display: block; will-change: transform, opacity;
+}
+.lightbox__caption { margin-top: 18px; display: flex; align-items: center; gap: 10px; }
+.lightbox__caption-tag { font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(200,164,91,0.85); }
+.lightbox__caption-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(200,164,91,0.4); flex-shrink: 0; }
+.lightbox__caption-name { font-size: 16px; letter-spacing: 0.1em; color: rgba(255,255,255,0.9); }
+.lightbox__close {
+  position: fixed; top: 22px; right: 26px; z-index: 2;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.85); transition: background 0.15s, transform 0.15s;
+}
+.lightbox__close:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
+.lightbox__nav {
+  position: fixed; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 54px; height: 54px; border-radius: 50%;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(200,164,91,0.22);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.85);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.lightbox__nav:hover { background: rgba(200,164,91,0.15); border-color: rgba(200,164,91,0.48); transform: translateY(-50%) scale(1.08); }
+.lightbox__nav--prev { left: 22px; }
+.lightbox__nav--next { right: 22px; }
+.lightbox__counter {
+  position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+  font-family: "Barlow Condensed", sans-serif; font-size: 13px; letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.45); z-index: 2; pointer-events: none;
+}
+@media (max-width: 600px) {
+  .lightbox__nav--prev { left: 10px; }
+  .lightbox__nav--next { right: 10px; }
+  .lightbox__close { top: 14px; right: 14px; }
+}
+
+/* ── Back to top ─────────────────────────────────────────── */
+.back-to-top {
+  position: fixed; bottom: 28px; right: 28px; z-index: 50;
+  width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(135deg, #0b2249, #1a4080);
+  border: 1px solid rgba(200,164,91,0.45);
+  box-shadow: 0 8px 20px #060d1f6f;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: rgba(200,164,91,0.9);
+  opacity: 0; transform: translateY(14px);
+  transition: all 0.3s ease; pointer-events: none;
+}
+.back-to-top.is-visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+.back-to-top:hover { box-shadow: 0 2px 28px #001d2e61, 0 -1px 22px #001d2e61; border-color: rgba(200,164,91,0.75); }
+@media (max-width: 480px) { .back-to-top { bottom: 18px; right: 18px; width: 44px; height: 44px; } }
 
 /* ── Animations ─────────────────────────────────────────── */
 .fade-up { opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s ease forwards; }
