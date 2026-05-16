@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { Fragment, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 const MENU_ITEMS = [
@@ -87,16 +87,15 @@ export default function MenuPage() {
       <nav className="local-nav" aria-label="ページ内ナビゲーション">
         <div className="local-nav__inner">
           {LOCAL_NAV.map((item, i) => (
-            <>
-              {i === 1 && <div key="sep" className="local-nav__sep" />}
+            <Fragment key={item.href}>
+              {i === 1 && <div className="local-nav__sep" />}
               <a
-                key={item.href}
                 className={`local-nav__item${activeNav === item.href.replace('#','') ? ' is-active' : ''}`}
                 href={item.href}
               >
                 {item.label}
               </a>
-            </>
+            </Fragment>
           ))}
         </div>
       </nav>
