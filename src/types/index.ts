@@ -10,7 +10,7 @@ export interface Movie {
   rating: string;          // "G" | "PG12" | "R15+" | "R18+"
   formats: string[];       // ["字幕", "吹替"]
   cast: string[];
-  director: string;
+  director: string[];
   status: 'now_showing' | 'coming_soon';
   colors?: {
     solid: string;
