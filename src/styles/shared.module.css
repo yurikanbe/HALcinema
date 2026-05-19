@@ -1,0 +1,589 @@
+/* ── Section layout ─────────────────────────── */
+.section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+.sectionTitle {
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  margin: 0;
+  color: var(--ink-900);
+  position: relative;
+  padding-bottom: 10px;
+}
+.sectionTitle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 300px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-500) 0%, var(--gold-300) 55%, transparent 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(200, 164, 91, 0.45);
+}
+.sectionHint {
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sectionHint::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold-500), transparent);
+  flex-shrink: 0;
+}
+.sectionFooter {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+}
+.sectionFeatured { padding-top: 54px; }
+
+/* ── Page hero ──────────────────────────────── */
+.pageHero {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 70px 20px 35px;
+  display: grid;
+  gap: 16px;
+}
+.pageHeroTitle {
+  margin: 0;
+  font-size: 42px;
+  letter-spacing: 0.12em;
+  color: var(--ink-900);
+}
+.pageHeroLead {
+  margin: 0;
+  max-width: 100%;
+  line-height: 1.7;
+  color: #2b3d5f;
+}
+
+/* ── Buttons ─────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-family: "Zen Old Mincho", serif;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(200, 164, 91, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink-700);
+  clip-path: polygon(14px 0%, calc(100% - 14px) 0%, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0% 50%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btnSolid {
+  background: linear-gradient(135deg, #0b2a57, #133f7f);
+  color: white;
+  border: 1px solid rgba(200, 164, 91, 0.95);
+  box-shadow: 0 14px 36px rgba(9, 29, 60, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+.btnSolid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(200, 164, 91, 0.35), transparent);
+  opacity: 0.6;
+  transform: translateX(-60%);
+  transition: transform 0.6s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--soft-shadow); }
+.btnSolid:hover::after { transform: translateX(60%); }
+
+/* ── Text links ─────────────────────────────── */
+.textLink {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  position: relative;
+  padding-right: 18px;
+  text-decoration: none;
+}
+.textLinkCenter { padding-right: 0; }
+.textLinkCenter::after { display: none; }
+.textLink::after { content: "→"; position: absolute; right: 0; top: 0; color: var(--gold-500); }
+
+/* ── Lineup stat ─────────────────────────────── */
+.lineupStat {
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), #eef3fb);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  box-shadow: 0 12px 24px rgba(10, 22, 40, 0.08);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  color: var(--ink-900);
+  display: grid;
+  gap: 4px;
+}
+.lineupStat span {
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+}
+
+/* ── Price list ─────────────────────────────── */
+.priceListPanel {
+  flex: 1;
+  min-width: fit-content;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.18);
+  overflow: hidden;
+  cursor: default;
+  user-select: none;
+}
+.priceListRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(200, 164, 91, 0.1);
+}
+.priceListRow:nth-child(odd) { background: rgba(200, 164, 91, 0.03); }
+.priceListRowName { font-size: 16px; letter-spacing: 0.06em; color: var(--ink-900); margin-bottom: 3px; }
+.priceListRowSub { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-500); }
+.priceListRowRight { display: flex; align-items: baseline; gap: 4px; }
+.priceListRowAmount { font-family: "Barlow Condensed", sans-serif; font-size: 30px; letter-spacing: 0.08em; color: var(--ink-900); line-height: 1; }
+.priceListRowUnit { font-size: 11px; color: var(--ink-500); letter-spacing: 0.08em; }
+.priceListFooter {
+  padding: 12px 24px;
+  font-size: 11px;
+  color: var(--ink-500);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(200, 164, 91, 0.04);
+  border-top: 1px solid rgba(200, 164, 91, 0.12);
+}
+
+/* ── Feature tiles ──────────────────────────── */
+.featureTiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.featureTile {
+  border-radius: 18px;
+  padding: 22px 24px;
+  background: linear-gradient(160deg, #ffffff, #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  box-shadow: var(--soft-shadow);
+}
+.featureTileBadge {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+  margin-bottom: 10px;
+}
+.featureTileTitle { font-size: 18px; margin: 0 0 8px; letter-spacing: 0.08em; }
+.featureTileDesc { font-size: 13px; line-height: 1.7; color: #2b3d5f; margin: 0; }
+
+/* ── Theater grid (homepage) ─────────────────── */
+.theaterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.theaterCard {
+  position: relative;
+  min-height: 220px;
+  border-radius: 22px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(6, 13, 31, 0.35);
+  border: 1px solid rgba(200, 164, 91, 0.25);
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+}
+.theaterCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 13, 31, 0.25), rgba(6, 13, 31, 0.8));
+}
+.theaterCard > * { position: relative; z-index: 1; }
+.theaterCardLabel { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; opacity: 0.8; }
+.theaterCardMeta { font-size: 12px; letter-spacing: 0.16em; opacity: 0.8; }
+.theaterCardStarry { background-image: url("/images/starry/starry1.png"); }
+.theaterCardAbyss  { background-image: url("/images/abyss/abyss1.png"); }
+.theaterCardCyber  { background-image: url("/images/cyber/cyber1.png"); }
+
+/* ── Film grid / cards ──────────────────────── */
+.filmGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.filmCard {
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #f4f7fd);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  box-shadow: var(--soft-shadow);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+.filmCardPoster { height: 160px; background-size: cover; background-position: center; }
+.filmCardBody { padding: 16px; display: grid; gap: 6px; }
+.filmCardTitle { font-size: 16px; letter-spacing: 0.08em; }
+.filmCardMeta { font-size: 12px; letter-spacing: 0.12em; color: var(--ink-500); }
+
+.filmGridMovies {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 22px;
+}
+.filmGridTheater {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 18px;
+}
+.filmCardPortrait {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(170deg, #ffffff 0%, #f2f6fb 100%);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  box-shadow: 0 12px 32px rgba(10, 22, 40, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+.filmCardPortrait:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(10, 22, 40, 0.18); }
+.filmCardPortrait .filmCardPoster {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 212 / 300;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  flex-shrink: 0;
+}
+.filmCardPortrait .filmCardPosterOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 13, 31, 0.65) 0%, rgba(6, 13, 31, 0.05) 50%, transparent 100%);
+}
+.filmCardPortrait .filmCardBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #091638a7;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #a0730b75;
+}
+.filmCardPortrait .filmCardBody {
+  height: fit-content;
+  min-height: fit-content;
+  max-height: fit-content;
+  padding: 0.55rem 18px 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+.filmCardPortrait .filmCardTitle {
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+  color: var(--ink-900);
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.filmCardPortrait .filmCardFooter {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filmCardPortrait .filmCardMeta {
+  margin-left: 0.2rem;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ink-500);
+  font-family: "Barlow Condensed", sans-serif;
+}
+.filmCardCta { font-size: 11px; letter-spacing: 0.2em; color: var(--gold-600); white-space: nowrap; }
+
+/* ── Filter buttons ─────────────────────────── */
+.filterBtn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-family: "Zen Old Mincho", serif;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(200, 164, 91, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink-700);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.filterBtn:hover { border-color: var(--gold-500); }
+.filterBtnActive {
+  background: linear-gradient(135deg, #0b2a57, #133f7f);
+  color: white;
+  border-color: rgba(200, 164, 91, 0.8);
+}
+.moviesFilter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Date strip ─────────────────────────────── */
+.dateStrip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200,164,91,0.35) transparent;
+}
+.dateStrip::-webkit-scrollbar { height: 4px; }
+.dateStrip::-webkit-scrollbar-thumb { background: rgba(200,164,91,0.4); border-radius: 3px; }
+.dateBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(200, 164, 91, 0.22);
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.dateBtnActive {
+  background: linear-gradient(135deg, #0b2a57, #133f7f);
+  border-color: rgba(200,164,91,0.6);
+  color: white;
+}
+.dateBtnDay { font-size: 10px; letter-spacing: 0.14em; opacity: 0.7; }
+.dateBtnNum { font-family: "Barlow Condensed", sans-serif; font-size: 22px; line-height: 1; }
+.dateBtnMonth { font-size: 9px; letter-spacing: 0.12em; opacity: 0.7; }
+
+/* ── Theater filter ─────────────────────────── */
+.theaterFilter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Time buttons ───────────────────────────── */
+.timeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(200, 164, 91, 0.24);
+  background: rgba(255,255,255,0.8);
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.timeBtn:hover:not(.timeBtnTaken) {
+  background: linear-gradient(135deg, #0b2a57, #133f7f);
+  color: white;
+  border-color: rgba(200,164,91,0.6);
+}
+.timeBtnTaken { opacity: 0.4; cursor: not-allowed; }
+.timeBtnTime { font-family: "Barlow Condensed", sans-serif; font-size: 18px; letter-spacing: 0.08em; color: var(--ink-900); }
+.timeBtn:hover:not(.timeBtnTaken) .timeBtnTime { color: white; }
+.timeBtnInfo { font-size: 12px; letter-spacing: 0.06em; color: var(--ink-500); }
+.timeBtn:hover:not(.timeBtnTaken) .timeBtnInfo { color: rgba(255,255,255,0.8); }
+
+/* ── Schedule grid (movie-detail) ───────────── */
+.scheduleGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.scheduleTheater {
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(170deg, #ffffff, #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  box-shadow: var(--soft-shadow);
+}
+.scheduleTheaterHeader {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(200, 164, 91, 0.12);
+  background: rgba(200, 164, 91, 0.04);
+}
+.scheduleTheaterName { font-size: 14px; font-weight: 600; letter-spacing: 0.06em; }
+.scheduleTheaterBadge {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  background: rgba(200, 164, 91, 0.1);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.timeSlots { padding: 12px; display: grid; gap: 8px; }
+
+/* ── News ────────────────────────────────────── */
+.newsFeatured {
+  display: block;
+  border-radius: 15px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.18);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+.newsFeatured:hover { transform: translateY(-3px); }
+.newsFeaturedImage { height: 220px; background-size: cover; background-position: center; background-color: #0b2249; }
+.newsFeaturedImageInner { padding: 32px; color: white; }
+.newsFeaturedImageTitle { font-size: 24px; letter-spacing: 0.1em; margin-bottom: 6px; }
+.newsFeaturedImageExcerpt { font-size: 13px; opacity: 0.8; }
+.newsFeaturedBody { padding: 22px; }
+.newsFeaturedTitle { font-size: 17px; letter-spacing: 0.06em; margin-bottom: 3px; }
+.newsFeaturedDate { font-size: 11px; color: var(--ink-500); letter-spacing: 0.06em; margin-top: 6px; }
+.newsList { display: grid; gap: 12px; }
+.newsCard {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), #f4f7fb);
+  border: 1px solid rgba(200,164,91,0.14);
+  box-shadow: var(--soft-shadow);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+.newsCard:hover { transform: translateY(-2px); }
+.newsCardImage { width: 90px; height: 64px; border-radius: 10px; background-size: cover; background-position: center; background-color: #dde8f4; flex-shrink: 0; }
+.newsCardTitle { font-size: 14px; letter-spacing: 0.06em; margin-bottom: 3px; }
+.newsCardDate { font-size: 11px; color: var(--ink-500); letter-spacing: 0.06em; }
+.newsFilter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+.newsBadge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.newsBadgeCampaign { background: rgba(200, 164, 91, 0.18); color: var(--gold-600); border: 1px solid rgba(200, 164, 91, 0.3); }
+.newsBadgeEvent    { background: rgba(90, 30, 140, 0.09); color: #6a2ba8; border: 1px solid rgba(90, 30, 140, 0.18); }
+.newsBadgeInfo     { background: rgba(27, 74, 138, 0.09); color: var(--ink-500); border: 1px solid rgba(27, 74, 138, 0.18); }
+
+/* ── Movie detail ────────────────────────────── */
+.movieHeroGrid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.moviePosterCard {
+  border-radius: 14px;
+  aspect-ratio: 212 / 300;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 24px 56px rgba(6,13,31,0.35);
+  border: 1px solid rgba(200,164,91,0.2);
+}
+.movieDetailGenre { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 8px; }
+.movieDetailTitle { font-size: 36px; letter-spacing: 0.1em; margin: 0 0 16px; line-height: 1.2; }
+.movieChips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.metaChip {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(200,164,91,0.1);
+  border: 1px solid rgba(200,164,91,0.25);
+  color: var(--ink-700);
+}
+.movieDetailDesc { font-size: 14px; line-height: 2.0; color: #2b3d5f; margin-bottom: 24px; }
+.subHeading { font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--ink-500); margin-bottom: 8px; }
+.castList { display: flex; gap: 8px; flex-wrap: wrap; }
+.castChip {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(27,74,138,0.08);
+  border: 1px solid rgba(27,74,138,0.15);
+  color: var(--ink-700);
+}
+
+/* ── Section divider ─────────────────────────── */
+.sectionDivider { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+.sectionDivider hr { border: none; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(200, 164, 91, 0.28) 28%, rgba(200, 164, 91, 0.28) 72%, transparent 100%); }
+
+/* ── Animations ──────────────────────────────── */
+.fadeUp { opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s ease forwards; }
+.delay1 { animation-delay: 0.1s; }
+.delay2 { animation-delay: 0.2s; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 960px) {
+  .movieHeroGrid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .filmGridMovies { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+@media (max-width: 400px) {
+  .filmGridMovies { grid-template-columns: 1fr; }
+}

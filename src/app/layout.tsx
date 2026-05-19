@@ -4,7 +4,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'HAL CINEMA | 想像を超えるシネマ体験',
+  title: 'HAL CINEMA | Dive into Cinema',
   description: 'Starry / Abyss / Cyber — 3つのコンセプト空間。HAL CINEMAは名古屋が誇る立体没入型シアターです。',
 };
 

@@ -6,6 +6,8 @@ import theatersData from '@/data/theaters.json';
 import schedulesData from '@/data/schedules.json';
 import moviesData from '@/data/movies.json';
 import type { Theater, ScreenSchedule, Movie } from '@/types';
+import shared from '@/styles/shared.module.css';
+import s from './page.module.css';
 
 const theaters  = theatersData  as Theater[];
 const schedules = schedulesData as ScreenSchedule[];
@@ -13,16 +15,23 @@ const movies    = moviesData    as Movie[];
 
 function getMoviesForTheater(theaterId: string): Movie[] {
   const ids = new Set<string>();
-  for (const s of schedules) {
-    if (s.theaterId !== theaterId) continue;
-    for (const sh of s.shows) ids.add(sh.movieId);
+  for (const sc of schedules) {
+    if (sc.theaterId !== theaterId) continue;
+    for (const sh of sc.shows) ids.add(sh.movieId);
   }
   return movies.filter(m => ids.has(m.id));
 }
 
-function getFirstScreenShows(theaterId: string) {
-  return schedules.find(s => s.theaterId === theaterId)?.shows ?? [];
-}
+const NAV_DOT_CLASS: Record<string, string> = {
+  starry: s.theaterNavDotStarry,
+  abyss:  s.theaterNavDotAbyss,
+  cyber:  s.theaterNavDotCyber,
+};
+const HERO_CLASS: Record<string, string> = {
+  starry: s.theaterChapterHeroStarry,
+  abyss:  s.theaterChapterHeroAbyss,
+  cyber:  s.theaterChapterHeroCyber,
+};
 
 export default function TheatersPage() {
   const [lb, setLb] = useState<{ theater: string; index: number } | null>(null);
@@ -31,7 +40,6 @@ export default function TheatersPage() {
 
   useEffect(() => { document.title = 'HAL CINEMA | シアター'; }, []);
 
-  // IntersectionObserver for local nav active state
   useEffect(() => {
     const elements = chaptersRef.current.filter(Boolean);
     if (!elements.length) return;
@@ -44,7 +52,6 @@ export default function TheatersPage() {
     return () => io.disconnect();
   }, []);
 
-  // Hash scroll on mount
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
     if (['starry', 'abyss', 'cyber'].includes(hash)) {
@@ -54,7 +61,6 @@ export default function TheatersPage() {
     }
   }, []);
 
-  // Lightbox keyboard nav
   useEffect(() => {
     if (!lb) return;
     const theater = theaters.find(t => t.id === lb.theater);
@@ -75,25 +81,25 @@ export default function TheatersPage() {
   return (
     <>
       {/* ── Page Intro ── */}
-      <div className="theaters-intro">
-        <div className="section__hint">Theater Collection</div>
-        <h1 className="theaters-intro__title">星と深海、そして静寂</h1>
-        <p className="theaters-intro__lead">
+      <div className={s.theatersIntro}>
+        <div className={shared.sectionHint}>Theater Collection</div>
+        <h1 className={s.theatersIntroTitle}>星と深海、そして静寂</h1>
+        <p className={s.theatersIntroLead}>
           Starry / Abyss / Cyber — 3つのコンセプト空間。<br />
           上方投影とリクライニングシートで、空間ごとに異なる世界観をご用意しています。
         </p>
       </div>
 
       {/* ── Local Nav ── */}
-      <nav className="theater-local-nav" aria-label="シアター選択">
-        <div className="theater-local-nav__inner">
+      <nav className={s.theaterLocalNav} aria-label="シアター選択">
+        <div className={s.theaterLocalNavInner}>
           {theaters.map(t => (
             <a
               key={t.id}
-              className={`theater-nav-btn${activeId === t.id ? ' is-active' : ''}`}
+              className={`${s.theaterNavBtn}${activeId === t.id ? ' ' + s.theaterNavBtnActive : ''}`}
               href={`#${t.id}`}
             >
-              <span className={`theater-nav-dot theater-nav-dot--${t.id}`}></span>
+              <span className={`${s.theaterNavDot} ${NAV_DOT_CLASS[t.id] ?? ''}`}></span>
               {t.name}
             </a>
           ))}
@@ -103,39 +109,39 @@ export default function TheatersPage() {
       {/* ── Theater Sections ── */}
       {theaters.map((theater, ti) => {
         const theaterMovies = getMoviesForTheater(theater.id);
-        const firstScreen   = schedules.find(s => s.theaterId === theater.id);
+        const firstScreen   = schedules.find(sc => sc.theaterId === theater.id);
         const screenShows   = firstScreen?.shows ?? [];
 
         return (
           <div key={theater.id}>
             <section
-              className="theater-chapter"
+              className={s.theaterChapter}
               id={theater.id}
               ref={el => { if (el) chaptersRef.current[ti] = el; }}
             >
               {/* Hero */}
-              <div className={`theater-chapter__hero theater-chapter__hero--${theater.id}`}>
-                <div className="theater-chapter__hero-content">
-                  <div className="theater-chapter__eyebrow">{theater.name}</div>
-                  <h2 className="theater-chapter__title">{theater.tagline}</h2>
-                  <p className="theater-chapter__tagline">{theater.concept}</p>
-                  <div className="theater-chapter__chips">
+              <div className={`${s.theaterChapterHero} ${HERO_CLASS[theater.id] ?? ''}`}>
+                <div className={s.theaterChapterHeroContent}>
+                  <div className={s.theaterChapterEyebrow}>{theater.name}</div>
+                  <h2 className={s.theaterChapterTitle}>{theater.tagline}</h2>
+                  <p className={s.theaterChapterTagline}>{theater.concept}</p>
+                  <div className={s.theaterChapterChips}>
                     {theater.features.map(f => (
-                      <span key={f} className="theater-chapter__chip">{f}</span>
+                      <span key={f} className={s.theaterChapterChip}>{f}</span>
                     ))}
                   </div>
-                  <Link href={`/schedule?theater=${theater.id}`} className="theater-chapter__btn">
+                  <Link href={`/schedule?theater=${theater.id}`} className={s.theaterChapterBtn}>
                     このシアターの全上映を見る →
                   </Link>
                 </div>
               </div>
 
               {/* Gallery */}
-              <div className="theater-gallery theater-gallery--photo">
+              <div className={`${s.theaterGallery} ${s.theaterGalleryPhoto}`}>
                 {theater.gallery.map((photo, pi) => (
                   <div
                     key={pi}
-                    className="theater-gallery__photo"
+                    className={s.theaterGalleryPhotoItem}
                     style={{ backgroundImage: `url('${photo.src}')` }}
                     onClick={() => setLb({ theater: theater.id, index: pi })}
                     title="クリックで拡大"
@@ -144,14 +150,14 @@ export default function TheatersPage() {
               </div>
 
               {/* Body */}
-              <div className="theater-chapter__body">
-                <div className="theater-chapter__desc-row">
-                  <p className="theater-chapter__desc">{theater.description}</p>
-                  <div className="theater-chapter__stats">
+              <div className={s.theaterChapterBody}>
+                <div className={s.theaterChapterDescRow}>
+                  <p className={s.theaterChapterDesc}>{theater.description}</p>
+                  <div className={s.theaterChapterStats}>
                     {theater.stats.map(stat => (
                       <div
                         key={stat.label}
-                        className="lineup-stat"
+                        className={shared.lineupStat}
                         style={stat.value.length > 3 ? { fontSize: '20px', letterSpacing: '0.04em' } : undefined}
                       >
                         {stat.value}<span>{stat.label}</span>
@@ -160,25 +166,25 @@ export default function TheatersPage() {
                   </div>
                 </div>
 
-                <div className="theater-chapter__cols">
+                <div className={s.theaterChapterCols}>
                   {/* Movies */}
                   <div>
-                    <div className="theater-chapter__subhead">
-                      <div className="section__hint">Now Showing</div>
-                      <h3 className="section__title" style={{ fontSize: '22px' }}>上映中の作品</h3>
+                    <div className={s.theaterChapterSubhead}>
+                      <div className={shared.sectionHint}>Now Showing</div>
+                      <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>上映中の作品</h3>
                     </div>
-                    <div className="film-grid film-grid--theater">
+                    <div className={`${shared.filmGrid} ${shared.filmGridTheater}`}>
                       {theaterMovies.map(m => (
-                        <Link key={m.id} className="film-card film-card--portrait" href={`/movies/${m.id}`}>
-                          <div className="film-card__poster" style={{ backgroundImage: `url('${m.poster}')` }}>
-                            <div className="film-card__poster-overlay"></div>
-                            <div className="film-card__badge">{m.category}</div>
+                        <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
+                          <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
+                            <div className={shared.filmCardPosterOverlay}></div>
+                            <div className={shared.filmCardBadge}>{m.category}</div>
                           </div>
-                          <div className="film-card__body">
-                            <div className="film-card__title">{m.title}</div>
-                            <div className="film-card__footer">
-                              <div className="film-card__meta">{m.formats.join('・')}</div>
-                              <span className="film-card__cta">詳細 →</span>
+                          <div className={shared.filmCardBody}>
+                            <div className={shared.filmCardTitle}>{m.title}</div>
+                            <div className={shared.filmCardFooter}>
+                              <div className={shared.filmCardMeta}>{m.formats.join('・')}</div>
+                              <span className={shared.filmCardCta}>詳細 →</span>
                             </div>
                           </div>
                         </Link>
@@ -188,32 +194,32 @@ export default function TheatersPage() {
 
                   {/* Schedule card */}
                   <div>
-                    <div className="theater-chapter__subhead">
-                      <div className="section__hint">Today&apos;s Showtime</div>
-                      <h3 className="section__title" style={{ fontSize: '22px' }}>本日の上映</h3>
+                    <div className={s.theaterChapterSubhead}>
+                      <div className={shared.sectionHint}>Today&apos;s Showtime</div>
+                      <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>本日の上映</h3>
                     </div>
-                    <div className="theater-sched-card">
-                      <div className="theater-sched-card__head">
-                        <span className="theater-sched-card__name">{theater.name}</span>
-                        <span className="theater-sched-card__screen">{firstScreen?.screen}</span>
+                    <div className={s.theaterSchedCard}>
+                      <div className={s.theaterSchedCardHead}>
+                        <span className={s.theaterSchedCardName}>{theater.name}</span>
+                        <span className={s.theaterSchedCardScreen}>{firstScreen?.screen}</span>
                       </div>
-                      <div className="theater-sched-card__slots">
+                      <div className={s.theaterSchedCardSlots}>
                         {screenShows.map(show => (
                           show.taken ? (
-                            <button key={show.start} className="time-btn taken">
-                              <span className="time-btn__time">{show.start}</span>
-                              <span className="time-btn__info">満席</span>
+                            <button key={show.start} className={`${shared.timeBtn} ${shared.timeBtnTaken}`}>
+                              <span className={shared.timeBtnTime}>{show.start}</span>
+                              <span className={shared.timeBtnInfo}>満席</span>
                             </button>
                           ) : (
-                            <Link key={show.start} href="/reserve" className="time-btn" style={{ textDecoration: 'none' }}>
-                              <span className="time-btn__time">{show.start}</span>
-                              <span className="time-btn__info">{show.title.length > 10 ? show.title.slice(0, 10) + '…' : show.title} / 残席{show.seats}</span>
+                            <Link key={show.start} href="/reserve" className={shared.timeBtn}>
+                              <span className={shared.timeBtnTime}>{show.start}</span>
+                              <span className={shared.timeBtnInfo}>{show.title.length > 10 ? show.title.slice(0, 10) + '…' : show.title} / 残席{show.seats}</span>
                             </Link>
                           )
                         ))}
                       </div>
-                      <div className="theater-sched-card__footer">
-                        <Link href="/schedule" className="text-link">全日程を見る →</Link>
+                      <div className={s.theaterSchedCardFooter}>
+                        <Link href="/schedule" className={shared.textLink}>全日程を見る →</Link>
                       </div>
                     </div>
                   </div>
@@ -221,34 +227,34 @@ export default function TheatersPage() {
               </div>
             </section>
 
-            {ti < theaters.length - 1 && <div className="theater-chapter-divider" />}
+            {ti < theaters.length - 1 && <div className={s.theaterChapterDivider} />}
           </div>
         );
       })}
 
       {/* ── Seat Philosophy ── */}
-      <section className="section">
-        <div className="section__head">
+      <section className={shared.section}>
+        <div className={shared.sectionHead}>
           <div>
-            <div className="section__hint">Seat Philosophy</div>
-            <h2 className="section__title">座席体験の設計</h2>
+            <div className={shared.sectionHint}>Seat Philosophy</div>
+            <h2 className={shared.sectionTitle}>座席の設計</h2>
           </div>
         </div>
-        <div className="feature-tiles">
-          <div className="feature-tile">
-            <div className="feature-tile__badge">Recline</div>
-            <h3 className="feature-tile__title">プラネタリウム姿勢</h3>
-            <p className="feature-tile__desc">自然に上方を向く角度で、首や肩の負担を軽減。長時間でも疲れにくい設計。</p>
+        <div className={shared.featureTiles}>
+          <div className={shared.featureTile}>
+            <div className={shared.featureTileBadge}>Recline</div>
+            <h3 className={shared.featureTileTitle}>リクライニング</h3>
+            <p className={shared.featureTileDesc}>自然に上方を向く角度で、首や肩の負担を軽減。<br />長時間でも疲れにくい設計。</p>
           </div>
-          <div className="feature-tile">
-            <div className="feature-tile__badge">Projection</div>
-            <h3 className="feature-tile__title">上方投影</h3>
-            <p className="feature-tile__desc">視界の中心を高く設定し、没入感を最大化。天井全体が映像に変わる。</p>
+          <div className={shared.featureTile}>
+            <div className={shared.featureTileBadge}>Projection</div>
+            <h3 className={shared.featureTileTitle}>上方投影</h3>
+            <p className={shared.featureTileDesc}>視界の中心を高く設定し、没入感を最大化。<br />天井全体が映像に変わる。</p>
           </div>
-          <div className="feature-tile">
-            <div className="feature-tile__badge">Seat View</div>
-            <h3 className="feature-tile__title">視点プレビュー</h3>
-            <p className="feature-tile__desc">座席ごとの見え方を可視化して選択可能。理想の角度を事前に確認。</p>
+          <div className={shared.featureTile}>
+            <div className={shared.featureTileBadge}>Seat View</div>
+            <h3 className={shared.featureTileTitle}>視点プレビュー</h3>
+            <p className={shared.featureTileDesc}>座席ごとの見え方を可視化して選択可能。<br />理想の角度を事前に確認。</p>
           </div>
         </div>
       </section>
@@ -256,20 +262,20 @@ export default function TheatersPage() {
       {/* ── Lightbox ── */}
       {lb && currentPhoto && (
         <div
-          className="th-lb is-open"
+          className={`${s.thLb} ${s.thLbOpen}`}
           onClick={e => { if (e.target === e.currentTarget) setLb(null); }}
         >
-          <button className="th-lb__close" onClick={() => setLb(null)}>×</button>
+          <button className={s.thLbClose} onClick={() => setLb(null)}>×</button>
           <button
-            className="th-lb__prev"
+            className={s.thLbPrev}
             onClick={() => setLb(p => p ? { ...p, index: (p.index - 1 + currentGallery.length) % currentGallery.length } : p)}
           >&#8249;</button>
-          <img className="th-lb__img" src={currentPhoto.src} alt={currentPhoto.caption} />
+          <img className={s.thLbImg} src={currentPhoto.src} alt={currentPhoto.caption} />
           <button
-            className="th-lb__next"
+            className={s.thLbNext}
             onClick={() => setLb(p => p ? { ...p, index: (p.index + 1) % currentGallery.length } : p)}
           >&#8250;</button>
-          <div className="th-lb__caption">
+          <div className={s.thLbCaption}>
             {currentPhoto.caption}&nbsp;&nbsp;{lb.index + 1} / {currentGallery.length}
           </div>
         </div>

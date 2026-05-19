@@ -1,0 +1,172 @@
+.sectionTight {
+  padding-top: 16px;
+}
+
+.sectionContact {
+  padding-top: 20px;
+}
+
+.faqCats {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.faqList {
+  display: grid;
+  gap: 8px;
+}
+
+.faqItem {
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.14);
+  box-shadow: 0 4px 12px rgba(10, 22, 40, 0.05);
+  overflow: hidden;
+}
+
+.faqQuestion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: var(--ink-700);
+  user-select: none;
+}
+
+.faqQuestion::-webkit-details-marker { display: none; }
+
+.faqQMark {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 16px;
+  color: var(--gold-500);
+  font-weight: 600;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.faqQuestionText { flex: 1; }
+
+.faqChevron {
+  color: var(--gold-500);
+  font-size: 18px;
+  font-weight: 300;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+details[open] .faqChevron { transform: rotate(45deg); }
+
+.faqAnswer {
+  padding: 0 18px 16px 50px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #2b3d5f;
+  border-top: 1px solid rgba(200, 164, 91, 0.1);
+}
+
+.contactForm {
+  margin-top: 28px;
+  padding: 26px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  box-shadow: 0 12px 28px rgba(10, 22, 40, 0.08);
+}
+
+.subHeading {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+  margin-bottom: 18px;
+}
+
+.formBody {
+  display: grid;
+  gap: 16px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.formGroup {
+  display: grid;
+  gap: 8px;
+}
+
+.formLabel {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-700);
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(200, 164, 91, 0.25);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 12px 14px;
+  font-size: 13px;
+  font-family: "Zen Old Mincho", serif;
+  letter-spacing: 0.04em;
+  color: var(--ink-900);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: rgba(200, 164, 91, 0.7);
+  box-shadow: 0 0 0 2px rgba(200, 164, 91, 0.18);
+}
+
+.formTextarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 13px;
+}
+
+.contactSuccess {
+  text-align: center;
+  padding: 24px;
+}
+
+.successIcon {
+  margin-bottom: 10px;
+  display: inline-flex;
+  color: var(--gold-600);
+}
+
+.successTitle {
+  font-size: 15px;
+  color: var(--ink-700);
+  margin-bottom: 4px;
+}
+
+.successNote {
+  font-size: 12px;
+  color: var(--ink-600);
+}
+
+@media (max-width: 720px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}

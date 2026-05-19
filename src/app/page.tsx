@@ -3,9 +3,11 @@ import Link from 'next/link';
 import Carousel3D from '@/components/Carousel3D';
 import moviesData from '@/data/movies.json';
 import type { Movie } from '@/types';
+import s from './page.module.css';
+import shared from '@/styles/shared.module.css';
 
 export const metadata: Metadata = {
-  title: 'HAL CINEMA | 想像を超えるシネマ体験',
+  title: 'HAL CINEMA | Dive into Cinema',
 };
 
 const movies = moviesData as Movie[];
@@ -23,137 +25,170 @@ export default function HomePage() {
   return (
     <>
       {/* ── Hero Brand ── */}
-      <section className="hero-brand">
-        <div className="hb-bg" aria-hidden="true">
-          <div className="hb-bg__halo"></div>
+      <section className={s.heroBrand}>
+        <div className={s.hbBg} aria-hidden="true">
+          <div className={s.hbBgHalo}></div>
         </div>
-        <div className="hb-frame" aria-hidden="true">
-          <span className="hb-corner hb-corner--tl"></span>
-          <span className="hb-corner hb-corner--tr"></span>
-          <span className="hb-corner hb-corner--bl"></span>
-          <span className="hb-corner hb-corner--br"></span>
+        <div className={s.hbFrame} aria-hidden="true">
+          <span className={`${s.hbCorner} ${s.hbCornerTl}`}></span>
+          <span className={`${s.hbCorner} ${s.hbCornerTr}`}></span>
+          <span className={`${s.hbCorner} ${s.hbCornerBl}`}></span>
+          <span className={`${s.hbCorner} ${s.hbCornerBr}`}></span>
         </div>
-        <div className="hb-logotype">
-          <div className="hb-ornament fade-up">
-            <span className="hb-ornament__line hb-ornament__line--l"></span>
-            <span className="hb-ornament__text">Nagoya · CINEMA</span>
-            <span className="hb-ornament__line hb-ornament__line--r"></span>
+        <div className={s.hbLogotype}>
+          <div className={`${s.hbOrnament} ${shared.fadeUp}`}>
+            <span className={`${s.hbOrnamentLine} ${s.hbOrnamentLineL}`}></span>
+            <span className={s.hbOrnamentText}>Nagoya · CINEMA</span>
+            <span className={`${s.hbOrnamentLine} ${s.hbOrnamentLineR}`}></span>
           </div>
-          <img className="hb-logo fade-up delay-1" src="/images/logo_dark.png" alt="HAL CINEMA" />
-          <p className="hb-tagline fade-up delay-2"><em>Dive into Cinema</em></p>
+          <img className={`${s.hbLogo} ${shared.fadeUp} ${shared.delay1}`} src="/images/logo_dark.png" alt="HAL CINEMA" />
+          <p className={`${s.hbTagline} ${shared.fadeUp} ${shared.delay2}`}><em>Dive into Cinema</em></p>
         </div>
-        <div className="hb-theaters">
-          <Link className="hb-th hb-th--starry" href="/theaters#starry">
-            <div className="hb-th__bg"></div>
-            <div className="hb-th__shade"></div>
-            <div className="hb-th__label"><span className="hb-th__dot"></span>Starry</div>
+        <div className={s.hbTheaters}>
+          <Link className={`${s.hbTh} ${s.hbThStarry}`} href="/theaters#starry">
+            <div className={s.hbThBg}></div>
+            <div className={s.hbThShade}></div>
+            <div className={s.hbThLabel}><span className={s.hbThDot}></span>Starry</div>
           </Link>
-          <Link className="hb-th hb-th--abyss" href="/theaters#abyss">
-            <div className="hb-th__bg"></div>
-            <div className="hb-th__shade"></div>
-            <div className="hb-th__label"><span className="hb-th__dot"></span>Abyss</div>
+          <Link className={`${s.hbTh} ${s.hbThAbyss}`} href="/theaters#abyss">
+            <div className={s.hbThBg}></div>
+            <div className={s.hbThShade}></div>
+            <div className={s.hbThLabel}><span className={s.hbThDot}></span>Abyss</div>
           </Link>
-          <Link className="hb-th hb-th--cyber" href="/theaters#cyber">
-            <div className="hb-th__bg"></div>
-            <div className="hb-th__shade"></div>
-            <div className="hb-th__label"><span className="hb-th__dot"></span>Cyber</div>
+          <Link className={`${s.hbTh} ${s.hbThCyber}`} href="/theaters#cyber">
+            <div className={s.hbThBg}></div>
+            <div className={s.hbThShade}></div>
+            <div className={s.hbThLabel}><span className={s.hbThDot}></span>Cyber</div>
           </Link>
         </div>
       </section>
 
       {/* ── Now Showing + 3D Carousel ── */}
-      <section className="section" id="now">
-        <div className="section__head">
+      <section className={shared.section} id="now">
+        <div className={shared.sectionHead}>
           <div>
-            <div className="section__hint">Now Showing</div>
-            <h2 className="section__title">上映中の注目作</h2>
+            <div className={shared.sectionHint}>Now Showing</div>
+            <h2 className={shared.sectionTitle}>上映中の注目作</h2>
           </div>
-          <Link className="text-link" href="/movies">すべて見る</Link>
+          <Link className={shared.textLink} href="/movies">すべて見る</Link>
         </div>
         <Carousel3D movies={carouselMovies} itemCount={18} hasInfoPanel={true} />
       </section>
 
-      {/* ── Signature Services ── */}
-      <section className="section" id="services">
-        <div className="section__head">
+      {/* ── Theater Introduction ── */}
+      <section className={shared.section} id="theaters">
+        <div className={shared.sectionHead}>
           <div>
-            <div className="section__hint">Signature Services</div>
-            <h2 className="section__title">静かに支える機能</h2>
+            <div className={shared.sectionHint}>Theater Experience</div>
+            <h2 className={shared.sectionTitle}>劇場紹介</h2>
           </div>
+          <Link className={shared.textLink} href="/theaters">シアター詳細を見る</Link>
         </div>
-        <div className="feature-tiles">
-          <div className="feature-tile">
-            <div className="feature-tile__badge">Seat Move</div>
-            <h3 className="feature-tile__title">隣席リクエスト</h3>
-            <p className="feature-tile__desc">+100円で並び席へ。承諾者にキャッシュバック。</p>
+        <div className={s.theaterShowcase}>
+          <div className={s.lobbyShowcase}>
+            <div className={s.lobbyVisual} aria-hidden="true">
+              <img className={s.lobbyImg} src="/images/lobby.png" alt="HAL CINEMAのロビー" />
+            </div>
+            <div className={s.lobbyContent}>
+              <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所。</p>
+              <p className={s.lobbyText}>
+                光のグラデーションと柔らかな素材感で、映画への没入を静かに支えます。
+              </p>
+              <div className={s.lobbyMeta}>
+                <span>Bar & Lounge</span>
+                <span>Quiet Lighting</span>
+                <span>Art Installations</span>
+              </div>
+            </div>
           </div>
-          <div className="feature-tile">
-            <div className="feature-tile__badge">Seat View</div>
-            <h3 className="feature-tile__title">視点プレビュー</h3>
-            <p className="feature-tile__desc">座席ごとの見え方を事前に確認。</p>
+          <div className={s.theaterHighlights}>
+            <div className={s.theaterHighlight}>
+              <span className={s.theaterHighlightLabel}>Sound</span>
+              <span className={s.theaterHighlightValue}>Immersive Audio</span>
+            </div>
+            <div className={s.theaterHighlight}>
+              <span className={s.theaterHighlightLabel}>Screen</span>
+              <span className={s.theaterHighlightValue}>Premium Laser</span>
+            </div>
+            <div className={s.theaterHighlight}>
+              <span className={s.theaterHighlightLabel}>Seat</span>
+              <span className={s.theaterHighlightValue}>Deep Comfort</span>
+            </div>
           </div>
-          <div className="feature-tile">
-            <div className="feature-tile__badge">Recommend</div>
-            <h3 className="feature-tile__title">推し通知</h3>
-            <p className="feature-tile__desc">監督・俳優の新作を届ける。</p>
+          <div className={s.theaterCards}>
+            <div className={s.theaterCardStack}>
+              <Link className={`${shared.theaterCard} ${shared.theaterCardStarry}`} href="/theaters#starry">
+                <div className={shared.theaterCardLabel}>Starry Theater</div>
+                <div className={shared.theaterCardMeta}>200 seats × 3</div>
+              </Link>
+              <Link className={`${shared.theaterCard} ${shared.theaterCardAbyss}`} href="/theaters#abyss">
+                <div className={shared.theaterCardLabel}>Abyss Theater</div>
+                <div className={shared.theaterCardMeta}>120 seats × 2</div>
+              </Link>
+              <Link className={`${shared.theaterCard} ${shared.theaterCardCyber}`} href="/theaters#cyber">
+                <div className={shared.theaterCardLabel}>Cyber Theater</div>
+                <div className={shared.theaterCardMeta}>70 seats × 3</div>
+              </Link>
+            </div>
+            <p className={s.theaterNote}>3つのコンセプト空間が、それぞれ異なる余韻を演出します。</p>
           </div>
         </div>
       </section>
 
-      {/* ── Theater Portfolio ── */}
-      <section className="section" id="theaters">
-        <div className="section__head">
+      {/* ── Signature Services ── */}
+      <section className={shared.section} id="services">
+        <div className={shared.sectionHead}>
           <div>
-            <div className="section__hint">Theater Portfolio</div>
-            <h2 className="section__title">3つのコンセプト空間</h2>
+            <div className={shared.sectionHint}>Original Services</div>
+            <h2 className={shared.sectionTitle}>オリジナル機能</h2>
           </div>
         </div>
-        <div className="theater-grid">
-          <Link className="theater-card theater-card--starry" href="/theaters#starry">
-            <div className="theater-card__label">Starry Theater</div>
-            <div className="theater-card__meta">200 seats × 3</div>
-          </Link>
-          <Link className="theater-card theater-card--abyss" href="/theaters#abyss">
-            <div className="theater-card__label">Abyss Theater</div>
-            <div className="theater-card__meta">120 seats × 2</div>
-          </Link>
-          <Link className="theater-card theater-card--cyber" href="/theaters#cyber">
-            <div className="theater-card__label">Cyber Theater</div>
-            <div className="theater-card__meta">70 seats × 3</div>
-          </Link>
-        </div>
-        <div className="section__footer">
-          <Link className="text-link text-link--center" href="/theaters">シアター詳細を見る</Link>
+        <div className={shared.featureTiles}>
+          <div className={shared.featureTile}>
+            <div className={shared.featureTileBadge}>Seat Move</div>
+            <h3 className={shared.featureTileTitle}>座席移動リクエスト</h3>
+            <p className={shared.featureTileDesc}>+100円で並び席へ。承諾者にキャッシュバック。</p>
+          </div>
+          <div className={shared.featureTile}>
+            <div className={shared.featureTileBadge}>Seat View</div>
+            <h3 className={shared.featureTileTitle}>視点プレビュー</h3>
+            <p className={shared.featureTileDesc}>座席ごとの見え方を事前に確認。</p>
+          </div>
+          <div className={shared.featureTile}>
+            <div className={shared.featureTileBadge}>Recommend</div>
+            <h3 className={shared.featureTileTitle}>推し通知</h3>
+            <p className={shared.featureTileDesc}>監督・俳優の新作を届ける。</p>
+          </div>
         </div>
       </section>
 
       {/* ── Ticket Pricing ── */}
-      <section className="section" id="tickets">
-        <div className="section__head">
+      <section className={shared.section} id="tickets">
+        <div className={shared.sectionHead}>
           <div>
-            <div className="section__hint">Ticket Pricing</div>
-            <h2 className="section__title">チケット料金</h2>
+            <div className={shared.sectionHint}>Ticket Pricing</div>
+            <h2 className={shared.sectionTitle}>チケット料金</h2>
           </div>
         </div>
-        <div className="price-list-panel">
+        <div className={shared.priceListPanel}>
           {[
             { name: '一般', sub: 'General', amount: '1,800' },
             { name: '大学生等', sub: 'University / College', amount: '1,600' },
             { name: '中学・高校生', sub: 'Junior High / High School', amount: '1,400' },
             { name: '小学生・幼児', sub: 'Children', amount: '1,000' },
           ].map(row => (
-            <div key={row.name} className="price-list-row">
+            <div key={row.name} className={shared.priceListRow}>
               <div>
-                <div className="price-list-row__name">{row.name}</div>
-                <div className="price-list-row__sub">{row.sub}</div>
+                <div className={shared.priceListRowName}>{row.name}</div>
+                <div className={shared.priceListRowSub}>{row.sub}</div>
               </div>
-              <div className="price-list-row__right">
-                <span className="price-list-row__amount">{row.amount}</span>
-                <span className="price-list-row__unit">円</span>
+              <div className={shared.priceListRowRight}>
+                <span className={shared.priceListRowAmount}>{row.amount}</span>
+                <span className={shared.priceListRowUnit}>円</span>
               </div>
             </div>
           ))}
-          <div className="price-list-footer">
+          <div className={shared.priceListFooter}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             Starry / Abyss シアターはプレミアム席あり（+¥500）
           </div>

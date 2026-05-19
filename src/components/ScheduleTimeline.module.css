@@ -1,0 +1,177 @@
+.tlWrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200,164,91,0.35) transparent;
+  margin: 0 -20px;
+}
+.tlWrap::-webkit-scrollbar { height: 5px; }
+.tlWrap::-webkit-scrollbar-track { background: transparent; }
+.tlWrap::-webkit-scrollbar-thumb { background: rgba(200,164,91,0.4); border-radius: 3px; }
+.tlInner { width: max-content; min-width: 100%; position: relative; box-sizing: border-box; }
+.tlAxisSticky {
+  position: sticky;
+  z-index: 19;
+  overflow-x: hidden;
+  margin: 0 -20px;
+  transform: translateY(-1px);
+}
+.tlAxis {
+  display: flex;
+  border-bottom: 1px solid rgba(200,164,91,0.22);
+  box-sizing: border-box;
+  clip-path: polygon(1% 0, 99% 0, 100% 50%, 99% 100%, 1% 100%, 0% 50%);
+  background-color: rgba(255,255,255,0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.tlAxisCorner {
+  width: 148px;
+  min-width: 148px;
+  padding: 9px 0 9px 2rem;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgb(200, 164, 91);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  position: sticky;
+  left: 0;
+  z-index: 22;
+  background-color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.tlAxisHours { display: flex; flex-shrink: 0; }
+.tlAxisHour {
+  width: 100px; min-width: 100px;
+  padding: 9px 0;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+  color: var(--ink-600, #4c5e7f);
+  border-left: 1px solid rgba(200,164,91,0.2);
+  box-sizing: border-box;
+  text-indent: 5px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+.tlBody { position: relative; display: flex; flex-direction: column; gap: 2rem; margin-top: 0.5rem; }
+.tlGroup {
+  position: relative;
+  border-radius: 5px 0 0 0;
+  background-color: #fdfdfda2;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.tlGroupStarry .tlRowTrack { background: rgba(200,164,91,0.07); }
+.tlGroupAbyss  .tlRowTrack { background: rgba(10,61,82,0.07); }
+.tlGroupCyber  .tlRowTrack { background: rgba(40,100,220,0.07); }
+.tlGroupStarry .tlRowLabel { border-left: 3px solid rgba(200,164,91,0.55);  padding-left: 11px; }
+.tlGroupAbyss  .tlRowLabel { border-left: 3px solid rgba(18,104,130,0.45); padding-left: 11px; }
+.tlGroupCyber  .tlRowLabel { border-left: 3px solid rgba(40,100,220,0.5); padding-left: 11px; }
+.tlTheaterHead { display: flex; height: 32px; border-radius: 5px 0 0 0; }
+.tlTheaterHeadLabel {
+  width: 148px; min-width: 148px;
+  padding: 0 12px 0 12px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  display: flex; align-items: center; gap: 10px;
+  border-radius: 5px 0 0 0;
+  box-sizing: border-box;
+  position: sticky; left: 0; z-index: 6;
+}
+.tlTheaterHeadDot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.55); flex-shrink: 0; }
+.tlTheaterHeadBar { flex-shrink: 0; border-radius: 0 5px 5px 0; box-sizing: border-box; }
+.tlTheaterHeadStarry .tlTheaterHeadLabel { background: linear-gradient(90deg, #2a1c04 0%, #6b4a14 100%); }
+.tlTheaterHeadStarry .tlTheaterHeadBar   { background: linear-gradient(90deg, #6b4a14 0%, rgba(200,164,91,0.22) 45%, transparent 85%); }
+.tlTheaterHeadAbyss  .tlTheaterHeadLabel { background: linear-gradient(90deg, #0a3d52 0%, #126882 100%); }
+.tlTheaterHeadAbyss  .tlTheaterHeadBar   { background: linear-gradient(90deg, #126882 0%, rgba(18,104,130,0.18) 45%, transparent 85%); }
+.tlTheaterHeadCyber  .tlTheaterHeadLabel { background: linear-gradient(90deg, #060d22 0%, #0d2060 100%); }
+.tlTheaterHeadCyber  .tlTheaterHeadBar   { background: linear-gradient(90deg, #0d2060 0%, rgba(40,100,220,0.22) 45%, transparent 85%); }
+.tlRow { display: flex; height: 76px; border-top: 1px solid rgba(200,164,91,0.1); }
+.tlRow:last-of-type { border-bottom: 1px solid rgba(200,164,91,0.1); }
+.tlRowLabel {
+  width: 148px; min-width: 148px;
+  padding: 0 14px;
+  display: flex; align-items: center;
+  background: #e8f0fcd8;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  position: sticky; left: 0; z-index: 5;
+  border-right: 1px solid rgba(200,164,91,0.12);
+  box-sizing: border-box;
+}
+.tlRowScreen {
+  margin: 0 auto;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.85rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-700, #3a4f6c);
+}
+.tlRowTrack {
+  flex-shrink: 0; height: 76px; position: relative;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(200,164,91,0.16) 0px, rgba(200,164,91,0.16) 1px, transparent 1px, transparent 100px),
+    repeating-linear-gradient(90deg, rgba(200,164,91,0.07) 0px, rgba(200,164,91,0.07) 1px, transparent 1px, transparent 50px);
+  box-sizing: border-box;
+}
+.tlBlock {
+  position: absolute; top: 8px; height: 60px;
+  border-radius: 10px; padding: 7px 10px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  overflow: hidden; text-decoration: none; cursor: pointer;
+  box-shadow: 0 3px 14px rgba(6,13,31,0.24), inset 0 1px 0 rgba(255,255,255,0.1);
+  transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-sizing: border-box; min-width: 0;
+  background: linear-gradient(150deg, #1a2a4a, #2a4878);
+}
+.tlBlock:hover { filter: brightness(1.14); box-shadow: 0 10px 28px rgba(6,13,31,0.32), inset 0 1px 0 rgba(255,255,255,0.12); }
+.tlBlockTaken { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+.tlBlockTime { font-family: "Barlow Condensed", sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; color: rgba(255,255,255,0.95); line-height: 1; flex-shrink: 0; }
+.tlBlockTitle { font-size: 11px; letter-spacing: 0.02em; color: rgba(255,255,255,0.82); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex-shrink: 0; }
+.tlBlockFoot { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-shrink: 0; }
+.tlBlockSeats { font-size: 10px; letter-spacing: 0.06em; color: rgba(255,255,255,0.5); white-space: nowrap; }
+.tlBlockSeatsFew { color: #f5a623; font-weight: 700; }
+.tlBlockFormat { font-size: 9px; letter-spacing: 0.06em; color: rgba(255,255,255,0.32); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tlNowLine {
+  position: absolute; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, rgba(200,164,91,0.9), rgba(200,164,91,0.1));
+  pointer-events: none; z-index: 12;
+}
+.tlNowDot {
+  position: absolute; top: -3px; left: -4px; width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(200,164,91,0.95);
+  box-shadow: 0 0 0 0 rgba(200,164,91,0.5);
+  animation: tlPulse 2.2s ease-out infinite;
+}
+@keyframes tlPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(200,164,91,0.5); }
+  70%  { box-shadow: 0 0 0 9px rgba(200,164,91,0); }
+  100% { box-shadow: 0 0 0 0 rgba(200,164,91,0); }
+}
+.tlNowTime {
+  position: absolute; top: 6px; left: 7px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  color: rgba(200,164,91,0.98); white-space: nowrap;
+  background: rgba(235,242,252,0.93);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(200,164,91,0.4);
+  pointer-events: none;
+}
+.schedDateLabel {
+  font-size: 13px; letter-spacing: 0.1em; color: var(--ink-700);
+  display: flex; align-items: center; gap: 8px;
+}
+.schedDateLabel::before { content: ""; width: 18px; height: 1px; background: var(--gold-500); flex-shrink: 0; }
+.schedTopbar {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin: 2rem 0 1rem 0;
+}
+.schedEmpty { text-align: center; padding: 64px 20px; color: var(--ink-500); font-size: 15px; letter-spacing: 0.06em; }
+
+@media (max-width: 640px) {
+  .tlAxisCorner, .tlRowLabel, .tlTheaterHeadLabel { width: 72px; min-width: 72px; }
+  .tlTheaterHeadLabel { font-size: 8px; letter-spacing: 0.18em; }
+}

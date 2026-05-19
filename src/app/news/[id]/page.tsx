@@ -3,12 +3,19 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import newsData from '@/data/news.json';
 import type { NewsItem } from '@/types';
+import shared from '@/styles/shared.module.css';
+import s from './page.module.css';
 
 const news = newsData as NewsItem[];
 const CATEGORY_LABEL: Record<string, string> = {
   campaign: 'キャンペーン',
   event:    'イベント',
   info:     'お知らせ',
+};
+const BADGE_CLASS: Record<string, string> = {
+  campaign: shared.newsBadgeCampaign,
+  event:    shared.newsBadgeEvent,
+  info:     shared.newsBadgeInfo,
 };
 
 export function generateStaticParams() {
@@ -32,65 +39,29 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ id:
   });
 
   return (
-    <section className="section" style={{ paddingTop: '48px', paddingBottom: '80px' }}>
-      <div style={{ maxWidth: '760px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '20px' }}>
-          <Link href="/news" className="text-link" style={{ paddingRight: 0, fontSize: '11px' }}>← お知らせ一覧に戻る</Link>
+    <section className={`${shared.section} ${s.sectionPt}`}>
+      <div className={s.wrapper}>
+        <div className={s.backLinkWrap}>
+          <Link href="/news" className={`${shared.textLink} ${s.backLink}`}>← お知らせ一覧に戻る</Link>
         </div>
 
-        {/* Hero image */}
-        <div style={{
-          height: '220px',
-          borderRadius: '14px',
-          background: item.imageGradient,
-          marginBottom: '32px',
-          border: '1px solid rgba(200,164,91,0.18)',
-          boxShadow: '0 12px 40px rgba(6,13,31,0.22)',
-        }} />
+        <div className={s.heroImg} style={{ background: item.imageGradient }} />
 
-        <span className={`news-badge news-badge--${item.category}`} style={{ marginBottom: '16px', display: 'inline-block' }}>
+        <span className={`${shared.newsBadge} ${BADGE_CLASS[item.category] ?? ''} ${s.badge}`}>
           {CATEGORY_LABEL[item.category]}
         </span>
 
-        <h1 style={{
-          fontSize: 'clamp(20px, 4vw, 28px)',
-          letterSpacing: '0.08em',
-          lineHeight: '1.55',
-          color: 'var(--ink-900)',
-          marginBottom: '12px',
-        }}>
-          {item.title}
-        </h1>
+        <h1 className={s.title}>{item.title}</h1>
+        <div className={s.date}>{dateStr}</div>
 
-        <div style={{
-          fontSize: '12px',
-          letterSpacing: '0.1em',
-          color: 'var(--ink-500)',
-          marginBottom: '36px',
-          fontFamily: '"Barlow Condensed", sans-serif',
-        }}>
-          {dateStr}
-        </div>
-
-        <div style={{
-          borderTop: '1px solid rgba(200,164,91,0.18)',
-          paddingTop: '32px',
-        }}>
+        <div className={s.body}>
           {paragraphs.map((p, i) => (
-            <p key={i} style={{
-              fontSize: '15px',
-              lineHeight: '2.0',
-              color: '#2b3d5f',
-              letterSpacing: '0.04em',
-              marginBottom: '1.6em',
-            }}>
-              {p}
-            </p>
+            <p key={i} className={s.bodyP}>{p}</p>
           ))}
         </div>
 
-        <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(200,164,91,0.14)' }}>
-          <Link href="/news" className="text-link">← お知らせ一覧に戻る</Link>
+        <div className={s.footer}>
+          <Link href="/news" className={shared.textLink}>← お知らせ一覧に戻る</Link>
         </div>
       </div>
     </section>

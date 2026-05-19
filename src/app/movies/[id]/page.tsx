@@ -4,6 +4,8 @@ import moviesData   from '@/data/movies.json';
 import schedulesData from '@/data/schedules.json';
 import type { Movie, ScreenSchedule } from '@/types';
 import { notFound } from 'next/navigation';
+import shared from '@/styles/shared.module.css';
+import s from './page.module.css';
 
 const movies    = moviesData    as Movie[];
 const schedules = schedulesData as ScreenSchedule[];
@@ -30,7 +32,6 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
   const movie = movies.find(m => m.id === id);
   if (!movie) notFound();
 
-  // Group schedules for this movie by theater
   const byTheater = new Map<string, { screen: string; shows: ScreenSchedule['shows'] }[]>();
   for (const s of schedules) {
     const movieShows = s.shows.filter(sh => sh.movieId === id);
@@ -40,47 +41,44 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
   }
 
   const posterStyle: React.CSSProperties = movie.colors
-    ? {
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.32)), url('${movie.poster}')`,
-        background: `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.32)), url('${movie.poster}') center/cover no-repeat`,
-      }
+    ? { background: `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.32)), url('${movie.poster}') center/cover no-repeat` }
     : { backgroundImage: `linear-gradient(160deg,#0a2060,#1a4a8a)` };
 
   return (
     <>
-      <section className="section" style={{ paddingTop: '56px' }}>
-        <div style={{ marginBottom: '16px' }}>
-          <Link href="/movies" className="text-link" style={{ paddingRight: 0, fontSize: '11px' }}>← 作品一覧に戻る</Link>
+      <section className={`${shared.section} ${s.sectionTop}`}>
+        <div className={s.backLink}>
+          <Link href="/movies" className={`${shared.textLink} ${s.backLink}`}>← 作品一覧に戻る</Link>
         </div>
 
-        <div className="movie-hero-grid">
-          <div className="movie-poster-card" style={posterStyle}></div>
+        <div className={shared.movieHeroGrid}>
+          <div className={shared.moviePosterCard} style={posterStyle}></div>
           <div>
-            <div className="movie-detail__genre">{movie.category}</div>
-            <h1 className="movie-detail__title">{movie.title}</h1>
-            <div className="movie-chips">
-              <span className="meta-chip">{formatDuration(movie.duration)}</span>
-              <span className="meta-chip">{movie.year}年公開</span>
-              <span className="meta-chip">{movie.rating}</span>
-              {movie.formats.map(f => <span key={f} className="meta-chip">{f}</span>)}
-              {movie.status === 'coming_soon' && <span className="meta-chip">Coming Soon</span>}
+            <div className={shared.movieDetailGenre}>{movie.category}</div>
+            <h1 className={shared.movieDetailTitle}>{movie.title}</h1>
+            <div className={shared.movieChips}>
+              <span className={shared.metaChip}>{formatDuration(movie.duration)}</span>
+              <span className={shared.metaChip}>{movie.year}年公開</span>
+              <span className={shared.metaChip}>{movie.rating}</span>
+              {movie.formats.map(f => <span key={f} className={shared.metaChip}>{f}</span>)}
+              {movie.status === 'coming_soon' && <span className={shared.metaChip}>Coming Soon</span>}
             </div>
-            <p className="movie-detail__desc">{movie.description}</p>
+            <p className={shared.movieDetailDesc}>{movie.description}</p>
             {movie.cast.length > 0 && (
-              <div style={{ marginBottom: '20px' }}>
-                <div className="sub-heading">出演</div>
-                <div className="cast-list">
-                  {movie.cast.map(c => <span key={c} className="cast-chip">{c}</span>)}
+              <div className={s.castBlock}>
+                <div className={shared.subHeading}>出演</div>
+                <div className={shared.castList}>
+                  {movie.cast.map(c => <span key={c} className={shared.castChip}>{c}</span>)}
                 </div>
               </div>
             )}
             {movie.director && (
-              <div style={{ marginBottom: '24px' }}>
-                <div className="sub-heading">監督</div>
-                <span className="cast-chip">{movie.director}</span>
+              <div className={s.directorBlock}>
+                <div className={shared.subHeading}>監督</div>
+                <span className={shared.castChip}>{movie.director}</span>
               </div>
             )}
-            <Link href="/reserve" className="btn btn--solid" style={{ fontSize: '15px', padding: '13px 28px' }}>
+            <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtn}`}>
               劇場窓口で予約する
             </Link>
           </div>
@@ -88,33 +86,33 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
       </section>
 
       {byTheater.size > 0 && (
-        <section className="section" style={{ paddingTop: '20px' }}>
-          <div className="section__head">
+        <section className={`${shared.section} ${s.scheduleSection}`}>
+          <div className={shared.sectionHead}>
             <div>
-              <div className="section__hint">Showtime</div>
-              <h2 className="section__title">本日の上映スケジュール</h2>
+              <div className={shared.sectionHint}>Showtime</div>
+              <h2 className={shared.sectionTitle}>本日の上映スケジュール</h2>
             </div>
-            <Link href="/schedule" className="text-link">全日程を見る</Link>
+            <Link href="/schedule" className={shared.textLink}>全日程を見る</Link>
           </div>
-          <div className="schedule-grid">
+          <div className={shared.scheduleGrid}>
             {Array.from(byTheater.entries()).map(([theaterId, screenList]) =>
               screenList.map(({ screen, shows }) => (
-                <div key={`${theaterId}-${screen}`} className="schedule-theater">
-                  <div className="schedule-theater__header">
-                    <span className="schedule-theater__name">{THEATER_NAME[theaterId]}</span>
-                    <span className="schedule-theater__badge">{screen}</span>
+                <div key={`${theaterId}-${screen}`} className={shared.scheduleTheater}>
+                  <div className={shared.scheduleTheaterHeader}>
+                    <span className={shared.scheduleTheaterName}>{THEATER_NAME[theaterId]}</span>
+                    <span className={shared.scheduleTheaterBadge}>{screen}</span>
                   </div>
-                  <div className="time-slots">
+                  <div className={shared.timeSlots}>
                     {shows.map(show => (
                       show.taken ? (
-                        <button key={show.start} className="time-btn taken">
-                          <span className="time-btn__time">{show.start}</span>
-                          <span className="time-btn__info">満席</span>
+                        <button key={show.start} className={`${shared.timeBtn} ${shared.timeBtnTaken}`}>
+                          <span className={shared.timeBtnTime}>{show.start}</span>
+                          <span className={shared.timeBtnInfo}>満席</span>
                         </button>
                       ) : (
-                        <Link key={show.start} href="/reserve" className="time-btn" style={{ textDecoration: 'none' }}>
-                          <span className="time-btn__time">{show.start}</span>
-                          <span className="time-btn__info">残席 {show.seats}</span>
+                        <Link key={show.start} href="/reserve" className={shared.timeBtn}>
+                          <span className={shared.timeBtnTime}>{show.start}</span>
+                          <span className={shared.timeBtnInfo}>残席 {show.seats}</span>
                         </Link>
                       )
                     ))}

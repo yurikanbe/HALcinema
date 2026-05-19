@@ -1,10 +1,12 @@
+import styles from './Footer.module.css';
+
 export default function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer__inner">
+    <footer className={styles.footer}>
+      <div className={styles.footerInner}>
         <div>
           <strong>HAL CINEMA</strong>
-          <div>想像を超える、立体シネマ体験。</div>
+          <div>Dive into Cinema</div>
         </div>
         <div>
           <div>〒000-0000 東京都千代田区HAL 8F</div>
