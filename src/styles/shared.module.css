@@ -125,7 +125,6 @@
 }
 .textLinkCenter { padding-right: 0; }
 .textLinkCenter::after { display: none; }
-.textLink::after { content: "→"; position: absolute; right: 0; top: 0; color: var(--gold-500); }
 
 /* ── Lineup stat ─────────────────────────────── */
 .lineupStat {
@@ -328,6 +327,7 @@
   color: var(--ink-900);
   font-weight: 600;
   display: -webkit-box;
+  line-clamp: 1;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
