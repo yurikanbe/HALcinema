@@ -60,7 +60,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
               <span className={shared.metaChip}>{formatDuration(movie.duration)}</span>
               <span className={shared.metaChip}>{movie.year}年公開</span>
               <span className={shared.metaChip}>{movie.rating}</span>
-              {movie.formats.map(f => <span key={f} className={shared.metaChip}>{f}</span>)}
+              {movie.formats?.map(f => <span key={f} className={shared.metaChip}>{f}</span>)}
               {movie.status === 'coming_soon' && <span className={shared.metaChip}>Coming Soon</span>}
             </div>
             <p className={shared.movieDetailDesc}>{movie.description}</p>
