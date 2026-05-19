@@ -60,7 +60,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
               <span className={shared.metaChip}>{formatDuration(movie.duration)}</span>
               <span className={shared.metaChip}>{movie.year}年公開</span>
               <span className={shared.metaChip}>{movie.rating}</span>
-              {movie.formats.map(f => <span key={f} className={shared.metaChip}>{f}</span>)}
+              {movie.formats?.map(f => <span key={f} className={shared.metaChip}>{f}</span>)}
               {movie.status === 'coming_soon' && <span className={shared.metaChip}>Coming Soon</span>}
             </div>
             <p className={shared.movieDetailDesc}>{movie.description}</p>
@@ -72,12 +72,26 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
                 </div>
               </div>
             )}
-            {movie.director && (
+            {(() => {
+              const directors = Array.isArray(movie.director)
+                ? movie.director
+                : movie.director
+                  ? [movie.director]
+                  : [];
+
+              if (directors.length === 0) return null;
+
+              return (
               <div className={s.directorBlock}>
                 <div className={shared.subHeading}>監督</div>
-                <span className={shared.castChip}>{movie.director}</span>
+                <div className={shared.castList}>
+                  {directors.map(d => (
+                    <span key={d} className={shared.castChip}>{d}</span>
+                  ))}
+                </div>
               </div>
-            )}
+              );
+            })()}
             <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtn}`}>
               劇場窓口で予約する
             </Link>

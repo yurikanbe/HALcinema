@@ -8,9 +8,9 @@ export interface Movie {
   duration: number;        // minutes
   year: number;
   rating: string;          // "G" | "PG12" | "R15+" | "R18+"
-  formats: string[];       // ["字幕", "吹替"]
+  formats?: string[] | null; // ["字幕", "吹替"]
   cast: string[];
-  director: string[];
+  director: string | string[];
   status: 'now_showing' | 'coming_soon';
   colors?: {
     solid: string;

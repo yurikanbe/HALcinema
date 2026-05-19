@@ -183,7 +183,7 @@ export default function TheatersPage() {
                           <div className={shared.filmCardBody}>
                             <div className={shared.filmCardTitle}>{m.title}</div>
                             <div className={shared.filmCardFooter}>
-                              <div className={shared.filmCardMeta}>{m.formats.join('・')}</div>
+                              <div className={shared.filmCardMeta}>{m.formats?.join('・') ?? '—'}</div>
                               <span className={shared.filmCardCta}>詳細 →</span>
                             </div>
                           </div>

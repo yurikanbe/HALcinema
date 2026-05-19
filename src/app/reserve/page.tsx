@@ -45,7 +45,7 @@ export default function ReservePage() {
         <div className={s.note}>
           <strong className={s.noteStrong}>劇場窓口受付時間</strong><br />
           OPEN 10:00 — 最終上映開始まで<br />
-          〒000-0000 東京都千代田区HAL 8F<br />
+          〒450-0002 名古屋市中村区名駅4-27-1<br />
           お問い合わせ: info@halcinema.jp
         </div>
       </div>

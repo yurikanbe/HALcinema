@@ -125,7 +125,6 @@
 }
 .textLinkCenter { padding-right: 0; }
 .textLinkCenter::after { display: none; }
-.textLink::after { content: "→"; position: absolute; right: 0; top: 0; color: var(--gold-500); }
 
 /* ── Lineup stat ─────────────────────────────── */
 .lineupStat {
@@ -328,6 +327,7 @@
   color: var(--ink-900);
   font-weight: 600;
   display: -webkit-box;
+  line-clamp: 1;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -529,18 +529,24 @@
 
 /* ── Movie detail ────────────────────────────── */
 .movieHeroGrid {
-  display: grid;
-  grid-template-columns: 280px 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 40px;
   align-items: start;
 }
 .moviePosterCard {
+  flex: 0 0 280px;
+  width: 280px;
   border-radius: 14px;
   aspect-ratio: 212 / 300;
   background-size: cover;
   background-position: center;
   box-shadow: 0 24px 56px rgba(6,13,31,0.35);
   border: 1px solid rgba(200,164,91,0.2);
+}
+.movieHeroGrid > div:last-child {
+  flex: 1 1 320px;
+  min-width: 0;
 }
 .movieDetailGenre { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 8px; }
 .movieDetailTitle { font-size: 36px; letter-spacing: 0.1em; margin: 0 0 16px; line-height: 1.2; }
@@ -578,8 +584,12 @@
 @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
 /* ── Responsive ──────────────────────────────── */
-@media (max-width: 960px) {
-  .movieHeroGrid { grid-template-columns: 1fr; }
+@media (max-width: 700px) {
+  .moviePosterCard {
+    flex-basis: 100%;
+    width: 100%;
+    max-width: none;
+  }
 }
 @media (max-width: 640px) {
   .filmGridMovies { grid-template-columns: repeat(2, 1fr); gap: 14px; }
