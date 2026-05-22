@@ -16,7 +16,6 @@
 | `bookings`              | 予約（購入）                      |
 | `booking_seats`         | 予約座席明細                      |
 | `seat_move_requests`    | 隣席リクエスト                    |
-| `point_transactions`    | ポイント履歴                      |
 | `user_favorites`        | 推しクリエイター登録              |
 | `notification_settings` | 通知設定                          |
 | `news`                  | お知らせ・キャンペーン            |
@@ -35,7 +34,6 @@
 | `password_hash`  | VARCHAR(255)            | NOT NULL                     |                             |
 | `name`           | VARCHAR(100)            | NOT NULL                     |                             |
 | `tier`           | ENUM('standard','gold') | NOT NULL, DEFAULT 'standard' | 会員ランク                  |
-| `points_balance` | INT                     | NOT NULL, DEFAULT 0          | 現在のポイント残高          |
 | `visit_count`    | INT                     | NOT NULL, DEFAULT 0          | 来場回数                    |
 | `created_at`     | DATETIME                | NOT NULL                     |                             |
 | `updated_at`     | DATETIME                | NOT NULL                     |                             |
@@ -157,9 +155,7 @@
 | `screening_id`   | BIGINT                                 | FK → screenings.id, NOT NULL  |                  |
 | `booking_number` | VARCHAR(30)                            | UNIQUE, NOT NULL              | QRコード用番号   |
 | `total_amount`   | INT                                    | NOT NULL                      | 合計金額 (円)    |
-| `points_earned`  | INT                                    | NOT NULL, DEFAULT 0           | 今回獲得ポイント |
-| `points_used`    | INT                                    | NOT NULL, DEFAULT 0           | 今回使用ポイント |
-| `payment_method` | ENUM('credit_card','qr','points')      | NOT NULL                      |                  |
+| `payment_method` | ENUM('credit_card','qr')               | NOT NULL                      |                  |
 | `payment_status` | ENUM('pending','completed','refunded') | NOT NULL, DEFAULT 'pending'   |                  |
 | `status`         | ENUM('confirmed','cancelled')          | NOT NULL, DEFAULT 'confirmed' |                  |
 | `created_at`     | DATETIME                               | NOT NULL                      |                  |
@@ -187,29 +183,13 @@
 | `requester_booking_seat_id` | BIGINT                                          | FK → booking_seats.id, NOT NULL | リクエスト者の現在の席     |
 | `target_booking_seat_id`    | BIGINT                                          | FK → booking_seats.id, NOT NULL | 移動希望先の席             |
 | `fee`                       | INT                                             | NOT NULL, DEFAULT 100           | リクエスト料金 (+¥100)     |
-| `cashback_amount`           | INT                                             | NOT NULL                        | 承認者へのキャッシュバック |
 | `status`                    | ENUM('pending','approved','declined','expired') | NOT NULL, DEFAULT 'pending'     |                            |
 | `requested_at`              | DATETIME                                        | NOT NULL                        |                            |
 | `responded_at`              | DATETIME                                        |                                 | 承認/拒否の日時            |
 
 ---
 
-### 13. `point_transactions` — ポイント履歴
-
-| カラム名               | 型                                                    | 制約                       | 説明                        |
-| ---------------------- | ----------------------------------------------------- | -------------------------- | --------------------------- |
-| `id`                   | BIGINT                                                | PK, AUTO_INCREMENT         |                             |
-| `user_id`              | BIGINT                                                | FK → users.id, NOT NULL    |                             |
-| `booking_id`           | BIGINT                                                | FK → bookings.id           | 関連予約 (NULL可)           |
-| `seat_move_request_id` | BIGINT                                                | FK → seat_move_requests.id | 隣席リクエスト関連 (NULL可) |
-| `type`                 | ENUM('earned','spent','expired','seat_move_cashback') | NOT NULL                   |                             |
-| `amount`               | INT                                                   | NOT NULL                   | 正: 獲得 / 負: 使用         |
-| `description`          | VARCHAR(200)                                          |                            | 摘要                        |
-| `created_at`           | DATETIME                                              | NOT NULL                   |                             |
-
----
-
-### 14. `user_favorites` — 推しクリエイター登録
+### 13. `user_favorites` — 推しクリエイター登録
 
 | カラム名     | 型                    | 制約                       | 説明 |
 | ------------ | --------------------- | -------------------------- | ---- |
@@ -221,7 +201,7 @@
 
 ---
 
-### 15. `notification_settings` — 通知設定
+### 14. `notification_settings` — 通知設定
 
 | カラム名                  | 型       | 制約                   | 説明               |
 | ------------------------- | -------- | ---------------------- | ------------------ |
@@ -237,7 +217,7 @@
 
 ---
 
-### 16. `news` — お知らせ・キャンペーン
+### 15. `news` — お知らせ・キャンペーン
 
 | カラム名        | 型                                      | 制約                    | 説明                               |
 | --------------- | --------------------------------------- | ----------------------- | ---------------------------------- |
@@ -260,8 +240,7 @@ users ──── bookings ──── booking_seats ──── seats ──
   │                              └──────── screens
   │
   ├── user_favorites ──── creators ──── movie_creators ──── movies
-  ├── notification_settings
-  └── point_transactions
+  └── notification_settings
 
 booking_seats ←── seat_move_requests ──→ booking_seats
 ```
@@ -274,6 +253,5 @@ booking_seats ←── seat_move_requests ──→ booking_seats
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **隣席リクエスト** | `seat_move_requests` を独立テーブルに。リクエスト元・対象ともに `booking_seats.id` で参照し、誰がどの席を狙っているか追跡可能                           |
 | **プレミアム料金** | `ticket_types.base_price` + 席種別の加算は `booking_seats.unit_price` に実額を保存。価格改定後も履歴が正確に残る                                        |
-| **ポイント**       | `point_transactions` で全増減を記録し、`users.points_balance` はその集計値。不整合防止のためトランザクション更新が必要                                  |
 | **推し通知**       | `creators` テーブルで監督・俳優を管理し、`movie_creators` で紐付け。`user_favorites` と組み合わせて上映スケジュール追加時に通知対象ユーザーを特定できる |
 | **座席の一意性**   | `booking_seats` に `(booking_id, seat_id)` のUNIQUE制約。さらに同じ `screening_id` での二重予約はアプリ層または複合UNIQUE制約で防ぐ必要あり             |
