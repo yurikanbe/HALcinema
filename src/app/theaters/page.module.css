@@ -87,12 +87,12 @@
 .theaterChapterBody { max-width: 1180px; margin: 0 auto; padding: 52px 20px 72px; }
 .theaterChapterDescRow {
   display: grid; grid-template-columns: 1fr auto; gap: 40px;
-  align-items: start; margin-bottom: 48px; padding-bottom: 40px;
+  align-items: flex-start; margin-bottom: 48px; padding-bottom: 40px;
   border-bottom: 1px solid rgba(200, 164, 91, 0.14);
 }
 .theaterChapterDesc { font-size: 15px; line-height: 2.0; color: #2b3d5f; margin: 0; }
 .theaterChapterStats { display: grid; grid-template-columns: repeat(3, auto); gap: 12px; flex-shrink: 0; }
-.theaterChapterCols { display: grid; grid-template-columns: 1fr 320px; gap: 44px; align-items: start; }
+.theaterChapterCols { display: grid; grid-template-columns: 1fr 320px; gap: 44px; align-items: flex-start; }
 .theaterChapterSubhead { margin-bottom: 20px; }
 
 .theaterSchedCard {

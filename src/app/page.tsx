@@ -70,7 +70,7 @@ export default function HomePage() {
             <div className={shared.sectionHint}>Now Showing</div>
             <h2 className={shared.sectionTitle}>上映中の注目作</h2>
           </div>
-          <Link className={shared.textLink} href="/movies">すべて見る</Link>
+          <Link className={shared.textLink} href="/movies">すべて見る →</Link>
         </div>
         <Carousel3D movies={carouselMovies} itemCount={18} hasInfoPanel={true} />
       </section>
@@ -82,7 +82,7 @@ export default function HomePage() {
             <div className={shared.sectionHint}>Theater Experience</div>
             <h2 className={shared.sectionTitle}>劇場紹介</h2>
           </div>
-          <Link className={shared.textLink} href="/theaters">シアター詳細を見る</Link>
+          <Link className={shared.textLink} href="/theaters">シアター詳細を見る →</Link>
         </div>
         <div className={s.theaterShowcase}>
           <div className={s.lobbyShowcase}>
@@ -90,29 +90,59 @@ export default function HomePage() {
               <img className={s.lobbyImg} src="/images/lobby.png" alt="HAL CINEMAのロビー" />
             </div>
             <div className={s.lobbyContent}>
-              <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所。</p>
+              <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所</p>
               <p className={s.lobbyText}>
-                光のグラデーションと柔らかな素材感で、映画への没入を静かに支えます。
+                3つのコンセプト空間が、それぞれ異なる余韻を演出。<br />
               </p>
               <div className={s.lobbyMeta}>
-                <span>Bar & Lounge</span>
-                <span>Quiet Lighting</span>
-                <span>Art Installations</span>
+                <span>Open 10:00 - 24:00</span>
+                <span>Parking 120</span>
+                <span>Lobby Cafe</span>
+                <span>Free Wi-Fi</span>
               </div>
-            </div>
-          </div>
-          <div className={s.theaterHighlights}>
-            <div className={s.theaterHighlight}>
-              <span className={s.theaterHighlightLabel}>Sound</span>
-              <span className={s.theaterHighlightValue}>Immersive Audio</span>
-            </div>
-            <div className={s.theaterHighlight}>
-              <span className={s.theaterHighlightLabel}>Screen</span>
-              <span className={s.theaterHighlightValue}>Premium Laser</span>
-            </div>
-            <div className={s.theaterHighlight}>
-              <span className={s.theaterHighlightLabel}>Seat</span>
-              <span className={s.theaterHighlightValue}>Deep Comfort</span>
+              <div className={s.lobbyPayment}>
+                <div className={s.lobbyPaymentHead}>
+                  <span className={s.lobbyPaymentEyebrow}>Payment</span>
+                  <span className={s.lobbyPaymentNote}>キャッシュレス対応</span>
+                </div>
+                <div className={s.lobbyPaymentList}>
+                  <span className={s.lobbyPaymentBadge}>Visa</span>
+                  <span className={s.lobbyPaymentBadge}>Mastercard</span>
+                  <span className={s.lobbyPaymentBadge}>JCB</span>
+                  <span className={s.lobbyPaymentBadge}>Amex</span>
+                  <span className={s.lobbyPaymentBadge}>交通系IC</span>
+                  <span className={s.lobbyPaymentBadge}>iD</span>
+                  <span className={s.lobbyPaymentBadge}>QUICPay</span>
+                </div>
+              </div>
+              <div className={s.lobbyAccess}>
+                <div className={s.lobbyAccessHead}>
+                  <span className={s.lobbyAccessEyebrow}>Access</span>
+                  <h3 className={s.lobbyAccessTitle}>交通アクセス</h3>
+                </div>
+                <ul className={s.lobbyAccessList}>
+                  <li className={s.lobbyAccessItem}>
+                    <span className={s.lobbyAccessBadge}>Airport</span>
+                    <span className={s.lobbyAccessRoute}>中部国際空港（セントレア）</span>
+                    <span className={s.lobbyAccessArrow}>→</span>
+                    <span className={s.lobbyAccessRoute}>名鉄名古屋駅</span>
+                    <span className={s.lobbyAccessTime}>ミュースカイ 28分</span>
+                  </li>
+                  <li className={s.lobbyAccessItem}>
+                    <span className={s.lobbyAccessBadge}>Airport</span>
+                    <span className={s.lobbyAccessRoute}>名古屋空港</span>
+                    <span className={s.lobbyAccessArrow}>→</span>
+                    <span className={s.lobbyAccessRoute}>名古屋駅前</span>
+                    <span className={s.lobbyAccessTime}>高速バス 25分</span>
+                  </li>
+                  <li className={s.lobbyAccessItem}>
+                    <span className={s.lobbyAccessBadge}>Station</span>
+                    <span className={s.lobbyAccessRoute}>名古屋駅前</span>
+                    <span className={s.lobbyAccessTime}>徒歩 3分</span>
+                    <span className={s.lobbyAccessNote}>JR・地下鉄・名鉄・近鉄から地下街が直結。</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <div className={s.theaterCards}>
@@ -130,7 +160,6 @@ export default function HomePage() {
                 <div className={shared.theaterCardMeta}>70 seats × 3</div>
               </Link>
             </div>
-            <p className={s.theaterNote}>3つのコンセプト空間が、それぞれ異なる余韻を演出します。</p>
           </div>
         </div>
       </section>

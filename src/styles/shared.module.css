@@ -216,7 +216,7 @@
 .theaterCard {
   position: relative;
   min-height: 220px;
-  border-radius: 22px;
+  border-radius: 12px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -532,7 +532,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
-  align-items: start;
+  align-items: flex-start;
 }
 .moviePosterCard {
   flex: 0 0 280px;
