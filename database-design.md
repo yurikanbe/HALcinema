@@ -26,17 +26,17 @@
 
 ### 1. `users` — 会員
 
-| カラム名         | 型                      | 制約                         | 説明                        |
-| ---------------- | ----------------------- | ---------------------------- | --------------------------- |
-| `id`             | BIGINT                  | PK, AUTO_INCREMENT           |                             |
-| `member_id`      | VARCHAR(20)             | UNIQUE, NOT NULL             | 表示用ID (例: HAL-2024-001) |
-| `email`          | VARCHAR(255)            | UNIQUE, NOT NULL             |                             |
-| `password_hash`  | VARCHAR(255)            | NOT NULL                     |                             |
-| `name`           | VARCHAR(100)            | NOT NULL                     |                             |
-| `tier`           | ENUM('standard','gold') | NOT NULL, DEFAULT 'standard' | 会員ランク                  |
-| `visit_count`    | INT                     | NOT NULL, DEFAULT 0          | 来場回数                    |
-| `created_at`     | DATETIME                | NOT NULL                     |                             |
-| `updated_at`     | DATETIME                | NOT NULL                     |                             |
+| カラム名        | 型                      | 制約                         | 説明                        |
+| --------------- | ----------------------- | ---------------------------- | --------------------------- |
+| `id`            | BIGINT                  | PK, AUTO_INCREMENT           |                             |
+| `member_id`     | VARCHAR(20)             | UNIQUE, NOT NULL             | 表示用ID (例: HAL-2024-001) |
+| `email`         | VARCHAR(255)            | UNIQUE, NOT NULL             |                             |
+| `password_hash` | VARCHAR(255)            | NOT NULL                     |                             |
+| `name`          | VARCHAR(100)            | NOT NULL                     |                             |
+| `tier`          | ENUM('standard','gold') | NOT NULL, DEFAULT 'standard' | 会員ランク                  |
+| `visit_count`   | INT                     | NOT NULL, DEFAULT 0          | 来場回数                    |
+| `created_at`    | DATETIME                | NOT NULL                     |                             |
+| `updated_at`    | DATETIME                | NOT NULL                     |                             |
 
 ---
 
@@ -53,7 +53,7 @@
 | `description`      | TEXT         |                        | あらすじ                          |
 | `poster_image_url` | VARCHAR(500) |                        | ポスター画像URL                   |
 | `is_active`        | BOOLEAN      | NOT NULL, DEFAULT TRUE | 公開中フラグ                      |
-| `release_date`     | DATE         |                        |                                   |
+| `release_date`     | DATE         |                        | 映画公開日                        |
 | `created_at`       | DATETIME     | NOT NULL               |                                   |
 
 ---
@@ -148,17 +148,17 @@
 
 ### 10. `bookings` — 予約（購入）
 
-| カラム名         | 型                                     | 制約                          | 説明             |
-| ---------------- | -------------------------------------- | ----------------------------- | ---------------- |
-| `id`             | BIGINT                                 | PK, AUTO_INCREMENT            |                  |
-| `user_id`        | BIGINT                                 | FK → users.id, NOT NULL       |                  |
-| `screening_id`   | BIGINT                                 | FK → screenings.id, NOT NULL  |                  |
-| `booking_number` | VARCHAR(30)                            | UNIQUE, NOT NULL              | QRコード用番号   |
-| `total_amount`   | INT                                    | NOT NULL                      | 合計金額 (円)    |
-| `payment_method` | ENUM('credit_card','qr')               | NOT NULL                      |                  |
-| `payment_status` | ENUM('pending','completed','refunded') | NOT NULL, DEFAULT 'pending'   |                  |
-| `status`         | ENUM('confirmed','cancelled')          | NOT NULL, DEFAULT 'confirmed' |                  |
-| `created_at`     | DATETIME                               | NOT NULL                      |                  |
+| カラム名         | 型                                     | 制約                          | 説明           |
+| ---------------- | -------------------------------------- | ----------------------------- | -------------- |
+| `id`             | BIGINT                                 | PK, AUTO_INCREMENT            |                |
+| `user_id`        | BIGINT                                 | FK → users.id, NOT NULL       |                |
+| `screening_id`   | BIGINT                                 | FK → screenings.id, NOT NULL  |                |
+| `booking_number` | VARCHAR(30)                            | UNIQUE, NOT NULL              | QRコード用番号 |
+| `total_amount`   | INT                                    | NOT NULL                      | 合計金額 (円)  |
+| `payment_method` | ENUM('credit_card','qr')               | NOT NULL                      |                |
+| `payment_status` | ENUM('pending','completed','refunded') | NOT NULL, DEFAULT 'pending'   |                |
+| `status`         | ENUM('confirmed','cancelled')          | NOT NULL, DEFAULT 'confirmed' |                |
+| `created_at`     | DATETIME                               | NOT NULL                      |                |
 
 ---
 
@@ -177,15 +177,15 @@
 
 ### 12. `seat_move_requests` — 隣席リクエスト
 
-| カラム名                    | 型                                              | 制約                            | 説明                       |
-| --------------------------- | ----------------------------------------------- | ------------------------------- | -------------------------- |
-| `id`                        | BIGINT                                          | PK, AUTO_INCREMENT              |                            |
-| `requester_booking_seat_id` | BIGINT                                          | FK → booking_seats.id, NOT NULL | リクエスト者の現在の席     |
-| `target_booking_seat_id`    | BIGINT                                          | FK → booking_seats.id, NOT NULL | 移動希望先の席             |
-| `fee`                       | INT                                             | NOT NULL, DEFAULT 100           | リクエスト料金 (+¥100)     |
-| `status`                    | ENUM('pending','approved','declined','expired') | NOT NULL, DEFAULT 'pending'     |                            |
-| `requested_at`              | DATETIME                                        | NOT NULL                        |                            |
-| `responded_at`              | DATETIME                                        |                                 | 承認/拒否の日時            |
+| カラム名                    | 型                                              | 制約                            | 説明                   |
+| --------------------------- | ----------------------------------------------- | ------------------------------- | ---------------------- |
+| `id`                        | BIGINT                                          | PK, AUTO_INCREMENT              |                        |
+| `requester_booking_seat_id` | BIGINT                                          | FK → booking_seats.id, NOT NULL | リクエスト者の現在の席 |
+| `target_booking_seat_id`    | BIGINT                                          | FK → booking_seats.id, NOT NULL | 移動希望先の席         |
+| `fee`                       | INT                                             | NOT NULL, DEFAULT 100           | リクエスト料金 (+¥100) |
+| `status`                    | ENUM('pending','approved','declined','expired') | NOT NULL, DEFAULT 'pending'     |                        |
+| `requested_at`              | DATETIME                                        | NOT NULL                        |                        |
+| `responded_at`              | DATETIME                                        |                                 | 承認/拒否の日時        |
 
 ---
 
