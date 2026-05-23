@@ -193,9 +193,10 @@
 .featureTile {
   border-radius: 18px;
   padding: 22px 24px;
-  background: linear-gradient(160deg, #ffffff, #f4f7fb);
+  background: #fff4;
   border: 1px solid rgba(200, 164, 91, 0.16);
   box-shadow: var(--soft-shadow);
+  backdrop-filter: blur(2px);
 }
 .featureTileBadge {
   font-size: 10px;

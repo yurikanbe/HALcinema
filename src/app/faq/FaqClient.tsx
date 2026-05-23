@@ -235,22 +235,16 @@ export default function FaqClient() {
             <div className={shared.featureTileBadge}>Hours</div>
             <h3 className={shared.featureTileTitle}>受付時間</h3>
             <p className={shared.featureTileDesc}>
-              平日 10:00〜20:00
+              平日 10:00〜20:00 / 土日祝 10:00〜18:00
               <br />
-              土日祝 10:00〜18:00
-              <br />
-              年末年始を除く
+              ※ 年末年始を除く
             </p>
           </div>
           <div className={shared.featureTile}>
             <div className={shared.featureTileBadge}>Response</div>
             <h3 className={shared.featureTileTitle}>回答目安</h3>
             <p className={shared.featureTileDesc}>
-              お問い合わせ受領後
-              <br />
-              2〜3営業日以内に
-              <br />
-              ご返信いたします
+              お問い合わせ受領後2〜3営業日以内にご返信いたします
             </p>
           </div>
         </div>
