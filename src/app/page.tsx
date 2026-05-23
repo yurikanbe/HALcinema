@@ -90,10 +90,13 @@ export default function HomePage() {
               <img className={s.lobbyImg} src="/images/lobby.png" alt="HAL CINEMAのロビー" />
             </div>
             <div className={s.lobbyContent}>
-              <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所</p>
-              <p className={s.lobbyText}>
-                3つのコンセプト空間が、それぞれ異なる余韻を演出。<br />
-              </p>
+              <div className={s.lobbyHead}>
+                <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所</p>
+                <p className={s.lobbyText}>
+                  3つのコンセプト空間が、それぞれ異なる余韻を演出。
+                </p>
+              </div>
+              
               <div className={s.lobbyMeta}>
                 <span>Open 10:00 - 24:00</span>
                 <span>Parking 120</span>
@@ -113,6 +116,8 @@ export default function HomePage() {
                   <span className={s.lobbyPaymentBadge}>交通系IC</span>
                   <span className={s.lobbyPaymentBadge}>iD</span>
                   <span className={s.lobbyPaymentBadge}>QUICPay</span>
+                  <span className={s.lobbyPaymentBadge}>PayPay</span>
+                  <span className={s.lobbyPaymentBadge}>LINE Pay</span>
                 </div>
               </div>
               <div className={s.lobbyAccess}>

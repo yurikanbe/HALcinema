@@ -9,7 +9,7 @@ const CATEGORIES = [
   { id: 'ticket', label: 'チケット・予約' },
   { id: 'seat', label: '座席・シアター' },
   { id: 'payment', label: 'お支払い' },
-  { id: 'member', label: '会員・ポイント' },
+  { id: 'member', label: '会員' },
   { id: 'other', label: 'その他' },
 ];
 
@@ -117,17 +117,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     id: 'member-1',
-    category: 'member',
-    question: 'ポイントの有効期限はありますか？',
-    answer: (
-      <>
-        ポイントは最後のご利用から2年間有効です。2年間一度もご利用がない場合は失効しますので、定期的なご来場をおすすめします。
-        ポイント残高と有効期限はマイページでご確認いただけます。
-      </>
-    ),
-  },
-  {
-    id: 'member-2',
     category: 'member',
     question: '会員ランクはどう決まりますか？',
     answer: (
@@ -308,7 +297,7 @@ export default function FaqClient() {
                   <option>チケット・予約について</option>
                   <option>座席・シアターについて</option>
                   <option>お支払いについて</option>
-                  <option>会員・ポイントについて</option>
+                  <option>会員について</option>
                   <option>施設・設備について</option>
                   <option>その他</option>
                 </select>
