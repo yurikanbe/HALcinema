@@ -542,7 +542,6 @@
   background-size: cover;
   background-position: center;
   box-shadow: 0 24px 56px rgba(6,13,31,0.35);
-  border: 1px solid rgba(200,164,91,0.2);
 }
 .movieHeroGrid > div:last-child {
   flex: 1 1 320px;

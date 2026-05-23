@@ -632,92 +632,92 @@ body::after {
 
 .item.a {
   transform: rotateY(0deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.b {
   transform: rotateY(20deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.c {
   transform: rotateY(40deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 .item.d {
   transform: rotateY(60deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 .item.e {
   transform: rotateY(80deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 .item.f {
   transform: rotateY(100deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.g {
   transform: rotateY(120deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.h {
   transform: rotateY(140deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 .item.i {
   transform: rotateY(160deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 .item.j {
   transform: rotateY(180deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 .item.k {
   transform: rotateY(200deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.l {
   transform: rotateY(220deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.m {
   transform: rotateY(240deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 .item.n {
   transform: rotateY(260deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 .item.o {
   transform: rotateY(280deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 .item.p {
   transform: rotateY(300deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.q {
   transform: rotateY(320deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.r {
   transform: rotateY(340deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 /* Movies page carousel – 22 items */
@@ -740,112 +740,112 @@ body::after {
 
 #top-carousel .item.a {
   transform: rotateY(0deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.b {
   transform: rotateY(16.36deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.c {
   transform: rotateY(32.73deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.d {
   transform: rotateY(49.09deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.e {
   transform: rotateY(65.45deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.f {
   transform: rotateY(81.82deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.g {
   transform: rotateY(98.18deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.h {
   transform: rotateY(114.55deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.i {
   transform: rotateY(130.91deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.j {
   transform: rotateY(147.27deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.k {
   transform: rotateY(163.64deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.l {
   transform: rotateY(180deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.m {
   transform: rotateY(196.36deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.n {
   transform: rotateY(212.73deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.o {
   transform: rotateY(229.09deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.p {
   transform: rotateY(245.45deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.q {
   transform: rotateY(261.82deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.r {
   transform: rotateY(278.18deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb3.jpg");
+  background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.s {
   transform: rotateY(294.55deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb4.jpg");
+  background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.t {
   transform: rotateY(310.91deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb5.jpg");
+  background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.u {
   transform: rotateY(327.27deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb1.jpg");
+  background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.v {
   transform: rotateY(343.64deg) translateZ(var(--carousel-depth));
-  background-image: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42)), url("/images/thumbnail/thumb2.jpg");
+  background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .next {
@@ -911,7 +911,7 @@ body::after {
   display: flex;
   flex-direction: column;
   background: #ffffff25;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .carousel-inner.container-row>.carousel-info .card {
@@ -941,7 +941,7 @@ body::after {
 
 .card__title {
   font-size: 26px;
-  margin: 0 0 0.5rem 0;
+  margin: 1rem 0 1rem 0;
   overflow: hidden;
   display: -webkit-box;
   line-clamp: 1;

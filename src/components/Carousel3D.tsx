@@ -65,7 +65,7 @@ export default function Carousel3D({ movies, itemCount = 18, hasInfoPanel = fals
 
         const m = movieData[index];
         if (m?.poster) {
-          item.style.backgroundImage    = `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.38)), url('${m.poster}')`;
+          item.style.backgroundImage    = `url('${m.poster}')`;
           item.style.backgroundSize     = 'cover';
           item.style.backgroundPosition = 'center';
         }

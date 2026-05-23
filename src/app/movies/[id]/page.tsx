@@ -41,7 +41,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
   }
 
   const posterStyle: React.CSSProperties = movie.colors
-    ? { background: `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.32)), url('${movie.poster}') center/cover no-repeat` }
+    ? { background: `url('${movie.poster}') center/cover no-repeat` }
     : { backgroundImage: `linear-gradient(160deg,#0a2060,#1a4a8a)` };
 
   return (

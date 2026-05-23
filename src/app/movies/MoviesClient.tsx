@@ -86,7 +86,6 @@ export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }
           {comingSoon.map(m => (
             <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
               <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
-                <div className={shared.filmCardPosterOverlay}></div>
                 <div className={shared.filmCardBadge}>{m.category}</div>
               </div>
               <div className={shared.filmCardBody}>
