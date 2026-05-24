@@ -542,8 +542,8 @@ body::after {
   width: 100%;
   padding: 34px 0 22px;
   --carousel-depth: 348px;
-  --carousel-item-width: 112px;
-  --carousel-item-half: 56px;
+  --carousel-item-width: 267px;
+  --carousel-item-half: 133.5px;
 }
 
 .carousel-inner.container-row {
@@ -619,7 +619,7 @@ body::after {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   transform-origin: center center;
   margin-left: calc(-1 * var(--carousel-item-half));
-  margin-top: -78px;
+  margin-top: -189px;
   backface-visibility: hidden;
   transition: opacity 0.35s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
@@ -631,92 +631,92 @@ body::after {
 }
 
 .item.a {
-  transform: rotateY(0deg) translateZ(var(--carousel-depth));
+  transform: rotateY(0deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.b {
-  transform: rotateY(20deg) translateZ(var(--carousel-depth));
+  transform: rotateY(20deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.c {
-  transform: rotateY(40deg) translateZ(var(--carousel-depth));
+  transform: rotateY(40deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 .item.d {
-  transform: rotateY(60deg) translateZ(var(--carousel-depth));
+  transform: rotateY(60deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 .item.e {
-  transform: rotateY(80deg) translateZ(var(--carousel-depth));
+  transform: rotateY(80deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 .item.f {
-  transform: rotateY(100deg) translateZ(var(--carousel-depth));
+  transform: rotateY(100deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.g {
-  transform: rotateY(120deg) translateZ(var(--carousel-depth));
+  transform: rotateY(120deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.h {
-  transform: rotateY(140deg) translateZ(var(--carousel-depth));
+  transform: rotateY(140deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 .item.i {
-  transform: rotateY(160deg) translateZ(var(--carousel-depth));
+  transform: rotateY(160deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 .item.j {
-  transform: rotateY(180deg) translateZ(var(--carousel-depth));
+  transform: rotateY(180deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 .item.k {
-  transform: rotateY(200deg) translateZ(var(--carousel-depth));
+  transform: rotateY(200deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.l {
-  transform: rotateY(220deg) translateZ(var(--carousel-depth));
+  transform: rotateY(220deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.m {
-  transform: rotateY(240deg) translateZ(var(--carousel-depth));
+  transform: rotateY(240deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 .item.n {
-  transform: rotateY(260deg) translateZ(var(--carousel-depth));
+  transform: rotateY(260deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 .item.o {
-  transform: rotateY(280deg) translateZ(var(--carousel-depth));
+  transform: rotateY(280deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 .item.p {
-  transform: rotateY(300deg) translateZ(var(--carousel-depth));
+  transform: rotateY(300deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 .item.q {
-  transform: rotateY(320deg) translateZ(var(--carousel-depth));
+  transform: rotateY(320deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 .item.r {
-  transform: rotateY(340deg) translateZ(var(--carousel-depth));
+  transform: rotateY(340deg) translateZ(var(--carousel-depth)) scale(0.42);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
@@ -724,8 +724,8 @@ body::after {
 #top-carousel .carousel-wrapper {
   padding: 8.2rem 0 7rem 0;
   --carousel-depth: 360px;
-  --carousel-item-width: 92px;
-  --carousel-item-half: 46px;
+  --carousel-item-width: 219px;
+  --carousel-item-half: 109.5px;
 }
 
 #top-carousel .container {
@@ -735,116 +735,116 @@ body::after {
 }
 
 #top-carousel .item {
-  margin-top: -70px;
+  margin-top: -155px;
 }
 
 #top-carousel .item.a {
-  transform: rotateY(0deg) translateZ(var(--carousel-depth));
+  transform: rotateY(0deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.b {
-  transform: rotateY(16.36deg) translateZ(var(--carousel-depth));
+  transform: rotateY(16.36deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.c {
-  transform: rotateY(32.73deg) translateZ(var(--carousel-depth));
+  transform: rotateY(32.73deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.d {
-  transform: rotateY(49.09deg) translateZ(var(--carousel-depth));
+  transform: rotateY(49.09deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.e {
-  transform: rotateY(65.45deg) translateZ(var(--carousel-depth));
+  transform: rotateY(65.45deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.f {
-  transform: rotateY(81.82deg) translateZ(var(--carousel-depth));
+  transform: rotateY(81.82deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.g {
-  transform: rotateY(98.18deg) translateZ(var(--carousel-depth));
+  transform: rotateY(98.18deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.h {
-  transform: rotateY(114.55deg) translateZ(var(--carousel-depth));
+  transform: rotateY(114.55deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.i {
-  transform: rotateY(130.91deg) translateZ(var(--carousel-depth));
+  transform: rotateY(130.91deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.j {
-  transform: rotateY(147.27deg) translateZ(var(--carousel-depth));
+  transform: rotateY(147.27deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.k {
-  transform: rotateY(163.64deg) translateZ(var(--carousel-depth));
+  transform: rotateY(163.64deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.l {
-  transform: rotateY(180deg) translateZ(var(--carousel-depth));
+  transform: rotateY(180deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.m {
-  transform: rotateY(196.36deg) translateZ(var(--carousel-depth));
+  transform: rotateY(196.36deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.n {
-  transform: rotateY(212.73deg) translateZ(var(--carousel-depth));
+  transform: rotateY(212.73deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.o {
-  transform: rotateY(229.09deg) translateZ(var(--carousel-depth));
+  transform: rotateY(229.09deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.p {
-  transform: rotateY(245.45deg) translateZ(var(--carousel-depth));
+  transform: rotateY(245.45deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.q {
-  transform: rotateY(261.82deg) translateZ(var(--carousel-depth));
+  transform: rotateY(261.82deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
 #top-carousel .item.r {
-  transform: rotateY(278.18deg) translateZ(var(--carousel-depth));
+  transform: rotateY(278.18deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb3.jpg");
 }
 
 #top-carousel .item.s {
-  transform: rotateY(294.55deg) translateZ(var(--carousel-depth));
+  transform: rotateY(294.55deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb4.jpg");
 }
 
 #top-carousel .item.t {
-  transform: rotateY(310.91deg) translateZ(var(--carousel-depth));
+  transform: rotateY(310.91deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb5.jpg");
 }
 
 #top-carousel .item.u {
-  transform: rotateY(327.27deg) translateZ(var(--carousel-depth));
+  transform: rotateY(327.27deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb1.jpg");
 }
 
 #top-carousel .item.v {
-  transform: rotateY(343.64deg) translateZ(var(--carousel-depth));
+  transform: rotateY(343.64deg) translateZ(var(--carousel-depth)) scale(0.419);
   background-image: url("/images/thumbnail/thumb2.jpg");
 }
 
