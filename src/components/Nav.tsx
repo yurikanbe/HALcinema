@@ -36,7 +36,7 @@ export default function Nav() {
           ))}
         </nav>
         <div className={styles.navCta}>
-          <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid}`}>今すぐ予約する</Link>
+          <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid}`}>チケット購入について</Link>
         </div>
       </div>
     </header>

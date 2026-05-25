@@ -32,13 +32,25 @@ const HERO_CLASS: Record<string, string> = {
   abyss:  s.theaterChapterHeroAbyss,
   cyber:  s.theaterChapterHeroCyber,
 };
+const HERO_IMG: Record<string, { src: string; caption: string }> = {
+  starry: { src: '/images/starry/starry1.png', caption: 'Starry Theater' },
+  abyss:  { src: '/images/abyss/abyss1.png',  caption: 'Abyss Theater' },
+  cyber:  { src: '/images/cyber/cyber1.png',   caption: 'Cyber Theater' },
+};
 
 export default function TheatersPage() {
-  const [lb, setLb] = useState<{ theater: string; index: number } | null>(null);
+  const [lb, setLb] = useState<{ images: { src: string; caption: string }[]; index: number } | null>(null);
+  const [showBackTop, setShowBackTop] = useState(false);
   const chaptersRef = useRef<HTMLElement[]>([]);
   const [activeId, setActiveId] = useState('starry');
 
   useEffect(() => { document.title = 'HAL CINEMA | シアター'; }, []);
+
+  useEffect(() => {
+    const onScroll = () => setShowBackTop(window.scrollY > 300);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const elements = chaptersRef.current.filter(Boolean);
@@ -63,20 +75,19 @@ export default function TheatersPage() {
 
   useEffect(() => {
     if (!lb) return;
-    const theater = theaters.find(t => t.id === lb.theater);
-    if (!theater) return;
+    const len = lb.images.length;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setLb(null);
-      if (e.key === 'ArrowLeft')  setLb(p => p ? { ...p, index: (p.index - 1 + theater.gallery.length) % theater.gallery.length } : p);
-      if (e.key === 'ArrowRight') setLb(p => p ? { ...p, index: (p.index + 1) % theater.gallery.length } : p);
+      if (e.key === 'ArrowLeft')  setLb(p => p ? { ...p, index: (p.index - 1 + len) % len } : p);
+      if (e.key === 'ArrowRight') setLb(p => p ? { ...p, index: (p.index + 1) % len } : p);
     };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
   }, [lb]);
 
-  const currentGallery = lb ? theaters.find(t => t.id === lb.theater)?.gallery ?? [] : [];
-  const currentPhoto   = lb ? currentGallery[lb.index] : null;
+  const currentImages = lb?.images ?? [];
+  const currentPhoto  = lb ? currentImages[lb.index] : null;
 
   return (
     <>
@@ -120,8 +131,17 @@ export default function TheatersPage() {
               ref={el => { if (el) chaptersRef.current[ti] = el; }}
             >
               {/* Hero */}
-              <div className={`${s.theaterChapterHero} ${HERO_CLASS[theater.id] ?? ''}`}>
-                <div className={s.theaterChapterHeroContent}>
+              <div
+                className={`${s.theaterChapterHero} ${HERO_CLASS[theater.id] ?? ''} ${s.theaterChapterHeroClickable}`}
+                onClick={() => {
+                  const hero = HERO_IMG[theater.id];
+                  setLb({ images: hero ? [hero, ...theater.gallery] : theater.gallery, index: 0 });
+                }}
+              >
+                <div className={s.theaterHeroZoom} aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+                <div className={s.theaterChapterHeroContent} onClick={e => e.stopPropagation()}>
                   <div className={s.theaterChapterEyebrow}>{theater.name}</div>
                   <h2 className={s.theaterChapterTitle}>{theater.tagline}</h2>
                   <p className={s.theaterChapterTagline}>{theater.concept}</p>
@@ -143,7 +163,7 @@ export default function TheatersPage() {
                     key={pi}
                     className={s.theaterGalleryPhotoItem}
                     style={{ backgroundImage: `url('${photo.src}')` }}
-                    onClick={() => setLb({ theater: theater.id, index: pi })}
+                    onClick={() => setLb({ images: theater.gallery, index: pi })}
                     title="クリックで拡大"
                   />
                 ))}
@@ -268,18 +288,26 @@ export default function TheatersPage() {
           <button className={s.thLbClose} onClick={() => setLb(null)}>×</button>
           <button
             className={s.thLbPrev}
-            onClick={() => setLb(p => p ? { ...p, index: (p.index - 1 + currentGallery.length) % currentGallery.length } : p)}
+            onClick={() => setLb(p => p ? { ...p, index: (p.index - 1 + currentImages.length) % currentImages.length } : p)}
           >&#8249;</button>
           <img className={s.thLbImg} src={currentPhoto.src} alt={currentPhoto.caption} />
           <button
             className={s.thLbNext}
-            onClick={() => setLb(p => p ? { ...p, index: (p.index + 1) % currentGallery.length } : p)}
+            onClick={() => setLb(p => p ? { ...p, index: (p.index + 1) % currentImages.length } : p)}
           >&#8250;</button>
           <div className={s.thLbCaption}>
-            {currentPhoto.caption}&nbsp;&nbsp;{lb.index + 1} / {currentGallery.length}
+            {currentPhoto.caption}&nbsp;&nbsp;{lb.index + 1} / {currentImages.length}
           </div>
         </div>
       )}
+
+      <button
+        className={`${shared.backToTop}${showBackTop ? ' ' + shared.backToTopVisible : ''}`}
+        aria-label="ページトップへ戻る"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
     </>
   );
 }

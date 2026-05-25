@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import BackButton from '@/components/BackButton';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -10,6 +11,9 @@ export const metadata: Metadata = {
 export default function ReservePage() {
   return (
     <section className={`${shared.section} ${s.section}`}>
+      <div className={s.backRow}>
+        <BackButton className={s.backBtn} />
+      </div>
       <div className={s.wrapper}>
         <div className={`${shared.sectionHint} ${s.sectionHintCenter}`}>Online Reservation</div>
         <h1 className={`${shared.sectionTitle} ${s.titleMargin}`}>オンライン予約</h1>

@@ -138,7 +138,7 @@ export default function Carousel3D({ movies, itemCount = 18, hasInfoPanel = fals
             <h3 className="card__title">映画タイトル</h3>
             <p className="card__short">映画の概要がここに表示されます。</p>
             <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '14px' }}>
-              <a className={`${shared.btn} ${shared.btnSolid}`} href="/reserve" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>今すぐ予約</a>
+              <a className={`${shared.btn} ${shared.btnSolid}`} href="/reserve" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>チケット購入について</a>
               <a className={`${shared.btn} ${shared.btnOutline}`} href="/movies" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>詳細を見る</a>
             </div>
           </div>

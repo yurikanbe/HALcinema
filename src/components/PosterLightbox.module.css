@@ -1,0 +1,48 @@
+.posterThumb {
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.posterThumb:hover {
+  box-shadow: 0 32px 72px rgba(6, 13, 31, 0.5);
+  transform: scale(1.02);
+}
+.zoomHint {
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-start; justify-content: flex-end;
+  padding: 12px;
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.zoomHint > svg {
+  background: rgba(4, 10, 24, 0.55);
+  border: 1px solid rgba(200, 164, 91, 0.4);
+  border-radius: 50%;
+  padding: 5px;
+  width: 28px; height: 28px;
+  color: rgba(200, 164, 91, 0.9);
+}
+.posterThumb:hover .zoomHint { opacity: 1; }
+
+.overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(4, 10, 24, 0.92);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+}
+.img {
+  max-width: min(420px, 88vw);
+  max-height: 88vh;
+  border-radius: 14px;
+  object-fit: contain;
+  box-shadow: 0 40px 100px rgba(4, 10, 24, 0.7);
+}
+.close {
+  position: absolute; top: 24px; right: 28px;
+  width: 44px; height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08); color: white;
+  font-size: 22px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease;
+}
+.close:hover { background: rgba(255, 255, 255, 0.16); }

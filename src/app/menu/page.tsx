@@ -160,7 +160,7 @@ export default function MenuPage() {
             <h2 className={shared.sectionTitle}>チケット料金</h2>
           </div>
           <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtnSmall}`}>
-            今すぐ予約する
+            チケット購入について
           </Link>
         </div>
 

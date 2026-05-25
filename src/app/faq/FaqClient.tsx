@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import shared from '@/styles/shared.module.css';
 import styles from './page.module.css';
 
@@ -155,7 +155,23 @@ const FAQ_ITEMS: FaqItem[] = [
 
 export default function FaqClient() {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [openIds, setOpenIds] = useState<Set<string>>(new Set());
+  const [showBackTop, setShowBackTop] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowBackTop(window.scrollY > 300);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  function toggleFaq(id: string) {
+    setOpenIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
   const [formValues, setFormValues] = useState({
     name: '',
     email: '',
@@ -209,16 +225,28 @@ export default function FaqClient() {
         </div>
 
         <div className={styles.faqList}>
-          {filteredItems.map(item => (
-            <details key={item.id} className={styles.faqItem} data-cat={item.category}>
-              <summary className={styles.faqQuestion}>
-                <span className={styles.faqQMark}>Q</span>
-                <span className={styles.faqQuestionText}>{item.question}</span>
-                <span className={styles.faqChevron}>+</span>
-              </summary>
-              <div className={styles.faqAnswer}>{item.answer}</div>
-            </details>
-          ))}
+          {filteredItems.map(item => {
+            const isOpen = openIds.has(item.id);
+            return (
+              <div key={item.id} className={styles.faqItem} data-open={isOpen ? 'true' : undefined} data-cat={item.category}>
+                <button
+                  type="button"
+                  className={styles.faqQuestion}
+                  onClick={() => toggleFaq(item.id)}
+                  aria-expanded={isOpen}
+                >
+                  <span className={styles.faqQMark}>Q</span>
+                  <span className={styles.faqQuestionText}>{item.question}</span>
+                  <span className={styles.faqChevron}>+</span>
+                </button>
+                <div className={styles.faqAnswerWrap}>
+                  <div className={styles.faqAnswerInner}>
+                    <div className={styles.faqAnswer}>{item.answer}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -347,6 +375,14 @@ export default function FaqClient() {
           )}
         </div>
       </section>
+
+      <button
+        className={`${shared.backToTop}${showBackTop ? ' ' + shared.backToTopVisible : ''}`}
+        aria-label="ページトップへ戻る"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
     </>
   );
 }

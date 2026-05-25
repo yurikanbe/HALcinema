@@ -4,6 +4,7 @@ import moviesData   from '@/data/movies.json';
 import schedulesData from '@/data/schedules.json';
 import type { Movie, ScreenSchedule } from '@/types';
 import { notFound } from 'next/navigation';
+import PosterLightbox from '@/components/PosterLightbox';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -52,7 +53,16 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
         </div>
 
         <div className={shared.movieHeroGrid}>
-          <div className={shared.moviePosterCard} style={posterStyle}></div>
+          {movie.poster ? (
+            <PosterLightbox
+              posterUrl={movie.poster}
+              title={movie.title}
+              posterClassName={shared.moviePosterCard}
+              style={posterStyle}
+            />
+          ) : (
+            <div className={shared.moviePosterCard} style={posterStyle} />
+          )}
           <div>
             <div className={shared.movieDetailGenre}>{movie.category}</div>
             <h1 className={shared.movieDetailTitle}>{movie.title}</h1>
@@ -93,7 +103,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
               );
             })()}
             <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtn}`}>
-              劇場窓口で予約する
+              チケット購入について
             </Link>
           </div>
         </div>

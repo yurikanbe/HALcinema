@@ -577,6 +577,24 @@
 .sectionDivider { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 .sectionDivider hr { border: none; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(200, 164, 91, 0.28) 28%, rgba(200, 164, 91, 0.28) 72%, transparent 100%); }
 
+/* ── Back to Top ─────────────────────────────── */
+.backToTop {
+  position: fixed; bottom: 28px; right: 28px; z-index: 50;
+  width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(135deg, #0b2249, #1a4080);
+  border: 1px solid rgba(200, 164, 91, 0.45);
+  color: rgba(200, 164, 91, 0.9);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(14px);
+  transition: all 0.3s ease; pointer-events: none;
+  cursor: pointer;
+}
+.backToTopVisible { opacity: 1; transform: translateY(0); pointer-events: all; }
+.backToTop:hover { box-shadow: 0 2px 28px #001d2e61, 0 -1px 22px #001d2e61; border-color: rgba(200, 164, 91, 0.75); }
+@media (max-width: 480px) {
+  .backToTop { bottom: 18px; right: 18px; width: 44px; height: 44px; }
+}
+
 /* ── Animations ──────────────────────────────── */
 .fadeUp { opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s ease forwards; }
 .delay1 { animation-delay: 0.1s; }

@@ -53,7 +53,7 @@
     "heroImage": "/images/cyber/cyber1.png",
     "gallery": [
       { "src": "/images/cyber/cyber2.png", "caption": "Cyber Theater — スクリーン" },
-      { "src": "/images/cyber/cyber1.png", "caption": "Cyber Theater — シート" },
+      { "src": "/images/cyber/cyber3.png", "caption": "Cyber Theater — シート" },
       { "src": "/images/cyber/cyber4.png", "caption": "Cyber Theater — エントランス" }
     ],
     "stats": [

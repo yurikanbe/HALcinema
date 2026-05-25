@@ -271,6 +271,30 @@
     }
   },
   {
+    "id": "chiikawa_ningyo",
+    "title": "映画ちいかわ 人魚の島のひみつ",
+    "category": "アニメ",
+    "poster": "/images/thumbnail/chiikawa_ningyo.jpg",
+    "description": "魅力的な言葉に釣られ、特別な島へ島合宿に行くことを決めたお馴染みのちいかわたち。チラシの内容を怪しがるラッコとともに島へ上陸するが、そこで彼らを待ち受けていたものとは……。大人気エピソード「セイレーン編」を映像化。",
+    "duration": 90,
+    "year": 2026,
+    "rating": "G",
+    "formats": [],
+    "cast": [
+      "ちいかわ：青木遥",
+      "ハチワレ：田中誠人",
+      "うさぎ：小澤亜李",
+      "モモンガ：井口裕香",
+      "ラッコ：内田雄馬"
+    ],
+    "director": "及川啓",
+    "status": "now_showing",
+    "colors": {
+      "solid": "#ec4899",
+      "fade": "rgba(236,72,153,0)"
+    }
+  },
+  {
     "id": "toi_story5",
     "title": "トイ・ストーリー5",
     "category": "アニメ",
@@ -314,30 +338,6 @@
     "colors": {
       "solid": "#1e293b",
       "fade": "rgba(30,41,59,0)"
-    }
-  },
-  {
-    "id": "chiikawa_ningyo",
-    "title": "映画ちいかわ 人魚の島のひみつ",
-    "category": "アニメ",
-    "poster": "/images/thumbnail/chiikawa_ningyo.jpg",
-    "description": "魅力的な言葉に釣られ、特別な島へ島合宿に行くことを決めたお馴染みのちいかわたち。チラシの内容を怪しがるラッコとともに島へ上陸するが、そこで彼らを待ち受けていたものとは……。大人気エピソード「セイレーン編」を映像化。",
-    "duration": 90,
-    "year": 2026,
-    "rating": "G",
-    "formats": [],
-    "cast": [
-      "ちいかわ：青木遥",
-      "ハチワレ：田中誠人",
-      "うさぎ：小澤亜李",
-      "モモンガ：井口裕香",
-      "ラッコ：内田雄馬"
-    ],
-    "director": "及川啓",
-    "status": "coming_soon",
-    "colors": {
-      "solid": "#ec4899",
-      "fade": "rgba(236,72,153,0)"
     }
   },
   {
