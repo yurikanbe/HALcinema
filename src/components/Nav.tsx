@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import styles from './Nav.module.css';
@@ -11,6 +11,8 @@ import SearchModal from './SearchModal';
 export default function Nav() {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -23,9 +25,30 @@ export default function Nav() {
     return () => window.removeEventListener('keydown', h);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 56);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () =>
+      document.documentElement.style.setProperty('--nav-height', el.offsetHeight + 'px');
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <>
-      <header className={styles.nav} data-nav>
+      <header
+        ref={headerRef}
+        className={`${styles.nav}${scrolled ? ' ' + styles.navScrolled : ''}`}
+        data-nav
+      >
         <div className={styles.navInner}>
           <Link className={styles.logo} href="/" aria-label="HAL CINEMA ホーム">
             <img className={styles.logoImage} src="/images/logo.png" alt="HAL CINEMA" />
@@ -58,7 +81,6 @@ export default function Nav() {
               
               <kbd className={styles.searchKbd}>Ctrl K</kbd>
             </button>
-            <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid}`}>チケット購入について</Link>
           </div>
         </div>
       </header>

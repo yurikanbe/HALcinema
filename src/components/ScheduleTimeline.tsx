@@ -67,10 +67,7 @@ export default function ScheduleTimeline({ initialTheater }: { initialTheater?: 
       return d;
     }));
 
-    const nav = document.querySelector<HTMLElement>('header');
-    if (nav && axisStickyRef.current) {
-      axisStickyRef.current.style.top = nav.offsetHeight + 'px';
-    }
+
   }, []);
 
   useEffect(() => {

@@ -167,6 +167,25 @@ export default function TheatersPage() {
                   </div>
                 </div>
 
+                {/* Seat layout */}
+                <div className={s.seatLayoutSection}>
+                  <div className={s.theaterChapterSubhead}>
+                    <div className={shared.sectionHint}>Seat Layout</div>
+                    <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>座席レイアウト</h3>
+                  </div>
+                  <div className={s.seatLayoutImgWrap}>
+                    <img
+                      src={`/images/${theater.id}/seatmap.png`}
+                      alt={`${theater.name} 座席レイアウト`}
+                      className={s.seatLayoutImg}
+                    />
+                  </div>
+                  <p className={s.seatLayoutNote}>
+                    ● 金色表示の座席（A・B列）はプレミアム席です（+¥500）。
+                    座席ごとの見え方は「視点プレビュー」機能でご確認いただけます。
+                  </p>
+                </div>
+
                 <div className={s.theaterChapterCols}>
                   {/* Movies */}
                   <div>
@@ -240,6 +259,7 @@ export default function TheatersPage() {
             <div className={shared.sectionHint}>Seat Philosophy</div>
             <h2 className={shared.sectionTitle}>座席の設計</h2>
           </div>
+          <Link className={shared.textLink} href="/faq">よくある質問 →</Link>
         </div>
         <div className={shared.featureTiles}>
           <div className={shared.featureTile}>

@@ -18,9 +18,10 @@ interface Props {
   nowShowing: Movie[];
   comingSoon: Movie[];
   theatersByMovie: Record<string, string[]>;
+  seatStatus: Record<string, 'sold_out' | 'few' | null>;
 }
 
-export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }: Props) {
+export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie, seatStatus }: Props) {
   const [activeTheater, setActiveTheater] = useState('all');
 
   const filteredNow = nowShowing.filter(m => {
@@ -52,11 +53,18 @@ export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }
         <div className={`${shared.filmGrid} ${shared.filmGridMovies}`} id="now-showing-grid">
           {filteredNow.map(m => {
             const theaters = (theatersByMovie[m.id] ?? []).map(t => THEATER_LABEL[t]).join('・');
+            const status = seatStatus[m.id];
             return (
               <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
                 <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
                   <div className={shared.filmCardPosterOverlay}></div>
                   <div className={shared.filmCardBadge}>{m.category}</div>
+                  {status === 'sold_out' && (
+                    <div className={`${shared.filmCardSeatBadge} ${shared.filmCardSeatBadgeSoldOut}`}>満席</div>
+                  )}
+                  {status === 'few' && (
+                    <div className={`${shared.filmCardSeatBadge} ${shared.filmCardSeatBadgeFew}`}>残席わずか</div>
+                  )}
                 </div>
                 <div className={shared.filmCardBody}>
                   <div className={shared.filmCardTitle}>{m.title}</div>

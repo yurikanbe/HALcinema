@@ -6,6 +6,17 @@
   background: #ffffffea;
   border-bottom: 1px solid rgba(200, 164, 91, 0.18);
   box-shadow: 0 10px 30px rgba(10, 22, 40, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+.navScrolled {
+  box-shadow: 0 4px 20px rgba(10, 22, 40, 0.14);
+}
+.navScrolled .navInner {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.navScrolled .logoImage {
+  height: 34px;
 }
 .navInner {
   max-width: 1180px;
@@ -15,6 +26,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  transition: padding 0.3s ease;
 }
 .navLinks {
   display: flex;
@@ -57,6 +69,7 @@
   height: 46px;
   width: auto;
   display: block;
+  transition: height 0.3s ease;
 }
 .navLinkActive { color: var(--gold-500); }
 
@@ -64,7 +77,7 @@
 .searchBtn {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   background: none;
   border: 1px solid #c8a45bbd;
   border-radius: 999px;

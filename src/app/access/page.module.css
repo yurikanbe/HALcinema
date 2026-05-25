@@ -1,0 +1,462 @@
+/* ── Map ── */
+.mapSection { padding-top: 0; }
+
+.mapWrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 164, 91, 0.22);
+  box-shadow: 0 24px 64px rgba(6, 13, 31, 0.22);
+}
+
+.map {
+  width: 100%;
+  height: 480px;
+  border: none;
+  display: block;
+}
+
+.mapCard {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  background: rgba(4, 10, 24, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(200, 164, 91, 0.28);
+  border-radius: 12px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.mapCardAddr { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
+
+.mapCardPostal {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(200, 164, 91, 0.65);
+}
+
+.mapCardAddrMain {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.mapCardMeta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.mapCardMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.mapCardMetaLabel {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+}
+
+.mapCardMetaDivider {
+  width: 1px;
+  height: 14px;
+  background: rgba(200, 164, 91, 0.22);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.mapCardBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(200, 164, 91, 0.88);
+  background: rgba(200, 164, 91, 0.1);
+  border: 1px solid rgba(200, 164, 91, 0.28);
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.mapCardBtn:hover {
+  background: rgba(200, 164, 91, 0.18);
+  border-color: rgba(200, 164, 91, 0.5);
+}
+
+/* ── Exterior ── */
+.exteriorSection { padding-top: 0; }
+
+.exteriorWrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 164, 91, 0.2);
+  box-shadow: 0 20px 56px rgba(6, 13, 31, 0.2);
+}
+
+.exteriorImg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 21 / 8;
+  object-fit: cover;
+  background: linear-gradient(135deg, #060e22 0%, #0c2249 50%, #163a78 100%);
+}
+
+.exteriorCaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 28px;
+  background: linear-gradient(to top, rgba(4, 10, 24, 0.72), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.exteriorCaptionLabel {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.exteriorCaptionSub {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(200, 164, 91, 0.75);
+}
+
+/* ── Station hub ── */
+.stationHub {
+  background: linear-gradient(170deg, #ffffff, #f0f4fa);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  border-radius: 16px;
+  padding: 32px 36px 28px;
+  box-shadow: 0 16px 48px rgba(10, 22, 40, 0.1);
+}
+
+.stationHubTop {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.stationHubIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0b2249, #1a4080);
+  border: 1px solid rgba(200, 164, 91, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-500);
+  flex-shrink: 0;
+}
+
+.stationHubName {
+  font-family: "Zen Old Mincho", serif;
+  font-size: 26px;
+  letter-spacing: 0.1em;
+  color: var(--ink-900);
+  line-height: 1.2;
+}
+
+.stationHubSub {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-600);
+  margin-top: 4px;
+}
+
+.stationLines { display: flex; flex-direction: column; gap: 8px; }
+
+.stationLine {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(200, 164, 91, 0.12);
+  box-shadow: 0 3px 10px rgba(10, 22, 40, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stationLine:hover {
+  transform: translateX(4px);
+  box-shadow: 0 8px 24px rgba(10, 22, 40, 0.1);
+}
+
+.stationBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: white;
+  border-radius: 6px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.badgeJr       { background: linear-gradient(135deg, #1a5276, #2471a3); border-color: rgba(200,164,91,0.25); }
+.badgeMeitetsu { background: linear-gradient(135deg, #7b0000, #b71c1c); border-color: rgba(200,164,91,0.2); }
+.badgeKintetsu { background: linear-gradient(135deg, #4a148c, #7b1fa2); border-color: rgba(200,164,91,0.2); }
+.badgeSubway   { background: linear-gradient(135deg, #006064, #00838f); border-color: rgba(200,164,91,0.2); }
+
+.stationLineInfo { min-width: 0; }
+
+.stationLineName {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-900);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stationLineGate {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-600);
+}
+
+.stationWalk {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.stationWalkNum {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-900);
+  line-height: 1;
+}
+
+.stationWalkMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stationWalkUnit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-700);
+  line-height: 1.2;
+}
+
+.stationWalkLabel {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gold-600);
+}
+
+.undergroundBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(200,164,91,0.07), rgba(200,164,91,0.03));
+  border: 1px dashed rgba(200, 164, 91, 0.3);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-700);
+}
+
+.undergroundBanner svg { color: var(--gold-500); flex-shrink: 0; }
+
+/* ── Airport ── */
+.airportGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.airportRoute {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: linear-gradient(170deg, #ffffff, #f0f4fa);
+  border: 1px solid rgba(200, 164, 91, 0.16);
+  border-radius: 16px;
+  padding: 28px 20px;
+  box-shadow: 0 12px 36px rgba(10, 22, 40, 0.1);
+}
+
+.airportNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  width: 90px;
+  text-align: center;
+}
+
+.airportNodeIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0b2249, #1a4080);
+  border: 1px solid rgba(200, 164, 91, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-500);
+  margin-bottom: 4px;
+}
+
+.airportNodeName {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-900);
+  line-height: 1.4;
+}
+
+.airportNodeSub {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-600);
+}
+
+.airportFlow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.airportFlowLine {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,164,91,0.4), transparent);
+}
+
+.airportFlowCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(200, 164, 91, 0.06);
+  border: 1px solid rgba(200, 164, 91, 0.18);
+  width: 100%;
+}
+
+.airportFlowVia {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold-600);
+}
+
+.airportFlowTime {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-900);
+  line-height: 1;
+}
+
+.airportFlowMin {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-700);
+}
+
+.airportFlowSub {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-600);
+}
+
+/* ── Facility CTA ── */
+.facilityCtaSection { padding-top: 0; }
+
+.facilityCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 36px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #06101f 0%, #0c2040 60%, #0f2e5a 100%);
+  border: 1px solid rgba(200, 164, 91, 0.24);
+  box-shadow: 0 16px 48px rgba(6, 13, 31, 0.28);
+  flex-wrap: wrap;
+}
+
+.facilityCtaLeft { display: flex; flex-direction: column; gap: 6px; }
+
+.facilityCtaTitle {
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+}
+
+.facilityCtaDesc {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .airportGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .map { height: 320px; }
+  .mapCard { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .mapCardBtn { margin-left: 0; }
+  .stationHub { padding: 24px 20px 20px; }
+  .stationHubName { font-size: 22px; }
+  .stationLine { gap: 12px; padding: 12px 14px; }
+  .stationLineName { font-size: 12px; }
+  .stationWalkNum { font-size: 30px; }
+}

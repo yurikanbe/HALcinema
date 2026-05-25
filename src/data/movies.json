@@ -8,7 +8,9 @@
     "duration": 118,
     "year": 2026,
     "rating": "G",
-    "formats": ["字幕"],
+    "formats": [
+      "字幕"
+    ],
     "cast": [
       "高橋みなみ(江戸川コナン)",
       "山崎和佳奈(毛利蘭)",
@@ -19,8 +21,14 @@
     ],
     "director": "蓮井隆弘",
     "status": "now_showing",
-    "theaters": ["starry", "cyber"],
-    "colors": { "solid": "#0c3e2c", "fade": "rgba(12,62,44,0)" }
+    "theaters": [
+      "starry",
+      "cyber"
+    ],
+    "colors": {
+      "solid": "#0c3e2c",
+      "fade": "rgba(12,62,44,0)"
+    }
   },
   {
     "id": "doraemon-kaiteikiganzyo",
@@ -43,8 +51,13 @@
     ],
     "director": "矢嶋哲生",
     "status": "now_showing",
-    "theaters": ["abyss"],
-    "colors": { "solid": "#4e1238", "fade": "rgba(78,18,56,0)" }
+    "theaters": [
+      "abyss"
+    ],
+    "colors": {
+      "solid": "#4e1238",
+      "fade": "rgba(78,18,56,0)"
+    }
   },
   {
     "id": "wikido_eiennoyokoku",
@@ -55,7 +68,9 @@
     "duration": 122,
     "year": 2026,
     "rating": "G",
-    "formats": ["吹替"],
+    "formats": [
+      "吹替"
+    ],
     "cast": [
       "シンシア・エリヴォ",
       "アリアナ・グランデ",
@@ -68,8 +83,13 @@
     ],
     "director": "ジョン・M・チュウ",
     "status": "now_showing",
-    "theaters": ["starry"],
-    "colors": { "solid": "#0c2c56", "fade": "rgba(12,44,86,0)" }
+    "theaters": [
+      "starry"
+    ],
+    "colors": {
+      "solid": "#0c2c56",
+      "fade": "rgba(12,44,86,0)"
+    }
   },
   {
     "id": "supermario_galaxy_movie",
@@ -80,7 +100,9 @@
     "duration": 104,
     "year": 2026,
     "rating": "G",
-    "formats": ["吹替"],
+    "formats": [
+      "吹替"
+    ],
     "cast": [
       "（マリオ）宮野 真守",
       "（ピーチ姫）志田 有彩",
@@ -90,10 +112,18 @@
       "（ロゼッタ）坂本 真綾",
       "（クッパJr.）山下 大輯"
     ],
-    "director": ["アーロン・ホーヴァス", "マイケル・ジェレニック"],
+    "director": [
+      "アーロン・ホーヴァス",
+      "マイケル・ジェレニック"
+    ],
     "status": "now_showing",
-    "theaters": ["cyber"],
-    "colors": { "solid": "#422006", "fade": "rgba(66,32,6,0)" }
+    "theaters": [
+      "cyber"
+    ],
+    "colors": {
+      "solid": "#422006",
+      "fade": "rgba(66,32,6,0)"
+    }
   },
   {
     "id": "sakamoto_days",
@@ -119,10 +149,18 @@
       "八木勇征",
       "小手伸也"
     ],
-    "director": ["福田雄一"],
+    "director": [
+      "福田雄一"
+    ],
     "status": "now_showing",
-    "theaters": ["abyss", "cyber"],
-    "colors": { "solid": "#1c1c2e", "fade": "rgba(28,28,46,0)" }
+    "theaters": [
+      "abyss",
+      "cyber"
+    ],
+    "colors": {
+      "solid": "#1c1c2e",
+      "fade": "rgba(28,28,46,0)"
+    }
   },
   {
     "id": "shoujiki_fudousan",
@@ -143,8 +181,13 @@
     ],
     "director": "川村泰祐",
     "status": "now_showing",
-    "theaters": ["starry"],
-    "colors": { "solid": "#164e63", "fade": "rgba(22,78,99,0)" }
+    "theaters": [
+      "starry"
+    ],
+    "colors": {
+      "solid": "#164e63",
+      "fade": "rgba(22,78,99,0)"
+    }
   },
   {
     "id": "devil_wears_prada_2",
@@ -155,7 +198,10 @@
     "duration": 110,
     "year": 2026,
     "rating": "G",
-    "formats": ["字幕", "吹替"],
+    "formats": [
+      "字幕",
+      "吹替"
+    ],
     "cast": [
       "メリル・ストリープ",
       "アン・ハサウェイ",
@@ -165,8 +211,14 @@
     ],
     "director": "デヴィッド・フランケル",
     "status": "now_showing",
-    "theaters": [],
-    "colors": { "solid": "#831843", "fade": "rgba(131,24,67,0)" }
+    "theaters": [
+      "starry",
+      "abyss"
+    ],
+    "colors": {
+      "solid": "#831843",
+      "fade": "rgba(131,24,67,0)"
+    }
   },
   {
     "id": "kyojo_requiem",
@@ -188,8 +240,14 @@
     ],
     "director": "中江功",
     "status": "now_showing",
-    "theaters": [],
-    "colors": { "solid": "#1e293b", "fade": "rgba(30,41,59,0)" }
+    "theaters": [
+      "abyss",
+      "cyber"
+    ],
+    "colors": {
+      "solid": "#1e293b",
+      "fade": "rgba(30,41,59,0)"
+    }
   },
   {
     "id": "project_hail_mary",
@@ -200,17 +258,29 @@
     "duration": 142,
     "year": 2026,
     "rating": "G",
-    "formats": ["字幕", "吹替"],
+    "formats": [
+      "字幕",
+      "吹替"
+    ],
     "cast": [
       "ライアン・ゴズリング",
       "ザンドラ・ヒュラー",
       "ライオネル・ボイス",
       "ケン・レオン"
     ],
-    "director": ["フィル・ロード", "クリストファー・ミラー"],
+    "director": [
+      "フィル・ロード",
+      "クリストファー・ミラー"
+    ],
     "status": "now_showing",
-    "theaters": [],
-    "colors": { "solid": "#1e1b4b", "fade": "rgba(30,27,75,0)" }
+    "theaters": [
+      "starry",
+      "cyber"
+    ],
+    "colors": {
+      "solid": "#1e1b4b",
+      "fade": "rgba(30,27,75,0)"
+    }
   },
   {
     "id": "honoo_kagayohe",
@@ -231,8 +301,13 @@
     ],
     "director": "松田圭太",
     "status": "now_showing",
-    "theaters": ["cyber"],
-    "colors": { "solid": "#450a0a", "fade": "rgba(69,10,10,0)" }
+    "theaters": [
+      "cyber"
+    ],
+    "colors": {
+      "solid": "#450a0a",
+      "fade": "rgba(69,10,10,0)"
+    }
   },
   {
     "id": "chiikawa_ningyo",
@@ -253,8 +328,13 @@
     ],
     "director": "及川啓",
     "status": "now_showing",
-    "theaters": ["starry"],
-    "colors": { "solid": "#ec4899", "fade": "rgba(236,72,153,0)" }
+    "theaters": [
+      "starry"
+    ],
+    "colors": {
+      "solid": "#ec4899",
+      "fade": "rgba(236,72,153,0)"
+    }
   },
   {
     "id": "toi_story5",
@@ -265,7 +345,9 @@
     "duration": 132,
     "year": 2026,
     "rating": "G",
-    "formats": ["吹替"],
+    "formats": [
+      "吹替"
+    ],
     "cast": [
       "ウッディ（日本語吹き替え）唐沢寿明",
       "バズ・ライトイヤー（日本語吹き替え）所ジョージ",
@@ -275,7 +357,10 @@
     "director": "アンドリュー・スタントン",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#0369a1", "fade": "rgba(3,105,161,0)" }
+    "colors": {
+      "solid": "#0369a1",
+      "fade": "rgba(3,105,161,0)"
+    }
   },
   {
     "id": "star_wars_mandarorian_and_guro-gu-",
@@ -287,11 +372,17 @@
     "year": 2026,
     "rating": "R15",
     "formats": [],
-    "cast": ["ペドロ・パスカル", "シガーニー・ウィーバー"],
+    "cast": [
+      "ペドロ・パスカル",
+      "シガーニー・ウィーバー"
+    ],
     "director": "ジョン・ファヴロー",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#1e293b", "fade": "rgba(30,41,59,0)" }
+    "colors": {
+      "solid": "#1e293b",
+      "fade": "rgba(30,41,59,0)"
+    }
   },
   {
     "id": "kingdom_soul_battle",
@@ -314,7 +405,10 @@
     "director": "佐藤信介",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#7c2d12", "fade": "rgba(124,45,18,0)" }
+    "colors": {
+      "solid": "#7c2d12",
+      "fade": "rgba(124,45,18,0)"
+    }
   },
   {
     "id": "shinchan_yokai",
@@ -336,7 +430,10 @@
     "director": "渡辺正樹",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#b45309", "fade": "rgba(180,83,9,0)" }
+    "colors": {
+      "solid": "#b45309",
+      "fade": "rgba(180,83,9,0)"
+    }
   },
   {
     "id": "tokyomer_capital_crisis",
@@ -359,7 +456,10 @@
     "director": "松木彩",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#15803d", "fade": "rgba(21,128,61,0)" }
+    "colors": {
+      "solid": "#15803d",
+      "fade": "rgba(21,128,61,0)"
+    }
   },
   {
     "id": "odoru_new",
@@ -371,11 +471,16 @@
     "year": 2026,
     "rating": "G",
     "formats": [],
-    "cast": ["青島俊作：織田裕二"],
+    "cast": [
+      "青島俊作：織田裕二"
+    ],
     "director": "本広克行",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#1f2937", "fade": "rgba(31,41,55,0)" }
+    "colors": {
+      "solid": "#1f2937",
+      "fade": "rgba(31,41,55,0)"
+    }
   },
   {
     "id": "kusuriya_movie",
@@ -387,11 +492,17 @@
     "year": 2026,
     "rating": "G",
     "formats": [],
-    "cast": ["猫猫：悠木碧", "壬氏：大塚剛央"],
+    "cast": [
+      "猫猫：悠木碧",
+      "壬氏：大塚剛央"
+    ],
     "director": "長沼範裕",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#0f766e", "fade": "rgba(15,118,110,0)" }
+    "colors": {
+      "solid": "#0f766e",
+      "fade": "rgba(15,118,110,0)"
+    }
   },
   {
     "id": "kokurojo",
@@ -413,7 +524,10 @@
     "director": "黒沢清",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#2d3748", "fade": "rgba(45,55,72,0)" }
+    "colors": {
+      "solid": "#2d3748",
+      "fade": "rgba(45,55,72,0)"
+    }
   },
   {
     "id": "michael_movie",
@@ -424,7 +538,9 @@
     "duration": 155,
     "year": 2026,
     "rating": "G",
-    "formats": ["字幕"],
+    "formats": [
+      "字幕"
+    ],
     "cast": [
       "マイケル・ジャクソン：ジャファー・ジャクソン",
       "ジョー・ジャクソン：コールマン・ドミンゴ",
@@ -433,7 +549,10 @@
     "director": "アントワーン・フークア",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#111827", "fade": "rgba(17,24,39,0)" }
+    "colors": {
+      "solid": "#111827",
+      "fade": "rgba(17,24,39,0)"
+    }
   },
   {
     "id": "bluelock_liveaction",
@@ -455,7 +574,10 @@
     "director": "瀧悠輔",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#1d4ed8", "fade": "rgba(29,78,216,0)" }
+    "colors": {
+      "solid": "#1d4ed8",
+      "fade": "rgba(29,78,216,0)"
+    }
   },
   {
     "id": "hakononakano_hitsuji",
@@ -476,6 +598,9 @@
     "director": "是枝裕和",
     "status": "coming_soon",
     "theaters": [],
-    "colors": { "solid": "#581c87", "fade": "rgba(88,28,135,0)" }
+    "colors": {
+      "solid": "#581c87",
+      "fade": "rgba(88,28,135,0)"
+    }
   }
 ]

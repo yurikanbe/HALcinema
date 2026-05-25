@@ -175,6 +175,10 @@ export default function MenuPage() {
             </ul>
           </div>
         </div>
+        <p className={s.menuNote}>
+          料金・ご購入方法についてのご不明な点は{' '}
+          <Link href="/faq" className={shared.textLink}>よくある質問 →</Link>
+        </p>
       </section>
 
       {/* Food & Drinks */}

@@ -13,6 +13,12 @@ interface Props {
   listItems: NewsItem[];
 }
 
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('ja-JP', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+}
+
 export default function NewsClient({ featured, listItems }: Props) {
   const [activeCategory, setActiveCategory] = useState('all');
 
@@ -33,24 +39,17 @@ export default function NewsClient({ featured, listItems }: Props) {
 
       {/* Featured */}
       {featured && isVisible(featured.category) && (
-        <Link className={shared.newsFeatured} href={`/news/${featured.id}`} data-cat={featured.category}>
-          <div className={shared.newsFeaturedImage} style={{ background: featured.imageGradient }}>
-            <div className={shared.newsFeaturedImageInner}>
-              <div className={`${shared.newsBadge} ${BADGE_CLASS[featured.category] ?? ''}`} style={{ marginBottom: '14px' }}>
-                {CATEGORY_LABEL[featured.category]}
-              </div>
-              <div className={shared.newsFeaturedImageTitle}>
-                {featured.title.replace(/【(.+?)】/, '').split('　')[0]}
-              </div>
-              <div className={shared.newsFeaturedImageExcerpt}>{featured.excerpt}</div>
-            </div>
+        <Link className={shared.newsFeatured} href={`/news/${featured.id}`}>
+          <div className={shared.newsFeaturedLeft}>
+            <span className={`${shared.newsBadge} ${BADGE_CLASS[featured.category] ?? ''}`}>
+              {CATEGORY_LABEL[featured.category]}
+            </span>
+            <div className={shared.newsFeaturedTitle}>{featured.title}</div>
+            <div className={shared.newsFeaturedDate}>{formatDate(featured.date)}</div>
           </div>
           <div className={shared.newsFeaturedBody}>
-            <span className={`${shared.newsBadge} ${BADGE_CLASS[featured.category] ?? ''}`}>{CATEGORY_LABEL[featured.category]}</span>
-            <div className={shared.newsFeaturedTitle}>{featured.title}</div>
-            <div className={shared.newsFeaturedDate}>
-              {new Date(featured.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </div>
+            <p className={shared.newsFeaturedExcerpt}>{featured.excerpt}</p>
+            <span className={shared.newsFeaturedCta}>続きを読む →</span>
           </div>
         </Link>
       )}
@@ -58,15 +57,12 @@ export default function NewsClient({ featured, listItems }: Props) {
       {/* News list */}
       <div className={shared.newsList} id="news-list">
         {listItems.filter(n => isVisible(n.category)).map(n => (
-          <Link key={n.id} className={shared.newsCard} href={`/news/${n.id}`} data-cat={n.category}>
-            <div className={shared.newsCardImage} style={{ background: n.imageGradient }}></div>
-            <div>
-              <span className={`${shared.newsBadge} ${BADGE_CLASS[n.category] ?? ''}`}>{CATEGORY_LABEL[n.category]}</span>
-              <div className={shared.newsCardTitle}>{n.title}</div>
-              <div className={shared.newsCardDate}>
-                {new Date(n.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </div>
-            </div>
+          <Link key={n.id} className={shared.newsCard} href={`/news/${n.id}`}>
+            <span className={`${shared.newsBadge} ${BADGE_CLASS[n.category] ?? ''}`}>
+              {CATEGORY_LABEL[n.category]}
+            </span>
+            <div className={shared.newsCardTitle}>{n.title}</div>
+            <div className={shared.newsCardDate}>{formatDate(n.date)}</div>
           </Link>
         ))}
       </div>

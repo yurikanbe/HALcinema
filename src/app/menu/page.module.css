@@ -1,138 +1,456 @@
-.menuGrid { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: flex-start; }
-.menuSection { display: flex; flex-direction: column; gap: 1rem; margin: 0 1rem; }
-.menuSectionBody { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; }
-.menuSection:nth-child(even) .menuSectionBody { flex-direction: row-reverse; }
-.menuSectionTitle { font-size: 1.3rem; letter-spacing: 0.15em; color: #1a4080; margin: 0; font-family: "Zen Old Mincho", serif; font-weight: bold; }
-.menuSection:nth-child(even) .menuSectionTitle { text-align: right; }
-.menuSectionDesc { flex: auto; color: #060e22; font-size: 1rem; letter-spacing: 0.05em; line-height: 1.85; margin: 0 0 0 1.2rem; width: fit-content; min-width: fit-content; }
-.menuImgCard { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid rgba(200,164,91,0.35); box-shadow: 0 8px 28px rgba(10,22,40,0.15); transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: pointer; }
-.menuImgCard:hover { transform: translateY(-4px); box-shadow: 0 20px 52px rgba(10,22,40,0.25); }
-.menuImgCard img { width: 650px; height: auto; display: block; object-fit: cover; }
-
-.ticketLayout { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; margin: 0 1rem; }
-.ticketNotePanel {
-  flex: 1; width: fit-content; min-width: fit-content; border-radius: 10px;
-  background: linear-gradient(155deg, #060e22, #0b2249 48%, #1a4080);
-  color: white; padding: 32px 40px; position: relative; overflow: hidden;
-  border: 1px solid rgba(200,164,91,0.22); box-shadow: 0 20px 52px rgba(6,13,31,0.28);
+.menuGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: flex-start;
 }
+
+.menuSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 1rem;
+}
+
+.menuSectionBody {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.menuSection:nth-child(even) .menuSectionBody {
+  flex-direction: row-reverse;
+}
+
+.menuSectionTitle {
+  font-size: 1.3rem;
+  letter-spacing: 0.15em;
+  color: #1a4080;
+  margin: 0;
+  font-family: "Zen Old Mincho", serif;
+  font-weight: bold;
+}
+
+.menuSection:nth-child(even) .menuSectionTitle {
+  text-align: right;
+}
+
+.menuSectionDesc {
+  flex: auto;
+  color: #060e22;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  line-height: 1.85;
+  margin: 0 0 0 1.2rem;
+  width: fit-content;
+  min-width: fit-content;
+}
+
+.menuImgCard {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(200, 164, 91, 0.35);
+  box-shadow: 0 8px 28px rgba(10, 22, 40, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.menuImgCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 52px rgba(10, 22, 40, 0.25);
+}
+
+.menuImgCard img {
+  width: 650px;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.ticketLayout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: flex-start;
+  margin: 0 1rem;
+}
+
+.ticketNotePanel {
+  flex: 1;
+  width: fit-content;
+  min-width: fit-content;
+  border-radius: 10px;
+  background: linear-gradient(155deg, #060e22, #0b2249 48%, #1a4080);
+  color: white;
+  padding: 32px 40px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(200, 164, 91, 0.22);
+  box-shadow: 0 20px 52px rgba(6, 13, 31, 0.28);
+}
+
 .ticketNotePanel::after {
-  content: ""; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 90% 10%, rgba(200,164,91,0.14), transparent 55%);
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 90% 10%, rgba(200, 164, 91, 0.14), transparent 55%);
   pointer-events: none;
 }
-.ticketNotePanel > * { position: relative; z-index: 1; }
-.ticketNotePanelEyebrow { font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(200,164,91,0.8); margin-bottom: 14px; }
-.ticketNotePanelTitle { font-size: 22px; letter-spacing: 0.1em; margin: 0 0 18px; color: white; }
-.ticketNoteList { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.ticketNoteList li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.82); letter-spacing: 0.04em; line-height: 1.65; }
-.ticketNoteList li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--gold-500); flex-shrink: 0; margin-top: 7px; }
+
+.ticketNotePanel>* {
+  position: relative;
+  z-index: 1;
+}
+
+.ticketNotePanelEyebrow {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(200, 164, 91, 0.8);
+  margin-bottom: 14px;
+}
+
+.ticketNotePanelTitle {
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  margin: 0 0 18px;
+  color: white;
+}
+
+.ticketNoteList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.ticketNoteList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: 0.04em;
+  line-height: 1.65;
+}
+
+.ticketNoteList li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-500);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
 
 .localNav {
-  position: sticky; top: 82px; margin: 1rem 0 2rem 0; z-index: 15;
-  background: #ffffffb3; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(200,164,91,0.14); box-shadow: 0 4px 16px rgba(10,22,40,0.06);
+  position: sticky;
+  top: var(--nav-height, 82px);
+  margin: 1rem 0 2rem 0;
+  z-index: 15;
+  transform: translateY(-1px);
+  background: #ffffffb3;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(200, 164, 91, 0.14);
+  box-shadow: 0 4px 16px rgba(10, 22, 40, 0.06);
 }
-.localNavInner { max-width: 1180px; margin: 0 auto; padding: 0 20px; display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; }
-.localNavInner::-webkit-scrollbar { display: none; }
+
+.localNavInner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.localNavInner::-webkit-scrollbar {
+  display: none;
+}
+
 .localNavItem {
-  display: inline-flex; align-items: center; gap: 7px; padding: 14px 16px;
-  font-size: 13px; letter-spacing: 0.07em; color: var(--ink-700);
-  text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap;
-  transition: color 0.15s ease, border-color 0.15s ease; flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 16px;
+  font-size: 13px;
+  letter-spacing: 0.07em;
+  color: var(--ink-700);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  flex-shrink: 0;
 }
-.localNavItem:hover { color: var(--ink-900); }
-.localNavItemActive { color: var(--gold-600); border-bottom-color: var(--gold-500); font-weight: 600; }
-.localNavItem svg { opacity: 0.65; transition: opacity 0.15s; }
-.localNavItem:hover svg { opacity: 1; }
-.localNavItemActive svg { opacity: 1; color: var(--gold-600); }
-.localNavSep { width: 1px; background: rgba(200,164,91,0.18); align-self: stretch; margin: 10px 4px; flex-shrink: 0; }
 
-.menuNote { margin: 2.5rem 2rem 0; font-size: 11px; color: var(--ink-500); letter-spacing: 0.06em; line-height: 1.8; }
+.localNavItem:hover {
+  color: var(--ink-900);
+}
 
-.sectionTicketPt { padding-top: 10px; }
-.sectionMenuPt { padding-top: 0; }
+.localNavItemActive {
+  color: var(--gold-600);
+  border-bottom-color: var(--gold-500);
+  font-weight: 600;
+}
 
-.ticketSectionHead { margin-bottom: 28px; }
-.reserveBtnSmall { font-size: 12px; padding: 10px 20px; }
+.localNavItem svg {
+  opacity: 0.65;
+  transition: opacity 0.15s;
+}
+
+.localNavItem:hover svg {
+  opacity: 1;
+}
+
+.localNavItemActive svg {
+  opacity: 1;
+  color: var(--gold-600);
+}
+
+.localNavSep {
+  width: 1px;
+  background: rgba(200, 164, 91, 0.18);
+  align-self: stretch;
+  margin: 10px 4px;
+  flex-shrink: 0;
+}
+
+.menuNote {
+  margin: 2.5rem 2rem 0;
+  font-size: 11px;
+  color: var(--ink-500);
+  letter-spacing: 0.06em;
+  line-height: 1.8;
+}
+
+.sectionTicketPt {
+  padding-top: 10px;
+}
+
+.sectionMenuPt {
+  padding-top: 0;
+}
+
+.ticketSectionHead {
+  margin-bottom: 28px;
+}
+
+.reserveBtnSmall {
+  font-size: 12px;
+  padding: 10px 20px;
+}
 
 
 .backToTop {
-  position: fixed; bottom: 28px; right: 28px; z-index: 50;
-  width: 50px; height: 50px; border-radius: 50%;
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 50;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   background: linear-gradient(135deg, #0b2249, #1a4080);
-  border: 1px solid rgba(200,164,91,0.45);
+  border: 1px solid rgba(200, 164, 91, 0.45);
   box-shadow: 0 8px 20px #060d1f6f;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  color: rgba(200,164,91,0.9);
-  opacity: 0; transform: translateY(14px);
-  transition: all 0.3s ease; pointer-events: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(200, 164, 91, 0.9);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: all 0.3s ease;
+  pointer-events: none;
 }
-.backToTopVisible { opacity: 1; transform: translateY(0); pointer-events: all; }
-.backToTop:hover { box-shadow: 0 2px 28px #001d2e61, 0 -1px 22px #001d2e61; border-color: rgba(200,164,91,0.75); }
+
+.backToTopVisible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.backToTop:hover {
+  box-shadow: 0 2px 28px #001d2e61, 0 -1px 22px #001d2e61;
+  border-color: rgba(200, 164, 91, 0.75);
+}
 
 .lightbox {
-  position: fixed; inset: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
   transition: opacity 0.28s ease;
 }
-.lightboxOpen { opacity: 1; pointer-events: all; }
+
+.lightboxOpen {
+  opacity: 1;
+  pointer-events: all;
+}
+
 .lightboxBackdrop {
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
   background: rgba(3, 7, 20, 0.92);
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
+
 .lightboxInner {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 20px; max-width: min(92vw, 960px);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: min(92vw, 960px);
 }
+
 .lightboxImg {
-  max-width: 100%; max-height: calc(85vh - 60px);
-  object-fit: contain; border-radius: 14px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.55);
-  display: block; will-change: transform, opacity;
+  max-width: 100%;
+  max-height: calc(85vh - 60px);
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+  display: block;
+  will-change: transform, opacity;
 }
-.lightboxCaption { margin-top: 18px; display: flex; align-items: center; gap: 10px; }
-.lightboxCaptionTag { font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(200,164,91,0.85); }
-.lightboxCaptionDot { width: 3px; height: 3px; border-radius: 50%; background: rgba(200,164,91,0.4); flex-shrink: 0; }
-.lightboxCaptionName { font-size: 16px; letter-spacing: 0.1em; color: rgba(255,255,255,0.9); }
+
+.lightboxCaption {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lightboxCaptionTag {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(200, 164, 91, 0.85);
+}
+
+.lightboxCaptionDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(200, 164, 91, 0.4);
+  flex-shrink: 0;
+}
+
+.lightboxCaptionName {
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .lightboxClose {
-  position: fixed; top: 22px; right: 26px; z-index: 2;
-  width: 46px; height: 46px; border-radius: 50%;
-  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.85); transition: background 0.15s, transform 0.15s;
+  position: fixed;
+  top: 22px;
+  right: 26px;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  transition: background 0.15s, transform 0.15s;
 }
-.lightboxClose:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
+
+.lightboxClose:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+}
+
 .lightboxNav {
-  position: fixed; top: 50%; transform: translateY(-50%); z-index: 2;
-  width: 54px; height: 54px; border-radius: 50%;
-  background: rgba(255,255,255,0.07); border: 1px solid rgba(200,164,91,0.22);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.85);
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(200, 164, 91, 0.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
-.lightboxNav:hover { background: rgba(200,164,91,0.15); border-color: rgba(200,164,91,0.48); transform: translateY(-50%) scale(1.08); }
-.lightboxNavPrev { left: 22px; }
-.lightboxNavNext { right: 22px; }
+
+.lightboxNav:hover {
+  background: rgba(200, 164, 91, 0.15);
+  border-color: rgba(200, 164, 91, 0.48);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lightboxNavPrev {
+  left: 22px;
+}
+
+.lightboxNavNext {
+  right: 22px;
+}
+
 .lightboxCounter {
-  position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
-  font-family: "Barlow Condensed", sans-serif; font-size: 13px; letter-spacing: 0.22em;
-  color: rgba(255,255,255,0.45); z-index: 2; pointer-events: none;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.45);
+  z-index: 2;
+  pointer-events: none;
 }
 
 @media (max-width: 600px) {
-  .lightboxNavPrev { left: 10px; }
-  .lightboxNavNext { right: 10px; }
-  .lightboxClose { top: 14px; right: 14px; }
+  .lightboxNavPrev {
+    left: 10px;
+  }
+
+  .lightboxNavNext {
+    right: 10px;
+  }
+
+  .lightboxClose {
+    top: 14px;
+    right: 14px;
+  }
 }
+
 @media (max-width: 480px) {
-  .backToTop { bottom: 18px; right: 18px; width: 44px; height: 44px; }
+  .backToTop {
+    bottom: 18px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+  }
 }
+
 @media (max-width: 640px) {
-  .menuImgCard img { width: 100%; }
+  .menuImgCard img {
+    width: 100%;
+  }
 }

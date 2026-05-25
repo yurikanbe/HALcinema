@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Carousel3D from '@/components/Carousel3D';
 import moviesData from '@/data/movies.json';
-import type { Movie } from '@/types';
+import newsData   from '@/data/news.json';
+import type { Movie, NewsItem } from '@/types';
+import { CATEGORY_LABEL, BADGE_CLASS } from '@/lib/newsCategories';
 import s from './page.module.css';
 import shared from '@/styles/shared.module.css';
 
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
 };
 
 const movies = moviesData as Movie[];
-const nowShowing = movies.filter(m => m.status === 'now_showing');
+const news   = newsData   as NewsItem[];
+const nowShowing   = movies.filter(m => m.status === 'now_showing');
+const featuredNews = news.find(n => n.featured);
 
 export default function HomePage() {
   const carouselMovies = nowShowing.map(m => ({
@@ -64,7 +68,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Now Showing + 3D Carousel ── */}
-      <section className={shared.section} id="now">
+      <section className={shared.section} id="now" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Now Showing</div>
@@ -76,13 +80,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Theater Introduction ── */}
-      <section className={shared.section} id="theaters">
+      <section className={shared.section} id="theaters" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Theater Experience</div>
             <h2 className={shared.sectionTitle}>劇場紹介</h2>
           </div>
-          <Link className={shared.textLink} href="/theaters">シアター詳細を見る →</Link>
+          <Link className={shared.textLink} href="/facility">施設案内を見る →</Link>
         </div>
         <div className={s.theaterShowcase}>
           <div className={s.lobbyShowcase}>
@@ -170,7 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Signature Services ── */}
-      <section className={shared.section} id="services">
+      <section className={shared.section} id="services" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Original Services</div>
@@ -197,12 +201,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Ticket Pricing ── */}
-      <section className={shared.section} id="tickets">
+      <section className={shared.section} id="tickets" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Ticket Pricing</div>
             <h2 className={shared.sectionTitle}>チケット料金</h2>
           </div>
+          <Link className={shared.textLink} href="/faq">よくある質問 →</Link>
         </div>
         <div className={shared.priceListPanel}>
           {[

@@ -16,14 +16,15 @@ export default function Footer() {
 
         {/* Brand */}
         <div className={styles.brand}>
-          <Link href="/" className={styles.logoLink}>
-            <img src="/images/logo_dark.png" alt="HAL CINEMA" className={styles.logo} />
-          </Link>
-          <p className={styles.tagline}>Dive into Cinema</p>
-          <p className={styles.desc}>
-            名古屋・名駅エリアに位置する体験型シネマコンプレックス。
-            星空・深海・サイバー、3つの没入空間で映画の世界へ。
-          </p>
+          <div className={styles.brandHead}>
+            <Link href="/" className={styles.logoLink}>
+              <img src="/images/logo_dark.png" alt="HAL CINEMA" className={styles.logo} />
+            </Link>
+            <p className={styles.tagline}>Dive into Cinema</p>
+            <p className={styles.desc}>
+              3つのコンセプト空間で映画の世界へ。
+            </p>
+          </div>
           <a href="mailto:info@halcinema.jp" className={styles.mail}>
             info@halcinema.jp
           </a>
@@ -32,12 +33,14 @@ export default function Footer() {
         {/* Site map */}
         <div>
           <div className={styles.colHead}>サイトマップ</div>
-          <ul className={styles.linkList}>
+          <ul className={`${styles.linkList} ${styles.linkListTwo}`}>
             {NAV_LINKS.map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} className={styles.navLink}>{label}</Link>
               </li>
             ))}
+            <li><Link href="/facility" className={styles.navLink}>施設案内</Link></li>
+            <li><Link href="/faq"      className={styles.navLink}>FAQ</Link></li>
           </ul>
         </div>
 

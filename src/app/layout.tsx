@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import AnnouncementBanner from '@/components/AnnouncementBanner';
+import RevealObserver from '@/components/RevealObserver';
 
 export const metadata: Metadata = {
   title: 'HAL CINEMA | Dive into Cinema',
@@ -34,6 +36,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="accent-lines accent-lines--short-7" aria-hidden="true"></div>
         <div className="page">
           <Nav />
+          <AnnouncementBanner />
+          <RevealObserver />
           {children}
           <Footer />
         </div>

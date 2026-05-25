@@ -8,34 +8,56 @@
   margin: 0 auto;
   padding: 2.4rem 1.8rem 1rem;
   display: grid;
-  grid-template-columns: 1.7fr 1fr 1.2fr 1.3fr;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1.3fr;
   gap: 48px;
 }
 
 /* ── Brand ── */
-.logoLink { display: inline-block; margin-bottom: 14px; }
-.logo { height: 36px; width: auto; opacity: 0.92; }
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.logoLink {
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.logo {
+  height: 36px;
+  width: auto;
+  opacity: 0.92;
+}
+
 .tagline {
   font-size: 11px;
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: rgba(200, 164, 91, 0.75);
-  margin: 0 0 14px;
+  margin: 0 0 0.5rem;
 }
+
 .desc {
   font-size: 12px;
   line-height: 1.9;
   color: rgba(255, 255, 255, 0.42);
   margin: 0 0 18px;
 }
+
 .mail {
+  margin-bottom: 0.75rem;
   font-size: 12px;
   letter-spacing: 0.06em;
   color: rgba(200, 164, 91, 0.65);
   text-decoration: none;
   transition: color 0.15s ease;
 }
-.mail:hover { color: rgba(200, 164, 91, 1); }
+
+.mail:hover {
+  color: rgba(200, 164, 91, 1);
+}
 
 /* ── Column heading ── */
 .colHead {
@@ -56,6 +78,13 @@
   display: grid;
   gap: 10px;
 }
+
+.linkListTwo {
+  width: max-content;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+}
+
 .navLink {
   font-size: 13px;
   letter-spacing: 0.06em;
@@ -63,7 +92,10 @@
   text-decoration: none;
   transition: color 0.15s ease;
 }
-.navLink:hover { color: rgba(255, 255, 255, 0.9); }
+
+.navLink:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
 
 /* ── Theater links ── */
 .theaterLink {
@@ -73,16 +105,30 @@
   text-decoration: none;
   transition: opacity 0.15s ease;
 }
-.theaterLink:hover { opacity: 0.85; }
+
+.theaterLink:hover {
+  opacity: 0.85;
+}
+
 .dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.dotStarry { background: linear-gradient(135deg, #c8a45b, #e3c788); }
-.dotAbyss  { background: linear-gradient(135deg, #0e6b86, #5ac8e0); }
-.dotCyber  { background: linear-gradient(135deg, #0d2060, #2a6ae0); }
+
+.dotStarry {
+  background: linear-gradient(135deg, #c8a45b, #e3c788);
+}
+
+.dotAbyss {
+  background: linear-gradient(135deg, #0e6b86, #5ac8e0);
+}
+
+.dotCyber {
+  background: linear-gradient(135deg, #0d2060, #2a6ae0);
+}
+
 .theaterName {
   display: block;
   font-size: 13px;
@@ -90,6 +136,7 @@
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.3;
 }
+
 .theaterMeta {
   display: block;
   font-size: 11px;
@@ -106,6 +153,7 @@
   display: grid;
   gap: 14px;
 }
+
 .infoItem {
   display: grid;
   grid-template-columns: 68px 1fr;
@@ -114,6 +162,7 @@
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.5);
 }
+
 .infoLabel {
   font-size: 10px;
   letter-spacing: 0.14em;
@@ -125,6 +174,7 @@
 .bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .bottomInner {
   max-width: 1180px;
   margin: 0 auto;
@@ -134,11 +184,13 @@
   justify-content: space-between;
   gap: 16px;
 }
+
 .copy {
   font-size: 11px;
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.25);
 }
+
 .bottomCta {
   font-size: 11px;
   letter-spacing: 0.14em;
@@ -146,7 +198,10 @@
   text-decoration: none;
   transition: color 0.15s ease;
 }
-.bottomCta:hover { color: rgba(200, 164, 91, 0.9); }
+
+.bottomCta:hover {
+  color: rgba(200, 164, 91, 0.9);
+}
 
 /* ── Responsive ── */
 @media (max-width: 960px) {
@@ -155,7 +210,10 @@
     gap: 40px 32px;
     padding: 52px 28px 48px;
   }
-  .brand { grid-column: 1 / -1; }
+
+  .brand {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 600px) {
@@ -163,6 +221,7 @@
     grid-template-columns: 1fr;
     padding: 44px 24px 40px;
   }
+
   .bottomInner {
     flex-direction: column;
     align-items: flex-start;
