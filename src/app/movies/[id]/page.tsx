@@ -41,7 +41,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
     byTheater.get(s.theaterId)!.push({ screen: s.screen, shows: movieShows });
   }
 
-  const posterStyle: React.CSSProperties = movie.colors
+  const posterStyle: React.CSSProperties = movie.poster
     ? { background: `url('${movie.poster}') center/cover no-repeat` }
     : { backgroundImage: `linear-gradient(160deg,#0a2060,#1a4a8a)` };
 

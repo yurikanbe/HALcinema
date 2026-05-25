@@ -4,13 +4,11 @@
     "title": "劇場版『名探偵コナン ハイウェイの堕天使』",
     "category": "",
     "poster": "/images/thumbnail/konan_highwaynodatensi.webp",
-    "description": "コナンと蘭・園子・小五郎は、バイクの祭典「神奈川モーターサイクルフェスティバル」が開催される横浜・みなとみらいに、バイク好きの世良真純と向かっていた。するとコナン達が乗った車の上を飛び越え現れた、暴走する謎の“黒いバイク”。そしてそれを追っていたのは、蘭がいつか見た「風の女神様」 神奈川県警交通機動隊の萩原千速だった―しかし激しいカーチェイスの末、千速のバイクは大破し、あと一歩のところで取り逃がしてしまう。その後、コナン達が横浜のフェス会場に到着すると、ある最新技術を搭載した白バイ「エンジェル」のお披露目が行われていた。そんな中、暴走した“黒いバイク”が今度は都内に出現し、警視庁の追跡をも振り切ったという情報が。目的不明な暴走だが、その車体が「エンジェル」に酷似していることが分かり、黒いエンジェル「ルシファー」と呼び、追跡を続ける。犯人の正体、そしてその目的とはいったい何なのか―核心に迫る怒涛の展開が待ち受ける！",
+    "description": "コナンと蘭・園子・小五郎は、バイクの祭典「神奈川モーターサイクルフェスティバル」が開催される横浜・みなとみらいに、バイク好きの世良真純と向かっていた。するとコナン達が乗った車の上を飛び越え現れた、暴走する謎の\"黒いバイク\"。そしてそれを追っていたのは、蘭がいつか見た「風の女神様」 神奈川県警交通機動隊の萩原千速だった―しかし激しいカーチェイスの末、千速のバイクは大破し、あと一歩のところで取り逃がしてしまう。その後、コナン達が横浜のフェス会場に到着すると、ある最新技術を搭載した白バイ「エンジェル」のお披露目が行われていた。そんな中、暴走した\"黒いバイク\"が今度は都内に出現し、警視庁の追跡をも振り切ったという情報が。目的不明な暴走だが、その車体が「エンジェル」に酷似していることが分かり、黒いエンジェル「ルシファー」と呼び、追跡を続ける。犯人の正体、そしてその目的とはいったい何なのか―核心に迫る怒涛の展開が待ち受ける！",
     "duration": 118,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "字幕"
-    ],
+    "formats": ["字幕"],
     "cast": [
       "高橋みなみ(江戸川コナン)",
       "山崎和佳奈(毛利蘭)",
@@ -21,17 +19,15 @@
     ],
     "director": "蓮井隆弘",
     "status": "now_showing",
-    "colors": {
-      "solid": "#0c3e2c",
-      "fade": "rgba(12,62,44,0)"
-    }
+    "theaters": ["starry", "cyber"],
+    "colors": { "solid": "#0c3e2c", "fade": "rgba(12,62,44,0)" }
   },
   {
     "id": "doraemon-kaiteikiganzyo",
     "title": "映画ドラえもん　新・のび太の海底鬼岩城",
     "category": "アニメ",
     "poster": "/images/thumbnail/doraemon_kaiteikiganzyo.webp",
-    "description": "そこは、地球の中心に最も近い、海の底。 謎ガナゾよぶ未知の世界！息をのむ、ビックリドッキリ海底大冒険！！ 夏休みにキャンプの行き先で意見が分かれたのび太たちは、ドラえもんの提案で海の真ん中でキャンプをすることに！ひみつ道具の「水中バギー」と「テキオー灯」を使い様々な生き物に出会いながら海底キャンプを楽しむ５人。 沈没船を発見したことをきっかけに、謎の青年・エルと出会う。なんと彼は、海底に広がる＜ムー連邦＞に住む“海人だった！陸上人を嫌っている海底人はのび太たちを信用することができない。そんな中、「鬼岩城が…活動を始めました！！」との知らせが届く。海底人が恐れる“鬼岩城”とは、一体何なのか…？ 仲間を信じる心を胸に、地球の命運をかけた大冒険に、いざ出発！ ",
+    "description": "そこは、地球の中心に最も近い、海の底。 謎ガナゾよぶ未知の世界！息をのむ、ビックリドッキリ海底大冒険！！ 夏休みにキャンプの行き先で意見が分かれたのび太たちは、ドラえもんの提案で海の真ん中でキャンプをすることに！ひみつ道具の「水中バギー」と「テキオー灯」を使い様々な生き物に出会いながら海底キャンプを楽しむ５人。 沈没船を発見したことをきっかけに、謎の青年・エルと出会う。なんと彼は、海底に広がる＜ムー連邦＞に住む\"海人だった！陸上人を嫌っている海底人はのび太たちを信用することができない。そんな中、「鬼岩城が…活動を始めました！！」との知らせが届く。海底人が恐れる\"鬼岩城\"とは、一体何なのか…？ 仲間を信じる心を胸に、地球の命運をかけた大冒険に、いざ出発！ ",
     "duration": 138,
     "year": 2026,
     "rating": "G",
@@ -47,10 +43,8 @@
     ],
     "director": "矢嶋哲生",
     "status": "now_showing",
-    "colors": {
-      "solid": "#4e1238",
-      "fade": "rgba(78,18,56,0)"
-    }
+    "theaters": ["abyss"],
+    "colors": { "solid": "#4e1238", "fade": "rgba(78,18,56,0)" }
   },
   {
     "id": "wikido_eiennoyokoku",
@@ -61,9 +55,7 @@
     "duration": 122,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "吹替"
-    ],
+    "formats": ["吹替"],
     "cast": [
       "シンシア・エリヴォ",
       "アリアナ・グランデ",
@@ -76,10 +68,8 @@
     ],
     "director": "ジョン・M・チュウ",
     "status": "now_showing",
-    "colors": {
-      "solid": "#0c2c56",
-      "fade": "rgba(12,44,86,0)"
-    }
+    "theaters": ["starry"],
+    "colors": { "solid": "#0c2c56", "fade": "rgba(12,44,86,0)" }
   },
   {
     "id": "supermario_galaxy_movie",
@@ -90,9 +80,7 @@
     "duration": 104,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "吹替"
-    ],
+    "formats": ["吹替"],
     "cast": [
       "（マリオ）宮野 真守",
       "（ピーチ姫）志田 有彩",
@@ -102,15 +90,10 @@
       "（ロゼッタ）坂本 真綾",
       "（クッパJr.）山下 大輯"
     ],
-    "director": [
-      "アーロン・ホーヴァス",
-      "マイケル・ジェレニック"
-    ],
+    "director": ["アーロン・ホーヴァス", "マイケル・ジェレニック"],
     "status": "now_showing",
-    "colors": {
-      "solid": "#422006",
-      "fade": "rgba(66,32,6,0)"
-    }
+    "theaters": ["cyber"],
+    "colors": { "solid": "#422006", "fade": "rgba(66,32,6,0)" }
   },
   {
     "id": "sakamoto_days",
@@ -136,10 +119,10 @@
       "八木勇征",
       "小手伸也"
     ],
-    "director": [
-      "福田雄一"
-    ],
-    "status": "now_showing"
+    "director": ["福田雄一"],
+    "status": "now_showing",
+    "theaters": ["abyss", "cyber"],
+    "colors": { "solid": "#1c1c2e", "fade": "rgba(28,28,46,0)" }
   },
   {
     "id": "shoujiki_fudousan",
@@ -160,10 +143,8 @@
     ],
     "director": "川村泰祐",
     "status": "now_showing",
-    "colors": {
-      "solid": "#164e63",
-      "fade": "rgba(22,78,99,0)"
-    }
+    "theaters": ["starry"],
+    "colors": { "solid": "#164e63", "fade": "rgba(22,78,99,0)" }
   },
   {
     "id": "devil_wears_prada_2",
@@ -174,10 +155,7 @@
     "duration": 110,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "字幕",
-      "吹替"
-    ],
+    "formats": ["字幕", "吹替"],
     "cast": [
       "メリル・ストリープ",
       "アン・ハサウェイ",
@@ -187,10 +165,8 @@
     ],
     "director": "デヴィッド・フランケル",
     "status": "now_showing",
-    "colors": {
-      "solid": "#831843",
-      "fade": "rgba(131,24,67,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#831843", "fade": "rgba(131,24,67,0)" }
   },
   {
     "id": "kyojo_requiem",
@@ -212,10 +188,8 @@
     ],
     "director": "中江功",
     "status": "now_showing",
-    "colors": {
-      "solid": "#1e293b",
-      "fade": "rgba(30,41,59,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#1e293b", "fade": "rgba(30,41,59,0)" }
   },
   {
     "id": "project_hail_mary",
@@ -226,25 +200,17 @@
     "duration": 142,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "字幕",
-      "吹替"
-    ],
+    "formats": ["字幕", "吹替"],
     "cast": [
       "ライアン・ゴズリング",
       "ザンドラ・ヒュラー",
       "ライオネル・ボイス",
       "ケン・レオン"
     ],
-    "director": [
-      "フィル・ロード",
-      "クリストファー・ミラー"
-    ],
+    "director": ["フィル・ロード", "クリストファー・ミラー"],
     "status": "now_showing",
-    "colors": {
-      "solid": "#1e1b4b",
-      "fade": "rgba(30,27,75,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#1e1b4b", "fade": "rgba(30,27,75,0)" }
   },
   {
     "id": "honoo_kagayohe",
@@ -265,10 +231,8 @@
     ],
     "director": "松田圭太",
     "status": "now_showing",
-    "colors": {
-      "solid": "#450a0a",
-      "fade": "rgba(69,10,10,0)"
-    }
+    "theaters": ["cyber"],
+    "colors": { "solid": "#450a0a", "fade": "rgba(69,10,10,0)" }
   },
   {
     "id": "chiikawa_ningyo",
@@ -289,10 +253,8 @@
     ],
     "director": "及川啓",
     "status": "now_showing",
-    "colors": {
-      "solid": "#ec4899",
-      "fade": "rgba(236,72,153,0)"
-    }
+    "theaters": ["starry"],
+    "colors": { "solid": "#ec4899", "fade": "rgba(236,72,153,0)" }
   },
   {
     "id": "toi_story5",
@@ -303,9 +265,7 @@
     "duration": 132,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "吹替"
-    ],
+    "formats": ["吹替"],
     "cast": [
       "ウッディ（日本語吹き替え）唐沢寿明",
       "バズ・ライトイヤー（日本語吹き替え）所ジョージ",
@@ -314,31 +274,24 @@
     ],
     "director": "アンドリュー・スタントン",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#0369a1",
-      "fade": "rgba(3,105,161,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#0369a1", "fade": "rgba(3,105,161,0)" }
   },
   {
     "id": "star_wars_mandarorian_and_guro-gu-",
     "title": "スター・ウォーズ　マンダロリアン・アンド・グローグー",
     "category": "SF_ファンタジー",
     "poster": "/images/thumbnail/star_wars_mandarorian_and_guro_gu.webp",
-    "description": "戦争によって国家が分断された近未来のアメリカ。困窮する社会への光として、そしてかつての栄光を取り戻す為の一歩として、国をあげて開催される競技“ロングウォーク”。ただひたすらに歩き続けるだけで破格の賞金と願いを１つ叶える権利を獲得できるこの祭典に、選ばれし５０人の若者が挑戦する。「時速4.8kmをキープすること」「速度を下回り警告を受けないこと」「最後の一人になるまで歩き続けること」この勝者になる為のルールの裏に、休息も睡眠も救いも存在しない。３つ警告を受けると即死の状況下で臨む、地獄の一本道の先に待ち受けるのは希望か、絶望か——",
+    "description": "戦争によって国家が分断された近未来のアメリカ。困窮する社会への光として、そしてかつての栄光を取り戻す為の一歩として、国をあげて開催される競技\"ロングウォーク\"。ただひたすらに歩き続けるだけで破格の賞金と願いを１つ叶える権利を獲得できるこの祭典に、選ばれし５０人の若者が挑戦する。「時速4.8kmをキープすること」「速度を下回り警告を受けないこと」「最後の一人になるまで歩き続けること」この勝者になる為のルールの裏に、休息も睡眠も救いも存在しない。３つ警告を受けると即死の状況下で臨む、地獄の一本道の先に待ち受けるのは希望か、絶望か——",
     "duration": 108,
     "year": 2026,
     "rating": "R15",
     "formats": [],
-    "cast": [
-      "ペドロ・パスカル",
-      "シガーニー・ウィーバー"
-    ],
+    "cast": ["ペドロ・パスカル", "シガーニー・ウィーバー"],
     "director": "ジョン・ファヴロー",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#1e293b",
-      "fade": "rgba(30,41,59,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#1e293b", "fade": "rgba(30,41,59,0)" }
   },
   {
     "id": "kingdom_soul_battle",
@@ -360,10 +313,8 @@
     ],
     "director": "佐藤信介",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#7c2d12",
-      "fade": "rgba(124,45,18,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#7c2d12", "fade": "rgba(124,45,18,0)" }
   },
   {
     "id": "shinchan_yokai",
@@ -384,10 +335,8 @@
     ],
     "director": "渡辺正樹",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#b45309",
-      "fade": "rgba(180,83,9,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#b45309", "fade": "rgba(180,83,9,0)" }
   },
   {
     "id": "tokyomer_capital_crisis",
@@ -409,10 +358,8 @@
     ],
     "director": "松木彩",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#15803d",
-      "fade": "rgba(21,128,61,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#15803d", "fade": "rgba(21,128,61,0)" }
   },
   {
     "id": "odoru_new",
@@ -424,15 +371,11 @@
     "year": 2026,
     "rating": "G",
     "formats": [],
-    "cast": [
-      "青島俊作：織田裕二"
-    ],
+    "cast": ["青島俊作：織田裕二"],
     "director": "本広克行",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#1f2937",
-      "fade": "rgba(31,41,55,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#1f2937", "fade": "rgba(31,41,55,0)" }
   },
   {
     "id": "kusuriya_movie",
@@ -444,16 +387,11 @@
     "year": 2026,
     "rating": "G",
     "formats": [],
-    "cast": [
-      "猫猫：悠木碧",
-      "壬氏：大塚剛央"
-    ],
+    "cast": ["猫猫：悠木碧", "壬氏：大塚剛央"],
     "director": "長沼範裕",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#0f766e",
-      "fade": "rgba(15,118,110,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#0f766e", "fade": "rgba(15,118,110,0)" }
   },
   {
     "id": "kokurojo",
@@ -474,10 +412,8 @@
     ],
     "director": "黒沢清",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#2d3748",
-      "fade": "rgba(45,55,72,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#2d3748", "fade": "rgba(45,55,72,0)" }
   },
   {
     "id": "michael_movie",
@@ -488,9 +424,7 @@
     "duration": 155,
     "year": 2026,
     "rating": "G",
-    "formats": [
-      "字幕"
-    ],
+    "formats": ["字幕"],
     "cast": [
       "マイケル・ジャクソン：ジャファー・ジャクソン",
       "ジョー・ジャクソン：コールマン・ドミンゴ",
@@ -498,10 +432,8 @@
     ],
     "director": "アントワーン・フークア",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#111827",
-      "fade": "rgba(17,24,39,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#111827", "fade": "rgba(17,24,39,0)" }
   },
   {
     "id": "bluelock_liveaction",
@@ -522,10 +454,8 @@
     ],
     "director": "瀧悠輔",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#1d4ed8",
-      "fade": "rgba(29,78,216,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#1d4ed8", "fade": "rgba(29,78,216,0)" }
   },
   {
     "id": "hakononakano_hitsuji",
@@ -545,9 +475,7 @@
     ],
     "director": "是枝裕和",
     "status": "coming_soon",
-    "colors": {
-      "solid": "#581c87",
-      "fade": "rgba(88,28,135,0)"
-    }
+    "theaters": [],
+    "colors": { "solid": "#581c87", "fade": "rgba(88,28,135,0)" }
   }
 ]

@@ -3,9 +3,9 @@
     "theaterId": "starry",
     "screen": "Screen 1",
     "shows": [
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "10:30", "duration": 138, "format": "吹替", "seats": 68 },
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "14:20", "duration": 138, "format": "吹替", "seats": 42 },
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "18:00", "duration": 138, "format": "吹替", "taken": true },
+      { "movieId": "shoujiki_fudousan", "title": "映画『正直不動産』", "start": "10:30", "duration": 115, "format": "字幕", "seats": 68 },
+      { "movieId": "shoujiki_fudousan", "title": "映画『正直不動産』", "start": "14:20", "duration": 115, "format": "字幕", "seats": 42 },
+      { "movieId": "shoujiki_fudousan", "title": "映画『正直不動産』", "start": "18:00", "duration": 115, "format": "字幕", "taken": true },
       { "movieId": "meitantei-konan-highwaynodatensi", "title": "劇場版『名探偵コナン ハイウェイの堕天使』", "start": "21:10", "duration": 118, "format": "字幕", "seats": 115 }
     ]
   },
@@ -22,8 +22,8 @@
     "theaterId": "starry",
     "screen": "Screen 3",
     "shows": [
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "13:00", "duration": 138, "format": "字幕", "seats": 55 },
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "17:45", "duration": 138, "format": "字幕", "seats": 31 }
+      { "movieId": "chiikawa_ningyo", "title": "映画ちいかわ 人魚の島のひみつ", "start": "13:00", "duration": 90, "format": "吹替", "seats": 55 },
+      { "movieId": "chiikawa_ningyo", "title": "映画ちいかわ 人魚の島のひみつ", "start": "17:45", "duration": 90, "format": "吹替", "seats": 31 }
     ]
   },
   {
@@ -39,8 +39,8 @@
     "theaterId": "abyss",
     "screen": "Screen 2",
     "shows": [
-      { "movieId": "supermario_galaxy_movie", "title": "ザ・スーパーマリオギャラクシー・ムービー", "start": "10:30", "duration": 104, "format": "字幕", "seats": 88 },
-      { "movieId": "supermario_galaxy_movie", "title": "ザ・スーパーマリオギャラクシー・ムービー", "start": "14:30", "duration": 104, "format": "字幕", "seats": 62 },
+      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "10:30", "duration": 138, "format": "吹替", "seats": 88 },
+      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "14:30", "duration": 138, "format": "吹替", "seats": 62 },
       { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "19:30", "duration": 138, "format": "吹替", "seats": 74 }
     ]
   },
@@ -48,8 +48,8 @@
     "theaterId": "cyber",
     "screen": "Screen 1",
     "shows": [
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "10:00", "duration": 138, "format": "字幕", "seats": 70 },
-      { "movieId": "doraemon-kaiteikiganzyo", "title": "映画ドラえもん　新・のび太の海底鬼岩城", "start": "13:50", "duration": 138, "format": "字幕", "seats": 48 },
+      { "movieId": "honoo_kagayohe", "title": "炎かがよへ", "start": "10:00", "duration": 120, "format": "字幕", "seats": 70 },
+      { "movieId": "honoo_kagayohe", "title": "炎かがよへ", "start": "13:50", "duration": 120, "format": "字幕", "seats": 48 },
       { "movieId": "sakamoto_days", "title": "SAKAMOTO DAYS", "start": "18:30", "duration": 114, "format": "吹替", "seats": 26 }
     ]
   },

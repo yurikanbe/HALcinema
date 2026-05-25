@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Movie } from '@/types';
+import FilterButtonGroup from '@/components/FilterButtonGroup';
 import shared from '@/styles/shared.module.css';
 
 const THEATER_LABEL: Record<string,string> = { starry: 'Starry', abyss: 'Abyss', cyber: 'Cyber' };
@@ -36,18 +37,16 @@ export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }
             <div className={shared.sectionHint}>Now Showing</div>
             <h2 className={shared.sectionTitle}>上映中</h2>
           </div>
-          <div className={shared.moviesFilter} id="theater-filter">
-            {['all', 'starry', 'abyss', 'cyber'].map(t => (
-              <button
-                key={t}
-                className={`${shared.filterBtn}${activeTheater === t ? ' ' + shared.filterBtnActive : ''}`}
-                data-theater={t}
-                onClick={() => setActiveTheater(t)}
-              >
-                {t === 'all' ? 'すべて' : THEATER_LABEL[t]}
-              </button>
-            ))}
-          </div>
+          <FilterButtonGroup
+            options={['all', 'starry', 'abyss', 'cyber'].map(t => ({
+              value: t,
+              label: t === 'all' ? 'すべて' : THEATER_LABEL[t],
+            }))}
+            active={activeTheater}
+            onChange={setActiveTheater}
+            className={shared.moviesFilter}
+            id="theater-filter"
+          />
         </div>
 
         <div className={`${shared.filmGrid} ${shared.filmGridMovies}`} id="now-showing-grid">

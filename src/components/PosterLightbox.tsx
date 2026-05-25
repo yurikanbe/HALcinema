@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
 import s from './PosterLightbox.module.css';
 
 interface PosterLightboxProps {
@@ -12,14 +13,7 @@ interface PosterLightboxProps {
 
 export default function PosterLightbox({ posterUrl, title, posterClassName, style }: PosterLightboxProps) {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [open]);
+  useLightboxKeyboard({ isOpen: open, onClose: () => setOpen(false) });
 
   return (
     <>

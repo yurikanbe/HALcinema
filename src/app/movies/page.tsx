@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Carousel3D from '@/components/Carousel3D';
-import moviesData   from '@/data/movies.json';
-import schedulesData from '@/data/schedules.json';
-import type { Movie, ScreenSchedule } from '@/types';
+import moviesData from '@/data/movies.json';
+import type { Movie } from '@/types';
 import MoviesClient from './MoviesClient';
 import s from './page.module.css';
 
@@ -10,23 +9,13 @@ export const metadata: Metadata = {
   title: 'HAL CINEMA | 映画一覧',
 };
 
-const movies    = moviesData    as Movie[];
-const schedules = schedulesData as ScreenSchedule[];
+const movies = moviesData as Movie[];
 
-function buildTheatersByMovie(): Record<string, string[]> {
-  const map: Record<string, Set<string>> = {};
-  for (const s of schedules) {
-    for (const show of s.shows) {
-      if (!map[show.movieId]) map[show.movieId] = new Set();
-      map[show.movieId].add(s.theaterId);
-    }
-  }
-  return Object.fromEntries(Object.entries(map).map(([k, v]) => [k, Array.from(v)]));
-}
-
-const nowShowing  = movies.filter(m => m.status === 'now_showing');
-const comingSoon  = movies.filter(m => m.status === 'coming_soon');
-const theatersByMovie = buildTheatersByMovie();
+const nowShowing = movies.filter(m => m.status === 'now_showing');
+const comingSoon = movies.filter(m => m.status === 'coming_soon');
+const theatersByMovie: Record<string, string[]> = Object.fromEntries(
+  movies.map(m => [m.id, m.theaters])
+);
 
 export default function MoviesPage() {
   const carouselMovies = nowShowing.map(m => ({

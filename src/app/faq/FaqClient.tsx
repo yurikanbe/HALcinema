@@ -1,6 +1,8 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
+import FilterButtonGroup from '@/components/FilterButtonGroup';
+import BackToTop from '@/components/BackToTop';
 import shared from '@/styles/shared.module.css';
 import styles from './page.module.css';
 
@@ -156,14 +158,7 @@ const FAQ_ITEMS: FaqItem[] = [
 export default function FaqClient() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
-  const [showBackTop, setShowBackTop] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setShowBackTop(window.scrollY > 300);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   function toggleFaq(id: string) {
     setOpenIds(prev => {
@@ -211,18 +206,12 @@ export default function FaqClient() {
           </div>
         </div>
 
-        <div className={styles.faqCats}>
-          {CATEGORIES.map(category => (
-            <button
-              key={category.id}
-              type="button"
-              className={`${shared.filterBtn} ${activeCategory === category.id ? shared.filterBtnActive : ''}`}
-              onClick={() => setActiveCategory(category.id)}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
+        <FilterButtonGroup
+          options={CATEGORIES.map(c => ({ value: c.id, label: c.label }))}
+          active={activeCategory}
+          onChange={setActiveCategory}
+          className={styles.faqCats}
+        />
 
         <div className={styles.faqList}>
           {filteredItems.map(item => {
@@ -376,13 +365,7 @@ export default function FaqClient() {
         </div>
       </section>
 
-      <button
-        className={`${shared.backToTop}${showBackTop ? ' ' + shared.backToTopVisible : ''}`}
-        aria-label="ページトップへ戻る"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
+      <BackToTop />
     </>
   );
 }

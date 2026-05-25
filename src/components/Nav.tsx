@@ -4,16 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import styles from './Nav.module.css';
 import shared from '@/styles/shared.module.css';
-
-const NAV_LINKS = [
-  { href: '/', label: 'ホーム' },
-  { href: '/movies', label: '作品一覧' },
-  { href: '/schedule', label: '上映スケジュール' },
-  { href: '/theaters', label: 'シアター' },
-  { href: '/news', label: 'お知らせ' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/menu', label: '料金・メニュー' },
-];
+import { NAV_LINKS } from '@/lib/navLinks';
 
 export default function Nav() {
   const pathname = usePathname();

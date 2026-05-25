@@ -2,6 +2,8 @@
 
 import { Fragment, useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
+import BackToTop from '@/components/BackToTop';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -57,17 +59,10 @@ const SCROLL_IDS = ['section-ticket', 'popcorn', 'drink', 'food', 'sweets', 'set
 export default function MenuPage() {
   const [lbIndex, setLbIndex] = useState<number | null>(null);
   const [activeNav, setActiveNav] = useState('section-ticket');
-  const [showBackTop, setShowBackTop] = useState(false);
   const lbImgRef = useRef<HTMLImageElement>(null);
   const animating = useRef(false);
 
   useEffect(() => { document.title = 'HAL CINEMA | 料金・メニュー'; }, []);
-
-  useEffect(() => {
-    const onScroll = () => setShowBackTop(window.scrollY > 400);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   useEffect(() => {
     const targets = SCROLL_IDS.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
@@ -112,17 +107,12 @@ export default function MenuPage() {
     }, 200);
   }, []);
 
-  useEffect(() => {
-    if (lbIndex === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape')     setLbIndex(null);
-      if (e.key === 'ArrowLeft')  navigate(-1);
-      if (e.key === 'ArrowRight') navigate(1);
-    };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [lbIndex, navigate]);
+  useLightboxKeyboard({
+    isOpen: lbIndex !== null,
+    onClose: () => setLbIndex(null),
+    onPrev:  () => navigate(-1),
+    onNext:  () => navigate(1),
+  });
 
   const lbItem = lbIndex !== null ? MENU_ITEMS[lbIndex] : null;
 
@@ -232,14 +222,7 @@ export default function MenuPage() {
         </p>
       </section>
 
-      {/* Back to top */}
-      <button
-        className={`${s.backToTop}${showBackTop ? ' ' + s.backToTopVisible : ''}`}
-        aria-label="ページトップへ戻る"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
+      <BackToTop threshold={400} />
 
       {/* Lightbox */}
       {lbItem && (

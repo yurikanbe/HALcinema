@@ -3,20 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import newsData from '@/data/news.json';
 import type { NewsItem } from '@/types';
+import { CATEGORY_LABEL, BADGE_CLASS } from '@/lib/newsCategories';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
 const news = newsData as NewsItem[];
-const CATEGORY_LABEL: Record<string, string> = {
-  campaign: 'キャンペーン',
-  event:    'イベント',
-  info:     'お知らせ',
-};
-const BADGE_CLASS: Record<string, string> = {
-  campaign: shared.newsBadgeCampaign,
-  event:    shared.newsBadgeEvent,
-  info:     shared.newsBadgeInfo,
-};
 
 export function generateStaticParams() {
   return news.map(n => ({ id: n.id }));

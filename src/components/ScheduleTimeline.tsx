@@ -6,6 +6,8 @@ import moviesData   from '@/data/movies.json';
 import type { ScreenSchedule, Movie } from '@/types';
 import tl from './ScheduleTimeline.module.css';
 import shared from '@/styles/shared.module.css';
+import { THEATER_IDS, THEATER_CONFIG } from '@/lib/theaterConfig';
+import FilterButtonGroup from '@/components/FilterButtonGroup';
 
 const DAYS   = ['日','月','火','水','木','金','土'];
 const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
@@ -17,11 +19,7 @@ const TL_HOURS = TL_END - TL_START;
 const LABEL_W  = 148;
 const TRACK_W  = TL_HOURS * PX_HR;
 
-const THEATERS = [
-  { id: 'starry', label: 'STARRY' },
-  { id: 'abyss',  label: 'ABYSS'  },
-  { id: 'cyber',  label: 'CYBER'  },
-];
+const THEATERS = THEATER_IDS.map(id => ({ id, label: THEATER_CONFIG[id].shortLabel }));
 
 const screens = scheduleData as ScreenSchedule[];
 const movies  = moviesData   as Movie[];
@@ -133,18 +131,16 @@ export default function ScheduleTimeline({ initialTheater }: { initialTheater?: 
       {/* ── Top bar ── */}
       <div className={tl.schedTopbar}>
         <div className={tl.schedDateLabel}>{dateLabel}</div>
-        <div className={shared.theaterFilter} id="theater-filter">
-          {[{ id: 'all', label: 'すべて' }, ...THEATERS.map(t => ({ id: t.id, label: t.id === 'starry' ? 'Starry' : t.id === 'abyss' ? 'Abyss' : 'Cyber' }))].map(t => (
-            <button
-              key={t.id}
-              className={`${shared.filterBtn}${activeTheater === t.id ? ' ' + shared.filterBtnActive : ''}`}
-              data-theater={t.id}
-              onClick={() => setActiveTheater(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        <FilterButtonGroup
+          options={[
+            { value: 'all', label: 'すべて' },
+            ...THEATER_IDS.map(id => ({ value: id, label: THEATER_CONFIG[id].name.split(' ')[0] })),
+          ]}
+          active={activeTheater}
+          onChange={setActiveTheater}
+          className={shared.theaterFilter}
+          id="theater-filter"
+        />
       </div>
 
       {/* ── Sticky time axis ── */}

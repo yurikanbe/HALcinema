@@ -1,21 +1,13 @@
 import Link from 'next/link';
 import styles from './Footer.module.css';
+import { NAV_LINKS } from '@/lib/navLinks';
+import { THEATER_IDS, THEATER_CONFIG } from '@/lib/theaterConfig';
 
-const NAV_LINKS = [
-  { href: '/',         label: 'ホーム' },
-  { href: '/movies',   label: '作品一覧' },
-  { href: '/schedule', label: '上映スケジュール' },
-  { href: '/theaters', label: 'シアター' },
-  { href: '/news',     label: 'お知らせ' },
-  { href: '/faq',      label: 'FAQ' },
-  { href: '/menu',     label: '料金・メニュー' },
-];
-
-const THEATERS = [
-  { href: '/theaters#starry', label: 'Starry Theater', meta: '200席 × 3スクリーン', dot: styles.dotStarry },
-  { href: '/theaters#abyss',  label: 'Abyss Theater',  meta: '120席 × 2スクリーン', dot: styles.dotAbyss },
-  { href: '/theaters#cyber',  label: 'Cyber Theater',  meta: '70席 × 3スクリーン',  dot: styles.dotCyber },
-];
+const DOT_CLASS: Record<string, string> = {
+  starry: styles.dotStarry,
+  abyss:  styles.dotAbyss,
+  cyber:  styles.dotCyber,
+};
 
 export default function Footer() {
   return (
@@ -53,17 +45,20 @@ export default function Footer() {
         <div>
           <div className={styles.colHead}>シアター</div>
           <ul className={styles.linkList}>
-            {THEATERS.map(({ href, label, meta, dot }) => (
-              <li key={href}>
-                <Link href={href} className={styles.theaterLink}>
-                  <span className={`${styles.dot} ${dot}`} />
-                  <span>
-                    <span className={styles.theaterName}>{label}</span>
-                    <span className={styles.theaterMeta}>{meta}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
+            {THEATER_IDS.map(id => {
+              const t = THEATER_CONFIG[id];
+              return (
+                <li key={id}>
+                  <Link href={t.href} className={styles.theaterLink}>
+                    <span className={`${styles.dot} ${DOT_CLASS[id]}`} />
+                    <span>
+                      <span className={styles.theaterName}>{t.name}</span>
+                      <span className={styles.theaterMeta}>{t.meta}</span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -95,7 +90,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className={styles.bottom}>
         <div className={styles.bottomInner}>
-          <span className={styles.copy}>© 2026 HAL CINEMA. All rights reserved.</span>
+          <span className={styles.copy}>&copy; 2026 HAL CINEMA. All rights reserved.</span>
           <Link href="/reserve" className={styles.bottomCta}>チケット購入について →</Link>
         </div>
       </div>

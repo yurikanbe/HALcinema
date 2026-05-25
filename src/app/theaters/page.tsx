@@ -6,6 +6,9 @@ import theatersData from '@/data/theaters.json';
 import schedulesData from '@/data/schedules.json';
 import moviesData from '@/data/movies.json';
 import type { Theater, ScreenSchedule, Movie } from '@/types';
+import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
+import { THEATER_CONFIG } from '@/lib/theaterConfig';
+import BackToTop from '@/components/BackToTop';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -14,12 +17,7 @@ const schedules = schedulesData as ScreenSchedule[];
 const movies    = moviesData    as Movie[];
 
 function getMoviesForTheater(theaterId: string): Movie[] {
-  const ids = new Set<string>();
-  for (const sc of schedules) {
-    if (sc.theaterId !== theaterId) continue;
-    for (const sh of sc.shows) ids.add(sh.movieId);
-  }
-  return movies.filter(m => ids.has(m.id));
+  return movies.filter(m => m.theaters.includes(theaterId));
 }
 
 const NAV_DOT_CLASS: Record<string, string> = {
@@ -32,25 +30,13 @@ const HERO_CLASS: Record<string, string> = {
   abyss:  s.theaterChapterHeroAbyss,
   cyber:  s.theaterChapterHeroCyber,
 };
-const HERO_IMG: Record<string, { src: string; caption: string }> = {
-  starry: { src: '/images/starry/starry1.png', caption: 'Starry Theater' },
-  abyss:  { src: '/images/abyss/abyss1.png',  caption: 'Abyss Theater' },
-  cyber:  { src: '/images/cyber/cyber1.png',   caption: 'Cyber Theater' },
-};
 
 export default function TheatersPage() {
   const [lb, setLb] = useState<{ images: { src: string; caption: string }[]; index: number } | null>(null);
-  const [showBackTop, setShowBackTop] = useState(false);
   const chaptersRef = useRef<HTMLElement[]>([]);
   const [activeId, setActiveId] = useState('starry');
 
   useEffect(() => { document.title = 'HAL CINEMA | シアター'; }, []);
-
-  useEffect(() => {
-    const onScroll = () => setShowBackTop(window.scrollY > 300);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   useEffect(() => {
     const elements = chaptersRef.current.filter(Boolean);
@@ -73,18 +59,12 @@ export default function TheatersPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!lb) return;
-    const len = lb.images.length;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLb(null);
-      if (e.key === 'ArrowLeft')  setLb(p => p ? { ...p, index: (p.index - 1 + len) % len } : p);
-      if (e.key === 'ArrowRight') setLb(p => p ? { ...p, index: (p.index + 1) % len } : p);
-    };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [lb]);
+  useLightboxKeyboard({
+    isOpen: lb !== null,
+    onClose: () => setLb(null),
+    onPrev:  () => setLb(p => p ? { ...p, index: (p.index - 1 + p.images.length) % p.images.length } : p),
+    onNext:  () => setLb(p => p ? { ...p, index: (p.index + 1) % p.images.length } : p),
+  });
 
   const currentImages = lb?.images ?? [];
   const currentPhoto  = lb ? currentImages[lb.index] : null;
@@ -134,7 +114,8 @@ export default function TheatersPage() {
               <div
                 className={`${s.theaterChapterHero} ${HERO_CLASS[theater.id] ?? ''} ${s.theaterChapterHeroClickable}`}
                 onClick={() => {
-                  const hero = HERO_IMG[theater.id];
+                  const cfg = THEATER_CONFIG[theater.id as keyof typeof THEATER_CONFIG];
+                  const hero = cfg ? { src: cfg.heroImage, caption: cfg.heroCaption } : null;
                   setLb({ images: hero ? [hero, ...theater.gallery] : theater.gallery, index: 0 });
                 }}
               >
@@ -301,13 +282,7 @@ export default function TheatersPage() {
         </div>
       )}
 
-      <button
-        className={`${shared.backToTop}${showBackTop ? ' ' + shared.backToTopVisible : ''}`}
-        aria-label="ページトップへ戻る"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
+      <BackToTop />
     </>
   );
 }
