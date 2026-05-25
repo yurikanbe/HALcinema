@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import styles from './Nav.module.css';
@@ -17,19 +16,7 @@ const NAV_LINKS = [
 ];
 
 export default function Nav() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setIsLoggedIn(localStorage.getItem('hal_cinema_logged_in') === 'true');
-  }, []);
-
-  function handleLogout() {
-    localStorage.removeItem('hal_cinema_logged_in');
-    localStorage.removeItem('hal_cinema_user');
-    setIsLoggedIn(false);
-    window.location.href = '/';
-  }
 
   return (
     <header className={styles.nav} data-nav>
@@ -47,16 +34,8 @@ export default function Nav() {
               {label}
             </Link>
           ))}
-          {isLoggedIn && (
-            <Link href="/mypage">マイページ</Link>
-          )}
         </nav>
         <div className={styles.navCta}>
-          {!isLoggedIn ? (
-            <Link href="/login" className={shared.btn}>ログイン</Link>
-          ) : (
-            <button className={shared.btn} onClick={handleLogout}>ログアウト</button>
-          )}
           <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid}`}>今すぐ予約する</Link>
         </div>
       </div>
