@@ -201,11 +201,13 @@ export default function FacilityPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className={`${shared.section} ${s.ctaSection}`} data-reveal>
-        <div className={s.ctaBox}>
-          <div className={shared.sectionHint}>Access</div>
-          <h2 className={s.ctaTitle}>アクセスはこちら</h2>
-          <p className={s.ctaDesc}>名古屋駅から徒歩3分 / 地下街直結</p>
+      <section className={`${shared.section} ${s.facilityCtaSection}`} data-reveal>
+        <div className={s.facilityCta}>
+          <div className={s.facilityCtaLeft}>
+            <div className={shared.sectionHint}>Access</div>
+            <h2 className={s.facilityCtaTitle}>アクセスはこちら</h2>
+            <p className={s.facilityCtaDesc}>名古屋駅から徒歩3分 / 地下街直結</p>
+          </div>
           <Link href="/access" className={`${shared.btn} ${shared.btnSolid}`}>
             アクセス詳細を見る →
           </Link>

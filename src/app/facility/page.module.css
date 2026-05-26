@@ -148,32 +148,34 @@
 }
 
 /* ── CTA ── */
-.ctaSection { padding-top: 0; }
+.facilityCtaSection { padding-top: 0; }
 
-.ctaBox {
-  background: linear-gradient(135deg, #051221 0%, #0c2040 60%, #0f2e5a 100%);
-  border: 1px solid rgba(200, 164, 91, 0.28);
-  border-radius: 16px;
-  padding: 48px;
+.facilityCta {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 14px;
-  box-shadow: 0 24px 60px rgba(6, 13, 31, 0.35);
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 36px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #06101f 0%, #0c2040 60%, #0f2e5a 100%);
+  border: 1px solid rgba(200, 164, 91, 0.24);
+  box-shadow: 0 16px 48px rgba(6, 13, 31, 0.28);
+  flex-wrap: wrap;
 }
 
-.ctaTitle {
-  font-size: 28px;
-  letter-spacing: 0.12em;
-  color: #e8e4d8;
+.facilityCtaLeft { display: flex; flex-direction: column; gap: 6px; }
+
+.facilityCtaTitle {
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.92);
   margin: 0;
 }
 
-.ctaDesc {
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  color: rgba(232, 228, 216, 0.6);
+.facilityCtaDesc {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
 
@@ -193,6 +195,5 @@
 @media (max-width: 520px) {
   .lobbyBannerOverlay { padding: 20px 24px; }
   .lobbyBannerLead { font-size: 13px; }
-  .ctaBox { padding: 32px 24px; }
-  .ctaTitle { font-size: 22px; }
+  .facilityCta { padding: 24px 22px; }
 }
