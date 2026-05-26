@@ -26,7 +26,7 @@
 .moviesHeroEyebrow::before { content: ""; width: 54px; height: 1px; flex-shrink: 0; background: linear-gradient(90deg, transparent, var(--gold-500)); }
 .moviesHeroEyebrow::after  { content: ""; width: 54px; height: 1px; flex-shrink: 0; background: linear-gradient(90deg, var(--gold-500), transparent); }
 .moviesHeroTitle { font-size: 45px; letter-spacing: 0.18em; color: #ffffff; text-shadow: 0 10px 40px rgba(6, 13, 31, 0.6); }
-.moviesHeroHint { font-size: 11px; letter-spacing: 0.18em; color: rgba(255,255,255,0.35); text-align: center; padding: 0 0 20px; position: relative; z-index: 2; margin: 0; }
+.moviesHeroHint { font-size: 11px; letter-spacing: 0.18em; color: rgba(255,255,255,0.35); text-align: center; padding: 0 0 2rem; position: relative; z-index: 2; margin: 0; }
 .topCarousel { position: relative; z-index: 2; }
 
 @media (max-width: 640px) {

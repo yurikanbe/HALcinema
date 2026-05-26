@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Carousel3D from '@/components/Carousel3D';
 import moviesData from '@/data/movies.json';
-import type { Movie } from '@/types';
+import newsData   from '@/data/news.json';
+import type { Movie, NewsItem } from '@/types';
+import { CATEGORY_LABEL, BADGE_CLASS } from '@/lib/newsCategories';
 import s from './page.module.css';
 import shared from '@/styles/shared.module.css';
 
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
 };
 
 const movies = moviesData as Movie[];
-const nowShowing = movies.filter(m => m.status === 'now_showing');
+const news   = newsData   as NewsItem[];
+const nowShowing   = movies.filter(m => m.status === 'now_showing');
+const featuredNews = news.find(n => n.featured);
 
 export default function HomePage() {
   const carouselMovies = nowShowing.map(m => ({
@@ -64,7 +68,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Now Showing + 3D Carousel ── */}
-      <section className={shared.section} id="now">
+      <section className={shared.section} id="now" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Now Showing</div>
@@ -76,13 +80,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Theater Introduction ── */}
-      <section className={shared.section} id="theaters">
+      <section className={shared.section} id="theaters" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Theater Experience</div>
             <h2 className={shared.sectionTitle}>劇場紹介</h2>
           </div>
-          <Link className={shared.textLink} href="/theaters">シアター詳細を見る →</Link>
+          <Link className={shared.textLink} href="/facility">施設案内を見る →</Link>
         </div>
         <div className={s.theaterShowcase}>
           <div className={s.lobbyShowcase}>
@@ -90,10 +94,13 @@ export default function HomePage() {
               <img className={s.lobbyImg} src="/images/lobby.png" alt="HAL CINEMAのロビー" />
             </div>
             <div className={s.lobbyContent}>
-              <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所</p>
-              <p className={s.lobbyText}>
-                3つのコンセプト空間が、それぞれ異なる余韻を演出。<br />
-              </p>
+              <div className={s.lobbyHead}>
+                <p className={s.lobbyLead}>上映前の静けさと高揚が交差する場所</p>
+                <p className={s.lobbyText}>
+                  3つのコンセプト空間が、それぞれ異なる余韻を演出。
+                </p>
+              </div>
+              
               <div className={s.lobbyMeta}>
                 <span>Open 10:00 - 24:00</span>
                 <span>Parking 120</span>
@@ -113,6 +120,8 @@ export default function HomePage() {
                   <span className={s.lobbyPaymentBadge}>交通系IC</span>
                   <span className={s.lobbyPaymentBadge}>iD</span>
                   <span className={s.lobbyPaymentBadge}>QUICPay</span>
+                  <span className={s.lobbyPaymentBadge}>PayPay</span>
+                  <span className={s.lobbyPaymentBadge}>LINE Pay</span>
                 </div>
               </div>
               <div className={s.lobbyAccess}>
@@ -165,7 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Signature Services ── */}
-      <section className={shared.section} id="services">
+      <section className={shared.section} id="services" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Original Services</div>
@@ -192,12 +201,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Ticket Pricing ── */}
-      <section className={shared.section} id="tickets">
+      <section className={shared.section} id="tickets" data-reveal>
         <div className={shared.sectionHead}>
           <div>
             <div className={shared.sectionHint}>Ticket Pricing</div>
             <h2 className={shared.sectionTitle}>チケット料金</h2>
           </div>
+          <Link className={shared.textLink} href="/faq">よくある質問 →</Link>
         </div>
         <div className={shared.priceListPanel}>
           {[
@@ -219,7 +229,7 @@ export default function HomePage() {
           ))}
           <div className={shared.priceListFooter}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            Starry / Abyss シアターはプレミアム席あり（+¥500）
+            プレミアム席あり（+¥500）
           </div>
         </div>
       </section>

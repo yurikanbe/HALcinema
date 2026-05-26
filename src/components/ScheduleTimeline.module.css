@@ -12,6 +12,7 @@
 .tlInner { width: max-content; min-width: 100%; position: relative; box-sizing: border-box; }
 .tlAxisSticky {
   position: sticky;
+  top: var(--nav-height, 82px);
   z-index: 19;
   overflow-x: hidden;
   margin: 0 -20px;

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Carousel3D from '@/components/Carousel3D';
-import moviesData   from '@/data/movies.json';
+import moviesData    from '@/data/movies.json';
 import schedulesData from '@/data/schedules.json';
 import type { Movie, ScreenSchedule } from '@/types';
 import MoviesClient from './MoviesClient';
@@ -13,20 +13,23 @@ export const metadata: Metadata = {
 const movies    = moviesData    as Movie[];
 const schedules = schedulesData as ScreenSchedule[];
 
-function buildTheatersByMovie(): Record<string, string[]> {
-  const map: Record<string, Set<string>> = {};
-  for (const s of schedules) {
-    for (const show of s.shows) {
-      if (!map[show.movieId]) map[show.movieId] = new Set();
-      map[show.movieId].add(s.theaterId);
-    }
-  }
-  return Object.fromEntries(Object.entries(map).map(([k, v]) => [k, Array.from(v)]));
+const nowShowing = movies.filter(m => m.status === 'now_showing');
+const comingSoon = movies.filter(m => m.status === 'coming_soon');
+const theatersByMovie: Record<string, string[]> = Object.fromEntries(
+  movies.map(m => [m.id, m.theaters])
+);
+
+function computeSeatStatus(movieId: string): 'sold_out' | 'few' | null {
+  const shows = schedules.flatMap(sc => sc.shows.filter(sh => sh.movieId === movieId));
+  if (!shows.length) return null;
+  if (shows.every(sh => sh.taken)) return 'sold_out';
+  if (shows.some(sh => !sh.taken && sh.seats !== undefined && sh.seats <= 15)) return 'few';
+  return null;
 }
 
-const nowShowing  = movies.filter(m => m.status === 'now_showing');
-const comingSoon  = movies.filter(m => m.status === 'coming_soon');
-const theatersByMovie = buildTheatersByMovie();
+const seatStatus: Record<string, 'sold_out' | 'few' | null> = Object.fromEntries(
+  nowShowing.map(m => [m.id, computeSeatStatus(m.id)])
+);
 
 export default function MoviesPage() {
   const carouselMovies = nowShowing.map(m => ({
@@ -51,6 +54,7 @@ export default function MoviesPage() {
         nowShowing={nowShowing}
         comingSoon={comingSoon}
         theatersByMovie={theatersByMovie}
+        seatStatus={seatStatus}
       />
     </>
   );

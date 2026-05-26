@@ -3,72 +3,280 @@
     "theaterId": "starry",
     "screen": "Screen 1",
     "shows": [
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "10:30", "duration": 138, "format": "吹替",    "seats": 68 },
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "14:20", "duration": 138, "format": "吹替",    "seats": 42 },
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "18:00", "duration": 138, "format": "吹替",    "taken": true },
-      { "movieId": "thank-you-chuck",         "title": "[字幕] サンキュー、チャック",   "start": "21:10", "duration": 118, "format": "字幕",    "seats": 115 }
+      {
+        "movieId": "shoujiki_fudousan",
+        "title": "映画『正直不動産』",
+        "start": "10:30",
+        "duration": 115,
+        "format": "字幕",
+        "seats": 68
+      },
+      {
+        "movieId": "shoujiki_fudousan",
+        "title": "映画『正直不動産』",
+        "start": "14:20",
+        "duration": 115,
+        "format": "字幕",
+        "seats": 42
+      },
+      {
+        "movieId": "shoujiki_fudousan",
+        "title": "映画『正直不動産』",
+        "start": "18:00",
+        "duration": 115,
+        "format": "字幕",
+        "taken": true
+      },
+      {
+        "movieId": "meitantei-konan-highwaynodatensi",
+        "title": "劇場版『名探偵コナン ハイウェイの堕天使』",
+        "start": "21:10",
+        "duration": 118,
+        "format": "字幕",
+        "seats": 115
+      }
     ]
   },
   {
     "theaterId": "starry",
     "screen": "Screen 2",
     "shows": [
-      { "movieId": "yoake-no-kokai",  "title": "夜明けの航海",               "start": "11:00", "duration": 122, "format": "吹替", "seats": 82 },
-      { "movieId": "yoake-no-kokai",  "title": "夜明けの航海",               "start": "15:30", "duration": 122, "format": "吹替", "seats": 71 },
-      { "movieId": "thank-you-chuck", "title": "[字幕] サンキュー、チャック", "start": "20:00", "duration": 118, "format": "字幕", "seats": 143 }
+      {
+        "movieId": "wikido_eiennoyokoku",
+        "title": "ウィキッド　永遠の約束",
+        "start": "11:00",
+        "duration": 122,
+        "format": "吹替",
+        "seats": 82
+      },
+      {
+        "movieId": "wikido_eiennoyokoku",
+        "title": "ウィキッド　永遠の約束",
+        "start": "15:30",
+        "duration": 122,
+        "format": "吹替",
+        "seats": 71
+      },
+      {
+        "movieId": "meitantei-konan-highwaynodatensi",
+        "title": "劇場版『名探偵コナン ハイウェイの堕天使』",
+        "start": "20:00",
+        "duration": 118,
+        "format": "字幕",
+        "seats": 143
+      }
     ]
   },
   {
     "theaterId": "starry",
     "screen": "Screen 3",
     "shows": [
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "13:00", "duration": 138, "format": "字幕", "seats": 55 },
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "17:45", "duration": 138, "format": "字幕", "seats": 31 }
+      {
+        "movieId": "devil_wears_prada_2",
+        "title": "プラダを着た悪魔2",
+        "start": "10:00",
+        "duration": 110,
+        "format": "字幕",
+        "seats": 88
+      },
+      {
+        "movieId": "chiikawa_ningyo",
+        "title": "映画ちいかわ 人魚の島のひみつ",
+        "start": "13:00",
+        "duration": 90,
+        "format": "吹替",
+        "seats": 55
+      },
+      {
+        "movieId": "chiikawa_ningyo",
+        "title": "映画ちいかわ 人魚の島のひみつ",
+        "start": "17:45",
+        "duration": 90,
+        "format": "吹替",
+        "seats": 31
+      },
+      {
+        "movieId": "project_hail_mary",
+        "title": "プロジェクト・ヘイル・メアリー",
+        "start": "19:30",
+        "duration": 142,
+        "format": "字幕",
+        "seats": 71
+      }
     ]
   },
   {
     "theaterId": "abyss",
     "screen": "Screen 1",
     "shows": [
-      { "movieId": "yoake-no-kokai", "title": "夜明けの航海", "start": "11:00", "duration": 112, "format": "吹替", "seats": 54 },
-      { "movieId": "yoake-no-kokai", "title": "夜明けの航海", "start": "15:45", "duration": 112, "format": "吹替", "seats": 21 },
-      { "movieId": "yoake-no-kokai", "title": "夜明けの航海", "start": "20:30", "duration": 112, "format": "吹替", "taken": true }
+      {
+        "movieId": "sakamoto_days",
+        "title": "SAKAMOTO DAYS",
+        "start": "11:00",
+        "duration": 114,
+        "format": "吹替",
+        "seats": 54
+      },
+      {
+        "movieId": "devil_wears_prada_2",
+        "title": "プラダを着た悪魔2",
+        "start": "13:10",
+        "duration": 110,
+        "format": "字幕",
+        "seats": 64
+      },
+      {
+        "movieId": "sakamoto_days",
+        "title": "SAKAMOTO DAYS",
+        "start": "15:45",
+        "duration": 114,
+        "format": "吹替",
+        "seats": 21
+      },
+      {
+        "movieId": "sakamoto_days",
+        "title": "SAKAMOTO DAYS",
+        "start": "20:30",
+        "duration": 114,
+        "format": "吹替",
+        "taken": true
+      }
     ]
   },
   {
     "theaterId": "abyss",
     "screen": "Screen 2",
     "shows": [
-      { "movieId": "machikado-no-symphony",   "title": "街角の交響曲",                 "start": "10:30", "duration": 104, "format": "字幕", "seats": 88 },
-      { "movieId": "machikado-no-symphony",   "title": "街角の交響曲",                 "start": "14:30", "duration": 104, "format": "字幕", "seats": 62 },
-      { "movieId": "why-write-love-letters",  "title": "人はなぜラブレターを書くのか", "start": "19:30", "duration": 138, "format": "吹替", "seats": 74 }
+      {
+        "movieId": "doraemon-kaiteikiganzyo",
+        "title": "映画ドラえもん　新・のび太の海底鬼岩城",
+        "start": "10:30",
+        "duration": 138,
+        "format": "吹替",
+        "seats": 88
+      },
+      {
+        "movieId": "doraemon-kaiteikiganzyo",
+        "title": "映画ドラえもん　新・のび太の海底鬼岩城",
+        "start": "14:30",
+        "duration": 138,
+        "format": "吹替",
+        "seats": 62
+      },
+      {
+        "movieId": "doraemon-kaiteikiganzyo",
+        "title": "映画ドラえもん　新・のび太の海底鬼岩城",
+        "start": "19:30",
+        "duration": 138,
+        "format": "吹替",
+        "seats": 74
+      }
     ]
   },
   {
     "theaterId": "cyber",
     "screen": "Screen 1",
     "shows": [
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "10:00", "duration": 138, "format": "字幕", "seats": 70 },
-      { "movieId": "why-write-love-letters", "title": "人はなぜラブレターを書くのか", "start": "13:50", "duration": 138, "format": "字幕", "seats": 48 },
-      { "movieId": "yoake-no-kokai",          "title": "夜明けの航海",                "start": "18:30", "duration": 112, "format": "吹替", "seats": 26 }
+      {
+        "movieId": "honoo_kagayohe",
+        "title": "炎かがよへ",
+        "start": "10:00",
+        "duration": 120,
+        "format": "字幕",
+        "seats": 70
+      },
+      {
+        "movieId": "honoo_kagayohe",
+        "title": "炎かがよへ",
+        "start": "13:50",
+        "duration": 120,
+        "format": "字幕",
+        "seats": 48
+      },
+      {
+        "movieId": "kyojo_requiem",
+        "title": "教場 Requiem",
+        "start": "16:10",
+        "duration": 125,
+        "format": "字幕",
+        "seats": 38
+      },
+      {
+        "movieId": "sakamoto_days",
+        "title": "SAKAMOTO DAYS",
+        "start": "18:30",
+        "duration": 114,
+        "format": "吹替",
+        "seats": 26
+      }
     ]
   },
   {
     "theaterId": "cyber",
     "screen": "Screen 2",
     "shows": [
-      { "movieId": "yoake-no-kokai",       "title": "夜明けの航海",  "start": "11:30", "duration": 112, "format": "吹替", "seats": 43 },
-      { "movieId": "machikado-no-symphony", "title": "街角の交響曲",  "start": "15:00", "duration": 104, "format": "吹替", "seats": 55 },
-      { "movieId": "yoake-no-kokai",       "title": "夜明けの航海",  "start": "19:00", "duration": 112, "format": "吹替", "seats": 67 }
+      {
+        "movieId": "sakamoto_days",
+        "title": "SAKAMOTO DAYS",
+        "start": "11:30",
+        "duration": 114,
+        "format": "吹替",
+        "seats": 43
+      },
+      {
+        "movieId": "supermario_galaxy_movie",
+        "title": "ザ・スーパーマリオギャラクシー・ムービー",
+        "start": "15:00",
+        "duration": 104,
+        "format": "吹替",
+        "seats": 55
+      },
+      {
+        "movieId": "sakamoto_days",
+        "title": "SAKAMOTO DAYS",
+        "start": "19:00",
+        "duration": 114,
+        "format": "吹替",
+        "seats": 67
+      }
     ]
   },
   {
     "theaterId": "cyber",
     "screen": "Screen 3",
     "shows": [
-      { "movieId": "machikado-no-symphony", "title": "街角の交響曲",               "start": "12:00", "duration": 104, "format": "字幕・吹替", "taken": true },
-      { "movieId": "machikado-no-symphony", "title": "街角の交響曲",               "start": "16:30", "duration": 104, "format": "字幕・吹替", "seats": 34 },
-      { "movieId": "thank-you-chuck",       "title": "[字幕] サンキュー、チャック", "start": "20:00", "duration": 118, "format": "字幕",        "seats": 58 }
+      {
+        "movieId": "supermario_galaxy_movie",
+        "title": "ザ・スーパーマリオギャラクシー・ムービー",
+        "start": "12:00",
+        "duration": 104,
+        "format": "字幕・吹替",
+        "taken": true
+      },
+      {
+        "movieId": "kyojo_requiem",
+        "title": "教場 Requiem",
+        "start": "14:00",
+        "duration": 125,
+        "format": "字幕",
+        "seats": 55
+      },
+      {
+        "movieId": "supermario_galaxy_movie",
+        "title": "ザ・スーパーマリオギャラクシー・ムービー",
+        "start": "16:30",
+        "duration": 104,
+        "format": "字幕・吹替",
+        "seats": 34
+      },
+      {
+        "movieId": "meitantei-konan-highwaynodatensi",
+        "title": "劇場版『名探偵コナン ハイウェイの堕天使』",
+        "start": "20:00",
+        "duration": 118,
+        "format": "字幕",
+        "seats": 58
+      }
     ]
   }
 ]

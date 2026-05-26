@@ -1,15 +1,231 @@
 .footer {
-  padding: 40px 20px 60px;
-  background: #f2f6fb;
-  border-top: 1px solid rgba(12, 32, 60, 0.08);
+  background: linear-gradient(180deg, #04101f 0%, #060e22 100%);
+  border-top: 1px solid rgba(200, 164, 91, 0.22);
 }
-.footerInner {
+
+.inner {
   max-width: 1180px;
   margin: 0 auto;
+  padding: 2.4rem 1.8rem 1rem;
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1.3fr;
+  gap: 48px;
+}
+
+/* ── Brand ── */
+.brand {
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.logoLink {
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.logo {
+  height: 36px;
+  width: auto;
+  opacity: 0.92;
+}
+
+.tagline {
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(200, 164, 91, 0.75);
+  margin: 0 0 0.5rem;
+}
+
+.desc {
+  font-size: 12px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.42);
+  margin: 0 0 18px;
+}
+
+.mail {
+  margin-bottom: 0.75rem;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: rgba(200, 164, 91, 0.65);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mail:hover {
+  color: rgba(200, 164, 91, 1);
+}
+
+/* ── Column heading ── */
+.colHead {
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(200, 164, 91, 0.7);
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(200, 164, 91, 0.14);
+}
+
+/* ── Nav links ── */
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.linkListTwo {
+  width: max-content;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+}
+
+.navLink {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.navLink:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Theater links ── */
+.theaterLink {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.theaterLink:hover {
+  opacity: 0.85;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotStarry {
+  background: linear-gradient(135deg, #c8a45b, #e3c788);
+}
+
+.dotAbyss {
+  background: linear-gradient(135deg, #0e6b86, #5ac8e0);
+}
+
+.dotCyber {
+  background: linear-gradient(135deg, #0d2060, #2a6ae0);
+}
+
+.theaterName {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.3;
+}
+
+.theaterMeta {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 2px;
+}
+
+/* ── Info list ── */
+.infoList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.infoItem {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.infoLabel {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(200, 164, 91, 0.6);
+  padding-top: 2px;
+}
+
+/* ── Bottom bar ── */
+.bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.bottomInner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
-  font-size: 12px;
-  color: #4c5e7f;
+}
+
+.copy {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.bottomCta {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(200, 164, 91, 0.55);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.bottomCta:hover {
+  color: rgba(200, 164, 91, 0.9);
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 32px;
+    padding: 52px 28px 48px;
+  }
+
+  .brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .inner {
+    grid-template-columns: 1fr;
+    padding: 44px 24px 40px;
+  }
+
+  .bottomInner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px 24px;
+  }
 }

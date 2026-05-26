@@ -6,6 +6,10 @@ import theatersData from '@/data/theaters.json';
 import schedulesData from '@/data/schedules.json';
 import moviesData from '@/data/movies.json';
 import type { Theater, ScreenSchedule, Movie } from '@/types';
+import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
+import { THEATER_CONFIG } from '@/lib/theaterConfig';
+import BackToTop from '@/components/BackToTop';
+import ZoomableImage from '@/components/ZoomableImage';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -14,12 +18,7 @@ const schedules = schedulesData as ScreenSchedule[];
 const movies    = moviesData    as Movie[];
 
 function getMoviesForTheater(theaterId: string): Movie[] {
-  const ids = new Set<string>();
-  for (const sc of schedules) {
-    if (sc.theaterId !== theaterId) continue;
-    for (const sh of sc.shows) ids.add(sh.movieId);
-  }
-  return movies.filter(m => ids.has(m.id));
+  return movies.filter(m => m.theaters.includes(theaterId));
 }
 
 const NAV_DOT_CLASS: Record<string, string> = {
@@ -34,7 +33,7 @@ const HERO_CLASS: Record<string, string> = {
 };
 
 export default function TheatersPage() {
-  const [lb, setLb] = useState<{ theater: string; index: number } | null>(null);
+  const [lb, setLb] = useState<{ images: { src: string; caption: string }[]; index: number } | null>(null);
   const chaptersRef = useRef<HTMLElement[]>([]);
   const [activeId, setActiveId] = useState('starry');
 
@@ -61,22 +60,15 @@ export default function TheatersPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!lb) return;
-    const theater = theaters.find(t => t.id === lb.theater);
-    if (!theater) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLb(null);
-      if (e.key === 'ArrowLeft')  setLb(p => p ? { ...p, index: (p.index - 1 + theater.gallery.length) % theater.gallery.length } : p);
-      if (e.key === 'ArrowRight') setLb(p => p ? { ...p, index: (p.index + 1) % theater.gallery.length } : p);
-    };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [lb]);
+  useLightboxKeyboard({
+    isOpen: lb !== null,
+    onClose: () => setLb(null),
+    onPrev:  () => setLb(p => p ? { ...p, index: (p.index - 1 + p.images.length) % p.images.length } : p),
+    onNext:  () => setLb(p => p ? { ...p, index: (p.index + 1) % p.images.length } : p),
+  });
 
-  const currentGallery = lb ? theaters.find(t => t.id === lb.theater)?.gallery ?? [] : [];
-  const currentPhoto   = lb ? currentGallery[lb.index] : null;
+  const currentImages = lb?.images ?? [];
+  const currentPhoto  = lb ? currentImages[lb.index] : null;
 
   return (
     <>
@@ -120,8 +112,18 @@ export default function TheatersPage() {
               ref={el => { if (el) chaptersRef.current[ti] = el; }}
             >
               {/* Hero */}
-              <div className={`${s.theaterChapterHero} ${HERO_CLASS[theater.id] ?? ''}`}>
-                <div className={s.theaterChapterHeroContent}>
+              <div
+                className={`${s.theaterChapterHero} ${HERO_CLASS[theater.id] ?? ''} ${s.theaterChapterHeroClickable}`}
+                onClick={() => {
+                  const cfg = THEATER_CONFIG[theater.id as keyof typeof THEATER_CONFIG];
+                  const hero = cfg ? { src: cfg.heroImage, caption: cfg.heroCaption } : null;
+                  setLb({ images: hero ? [hero, ...theater.gallery] : theater.gallery, index: 0 });
+                }}
+              >
+                <div className={s.theaterHeroZoom} aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+                <div className={s.theaterChapterHeroContent} onClick={e => e.stopPropagation()}>
                   <div className={s.theaterChapterEyebrow}>{theater.name}</div>
                   <h2 className={s.theaterChapterTitle}>{theater.tagline}</h2>
                   <p className={s.theaterChapterTagline}>{theater.concept}</p>
@@ -143,7 +145,7 @@ export default function TheatersPage() {
                     key={pi}
                     className={s.theaterGalleryPhotoItem}
                     style={{ backgroundImage: `url('${photo.src}')` }}
-                    onClick={() => setLb({ theater: theater.id, index: pi })}
+                    onClick={() => setLb({ images: theater.gallery, index: pi })}
                     title="クリックで拡大"
                   />
                 ))}
@@ -151,18 +153,36 @@ export default function TheatersPage() {
 
               {/* Body */}
               <div className={s.theaterChapterBody}>
-                <div className={s.theaterChapterDescRow}>
-                  <p className={s.theaterChapterDesc}>{theater.description}</p>
-                  <div className={s.theaterChapterStats}>
-                    {theater.stats.map(stat => (
-                      <div
-                        key={stat.label}
-                        className={shared.lineupStat}
-                        style={stat.value.length > 3 ? { fontSize: '20px', letterSpacing: '0.04em' } : undefined}
-                      >
-                        {stat.value}<span>{stat.label}</span>
+                {/* Seat layout */}
+                <div className={s.seatLayoutSection}>
+                  <div className={s.theaterChapterSubhead}>
+                    <div className={shared.sectionHint}>Seat Layout</div>
+                    <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>座席レイアウト</h3>
+                  </div>
+                  <div className={s.seatLayoutGrid}>
+                    <div className={s.seatLayoutImgWrap}>
+                      <ZoomableImage
+                        src={`/images/${theater.id}/seatmap.png`}
+                        alt={`${theater.name} 座席レイアウト`}
+                        className={s.seatLayoutImg}
+                      />
+                    </div>
+                    <div className={s.seatLayoutInfo}>
+                      <p className={s.seatLayoutDesc}>{theater.description}</p>
+                      <div className={s.seatLayoutStats}>
+                        {theater.stats.map(stat => (
+                          <div key={stat.label} className={s.seatLayoutStat}>
+                            <span className={s.seatLayoutStatValue}>{stat.value}</span>
+                            <span className={s.seatLayoutStatLabel}>{stat.label}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                      <div className={s.seatLayoutFeatures}>
+                        {theater.features.map(f => (
+                          <span key={f} className={s.seatLayoutFeatureChip}>{f}</span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -239,6 +259,7 @@ export default function TheatersPage() {
             <div className={shared.sectionHint}>Seat Philosophy</div>
             <h2 className={shared.sectionTitle}>座席の設計</h2>
           </div>
+          <Link className={shared.textLink} href="/faq">よくある質問 →</Link>
         </div>
         <div className={shared.featureTiles}>
           <div className={shared.featureTile}>
@@ -268,18 +289,20 @@ export default function TheatersPage() {
           <button className={s.thLbClose} onClick={() => setLb(null)}>×</button>
           <button
             className={s.thLbPrev}
-            onClick={() => setLb(p => p ? { ...p, index: (p.index - 1 + currentGallery.length) % currentGallery.length } : p)}
+            onClick={() => setLb(p => p ? { ...p, index: (p.index - 1 + currentImages.length) % currentImages.length } : p)}
           >&#8249;</button>
           <img className={s.thLbImg} src={currentPhoto.src} alt={currentPhoto.caption} />
           <button
             className={s.thLbNext}
-            onClick={() => setLb(p => p ? { ...p, index: (p.index + 1) % currentGallery.length } : p)}
+            onClick={() => setLb(p => p ? { ...p, index: (p.index + 1) % currentImages.length } : p)}
           >&#8250;</button>
           <div className={s.thLbCaption}>
-            {currentPhoto.caption}&nbsp;&nbsp;{lb.index + 1} / {currentGallery.length}
+            {currentPhoto.caption}&nbsp;&nbsp;{lb.index + 1} / {currentImages.length}
           </div>
         </div>
       )}
+
+      <BackToTop />
     </>
   );
 }

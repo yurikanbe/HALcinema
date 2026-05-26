@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import FilterButtonGroup from '@/components/FilterButtonGroup';
+import BackToTop from '@/components/BackToTop';
 import shared from '@/styles/shared.module.css';
 import styles from './page.module.css';
 
@@ -9,7 +11,7 @@ const CATEGORIES = [
   { id: 'ticket', label: 'チケット・予約' },
   { id: 'seat', label: '座席・シアター' },
   { id: 'payment', label: 'お支払い' },
-  { id: 'member', label: '会員・ポイント' },
+  { id: 'member', label: '会員' },
   { id: 'other', label: 'その他' },
 ];
 
@@ -118,17 +120,6 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'member-1',
     category: 'member',
-    question: 'ポイントの有効期限はありますか？',
-    answer: (
-      <>
-        ポイントは最後のご利用から2年間有効です。2年間一度もご利用がない場合は失効しますので、定期的なご来場をおすすめします。
-        ポイント残高と有効期限はマイページでご確認いただけます。
-      </>
-    ),
-  },
-  {
-    id: 'member-2',
-    category: 'member',
     question: '会員ランクはどう決まりますか？',
     answer: (
       <>
@@ -166,7 +157,16 @@ const FAQ_ITEMS: FaqItem[] = [
 
 export default function FaqClient() {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [openIds, setOpenIds] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+
+  function toggleFaq(id: string) {
+    setOpenIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
   const [formValues, setFormValues] = useState({
     name: '',
     email: '',
@@ -206,30 +206,36 @@ export default function FaqClient() {
           </div>
         </div>
 
-        <div className={styles.faqCats}>
-          {CATEGORIES.map(category => (
-            <button
-              key={category.id}
-              type="button"
-              className={`${shared.filterBtn} ${activeCategory === category.id ? shared.filterBtnActive : ''}`}
-              onClick={() => setActiveCategory(category.id)}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
+        <FilterButtonGroup
+          options={CATEGORIES.map(c => ({ value: c.id, label: c.label }))}
+          active={activeCategory}
+          onChange={setActiveCategory}
+          className={styles.faqCats}
+        />
 
         <div className={styles.faqList}>
-          {filteredItems.map(item => (
-            <details key={item.id} className={styles.faqItem} data-cat={item.category}>
-              <summary className={styles.faqQuestion}>
-                <span className={styles.faqQMark}>Q</span>
-                <span className={styles.faqQuestionText}>{item.question}</span>
-                <span className={styles.faqChevron}>+</span>
-              </summary>
-              <div className={styles.faqAnswer}>{item.answer}</div>
-            </details>
-          ))}
+          {filteredItems.map(item => {
+            const isOpen = openIds.has(item.id);
+            return (
+              <div key={item.id} className={styles.faqItem} data-open={isOpen ? 'true' : undefined} data-cat={item.category}>
+                <button
+                  type="button"
+                  className={styles.faqQuestion}
+                  onClick={() => toggleFaq(item.id)}
+                  aria-expanded={isOpen}
+                >
+                  <span className={styles.faqQMark}>Q</span>
+                  <span className={styles.faqQuestionText}>{item.question}</span>
+                  <span className={styles.faqChevron}>+</span>
+                </button>
+                <div className={styles.faqAnswerWrap}>
+                  <div className={styles.faqAnswerInner}>
+                    <div className={styles.faqAnswer}>{item.answer}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -246,22 +252,16 @@ export default function FaqClient() {
             <div className={shared.featureTileBadge}>Hours</div>
             <h3 className={shared.featureTileTitle}>受付時間</h3>
             <p className={shared.featureTileDesc}>
-              平日 10:00〜20:00
+              平日 10:00〜20:00 / 土日祝 10:00〜18:00
               <br />
-              土日祝 10:00〜18:00
-              <br />
-              年末年始を除く
+              ※ 年末年始を除く
             </p>
           </div>
           <div className={shared.featureTile}>
             <div className={shared.featureTileBadge}>Response</div>
             <h3 className={shared.featureTileTitle}>回答目安</h3>
             <p className={shared.featureTileDesc}>
-              お問い合わせ受領後
-              <br />
-              2〜3営業日以内に
-              <br />
-              ご返信いたします
+              お問い合わせ受領後2〜3営業日以内にご返信いたします
             </p>
           </div>
         </div>
@@ -308,7 +308,7 @@ export default function FaqClient() {
                   <option>チケット・予約について</option>
                   <option>座席・シアターについて</option>
                   <option>お支払いについて</option>
-                  <option>会員・ポイントについて</option>
+                  <option>会員について</option>
                   <option>施設・設備について</option>
                   <option>その他</option>
                 </select>
@@ -364,6 +364,8 @@ export default function FaqClient() {
           )}
         </div>
       </section>
+
+      <BackToTop />
     </>
   );
 }

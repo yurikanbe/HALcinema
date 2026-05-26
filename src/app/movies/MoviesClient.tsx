@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Movie } from '@/types';
+import FilterButtonGroup from '@/components/FilterButtonGroup';
 import shared from '@/styles/shared.module.css';
 
 const THEATER_LABEL: Record<string,string> = { starry: 'Starry', abyss: 'Abyss', cyber: 'Cyber' };
@@ -17,9 +18,10 @@ interface Props {
   nowShowing: Movie[];
   comingSoon: Movie[];
   theatersByMovie: Record<string, string[]>;
+  seatStatus: Record<string, 'sold_out' | 'few' | null>;
 }
 
-export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }: Props) {
+export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie, seatStatus }: Props) {
   const [activeTheater, setActiveTheater] = useState('all');
 
   const filteredNow = nowShowing.filter(m => {
@@ -36,28 +38,33 @@ export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }
             <div className={shared.sectionHint}>Now Showing</div>
             <h2 className={shared.sectionTitle}>上映中</h2>
           </div>
-          <div className={shared.moviesFilter} id="theater-filter">
-            {['all', 'starry', 'abyss', 'cyber'].map(t => (
-              <button
-                key={t}
-                className={`${shared.filterBtn}${activeTheater === t ? ' ' + shared.filterBtnActive : ''}`}
-                data-theater={t}
-                onClick={() => setActiveTheater(t)}
-              >
-                {t === 'all' ? 'すべて' : THEATER_LABEL[t]}
-              </button>
-            ))}
-          </div>
+          <FilterButtonGroup
+            options={['all', 'starry', 'abyss', 'cyber'].map(t => ({
+              value: t,
+              label: t === 'all' ? 'すべて' : THEATER_LABEL[t],
+            }))}
+            active={activeTheater}
+            onChange={setActiveTheater}
+            className={shared.moviesFilter}
+            id="theater-filter"
+          />
         </div>
 
         <div className={`${shared.filmGrid} ${shared.filmGridMovies}`} id="now-showing-grid">
           {filteredNow.map(m => {
             const theaters = (theatersByMovie[m.id] ?? []).map(t => THEATER_LABEL[t]).join('・');
+            const status = seatStatus[m.id];
             return (
               <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
                 <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
                   <div className={shared.filmCardPosterOverlay}></div>
                   <div className={shared.filmCardBadge}>{m.category}</div>
+                  {status === 'sold_out' && (
+                    <div className={`${shared.filmCardSeatBadge} ${shared.filmCardSeatBadgeSoldOut}`}>満席</div>
+                  )}
+                  {status === 'few' && (
+                    <div className={`${shared.filmCardSeatBadge} ${shared.filmCardSeatBadgeFew}`}>残席わずか</div>
+                  )}
                 </div>
                 <div className={shared.filmCardBody}>
                   <div className={shared.filmCardTitle}>{m.title}</div>
@@ -86,7 +93,6 @@ export default function MoviesClient({ nowShowing, comingSoon, theatersByMovie }
           {comingSoon.map(m => (
             <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
               <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
-                <div className={shared.filmCardPosterOverlay}></div>
                 <div className={shared.filmCardBadge}>{m.category}</div>
               </div>
               <div className={shared.filmCardBody}>

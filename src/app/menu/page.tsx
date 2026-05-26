@@ -2,21 +2,11 @@
 
 import { Fragment, useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
+import BackToTop from '@/components/BackToTop';
+import { MENU_ITEMS } from '@/lib/menuData';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
-
-const MENU_ITEMS = [
-  { id: 'popcorn', title: 'ポップコーン', tag: 'Snack',       src: '/images/menu/popcorn.png',
-    desc: '王道の塩から塩バター、キャラメル、塩キャラメル、\n\nミックスまで、選べる組み合わせが豊富。\n\nお子様やおひとりさま向けの小さいサイズも\n\nご用意しています。' },
-  { id: 'drink',   title: 'ドリンク',     tag: 'Drink',       src: '/images/menu/drink.png',
-    desc: 'コーラやレモンスカッシュなどのアイスドリンク、\n\nホットコーヒーやラテまで種類が豊富。\n\nさらに星空をイメージした「Stella Horizon」と\n\n深海の「Deep Sea Melody」の\n\nオリジナルドリンクもご用意しています。' },
-  { id: 'food',    title: 'フード',       tag: 'Food',        src: '/images/menu/food.png',
-    desc: '種類豊富なラインナップ。\n\n食べ比べたり、シェアしたり、\n\nそのときの気分に合わせて楽しめる。\n\n小腹を満たすサイズ展開もそろっています。' },
-  { id: 'sweets',  title: 'スイーツ',     tag: 'Sweets',      src: '/images/menu/sweets.png',
-    desc: 'チュロス、クレープ、アイス＆ソフトなど、\n\n映画時間にぴったりの甘いメニューが勢ぞろい。\n\n星空を閉じ込めた「星空シアターパルフェ」と\n\n深海のきらめきを映した「深海のパールサンデー」の\n\nオリジナルスイーツもお楽しみいただけます。' },
-  { id: 'set',     title: 'お得なセット', tag: 'Recommended', src: '/images/menu/set.png',
-    desc: 'ポップコーンセット、ホットドッグセット、\n\nナチョスセット、スイーツセットまで、\n\nお好きなメニューとドリンクを組み合わせた\n\nセットをご用意。\n\n手軽に楽しめる定番から、\n\nシアターオリジナルのスペシャルセットまで。' },
-];
 
 const TICKET_PRICES = [
   { name: '一般',          sub: 'General',                   amount: '1,800' },
@@ -57,17 +47,10 @@ const SCROLL_IDS = ['section-ticket', 'popcorn', 'drink', 'food', 'sweets', 'set
 export default function MenuPage() {
   const [lbIndex, setLbIndex] = useState<number | null>(null);
   const [activeNav, setActiveNav] = useState('section-ticket');
-  const [showBackTop, setShowBackTop] = useState(false);
   const lbImgRef = useRef<HTMLImageElement>(null);
   const animating = useRef(false);
 
   useEffect(() => { document.title = 'HAL CINEMA | 料金・メニュー'; }, []);
-
-  useEffect(() => {
-    const onScroll = () => setShowBackTop(window.scrollY > 400);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   useEffect(() => {
     const targets = SCROLL_IDS.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
@@ -112,17 +95,12 @@ export default function MenuPage() {
     }, 200);
   }, []);
 
-  useEffect(() => {
-    if (lbIndex === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape')     setLbIndex(null);
-      if (e.key === 'ArrowLeft')  navigate(-1);
-      if (e.key === 'ArrowRight') navigate(1);
-    };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [lbIndex, navigate]);
+  useLightboxKeyboard({
+    isOpen: lbIndex !== null,
+    onClose: () => setLbIndex(null),
+    onPrev:  () => navigate(-1),
+    onNext:  () => navigate(1),
+  });
 
   const lbItem = lbIndex !== null ? MENU_ITEMS[lbIndex] : null;
 
@@ -160,7 +138,7 @@ export default function MenuPage() {
             <h2 className={shared.sectionTitle}>チケット料金</h2>
           </div>
           <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtnSmall}`}>
-            今すぐ予約する
+            チケット購入について
           </Link>
         </div>
 
@@ -180,7 +158,7 @@ export default function MenuPage() {
             ))}
             <div className={shared.priceListFooter}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Starry / Abyss シアターはプレミアム席あり（+¥500）
+              プレミアム席あり（+¥500）
             </div>
           </div>
 
@@ -197,6 +175,10 @@ export default function MenuPage() {
             </ul>
           </div>
         </div>
+        <p className={s.menuNote}>
+          料金・ご購入方法についてのご不明な点は{' '}
+          <Link href="/faq" className={shared.textLink}>よくある質問 →</Link>
+        </p>
       </section>
 
       {/* Food & Drinks */}
@@ -232,14 +214,7 @@ export default function MenuPage() {
         </p>
       </section>
 
-      {/* Back to top */}
-      <button
-        className={`${s.backToTop}${showBackTop ? ' ' + s.backToTopVisible : ''}`}
-        aria-label="ページトップへ戻る"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
+      <BackToTop threshold={400} />
 
       {/* Lightbox */}
       {lbItem && (

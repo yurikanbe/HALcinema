@@ -12,6 +12,7 @@ export interface Movie {
   cast: string[];
   director: string | string[];
   status: 'now_showing' | 'coming_soon';
+  theaters: string[];
   colors?: {
     solid: string;
     fade: string;

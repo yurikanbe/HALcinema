@@ -6,6 +6,17 @@
   background: #ffffffea;
   border-bottom: 1px solid rgba(200, 164, 91, 0.18);
   box-shadow: 0 10px 30px rgba(10, 22, 40, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+.navScrolled {
+  box-shadow: 0 4px 20px rgba(10, 22, 40, 0.14);
+}
+.navScrolled .navInner {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.navScrolled .logoImage {
+  height: 34px;
 }
 .navInner {
   max-width: 1180px;
@@ -15,6 +26,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  transition: padding 0.3s ease;
 }
 .navLinks {
   display: flex;
@@ -57,9 +69,55 @@
   height: 46px;
   width: auto;
   display: block;
+  transition: height 0.3s ease;
 }
 .navLinkActive { color: var(--gold-500); }
 
+/* ── Search button ── */
+.searchBtn {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: none;
+  border: 1px solid #c8a45bbd;
+  border-radius: 999px;
+  color: var(--ink-700);
+  font-size: 13px;
+  font-family: inherit;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.searchBtn:hover {
+  border-color: rgba(200, 164, 91, 0.6);
+  background: rgba(200, 164, 91, 0.06);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.searchBtnLabel {
+  color: #283b57;
+  font-size: 13px;
+}
+
+.searchKbd {
+  font-size: 10px;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  color: rgba(60, 50, 30, 0.45);
+  background: rgba(200, 164, 91, 0.1);
+  border: 1px solid rgba(200, 164, 91, 0.2);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
 @media (max-width: 640px) {
   .navLinks { display: none; }
+  .searchBtnLabel { display: none; }
+  .searchKbd { display: none; }
 }

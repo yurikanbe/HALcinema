@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import shared from '@/styles/shared.module.css';
 
 const ALL_LETTERS = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v'];
 
@@ -65,7 +66,7 @@ export default function Carousel3D({ movies, itemCount = 18, hasInfoPanel = fals
 
         const m = movieData[index];
         if (m?.poster) {
-          item.style.backgroundImage    = `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.38)), url('${m.poster}')`;
+          item.style.backgroundImage    = `url('${m.poster}')`;
           item.style.backgroundSize     = 'cover';
           item.style.backgroundPosition = 'center';
         }
@@ -137,8 +138,8 @@ export default function Carousel3D({ movies, itemCount = 18, hasInfoPanel = fals
             <h3 className="card__title">映画タイトル</h3>
             <p className="card__short">映画の概要がここに表示されます。</p>
             <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '14px' }}>
-              <a className="btn btn--solid carousel-reserve-link" href="/reserve" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>今すぐ予約</a>
-              <a className="btn carousel-detail-link" href="/movies" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>詳細を見る</a>
+              <a className={`${shared.btn} ${shared.btnSolid}`} href="/reserve" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>チケット購入について</a>
+              <a className={`${shared.btn} ${shared.btnOutline}`} href="/movies" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>詳細を見る</a>
             </div>
           </div>
           <div className="container">

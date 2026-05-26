@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import moviesData   from '@/data/movies.json';
+import moviesData    from '@/data/movies.json';
 import schedulesData from '@/data/schedules.json';
 import type { Movie, ScreenSchedule } from '@/types';
 import { notFound } from 'next/navigation';
+import PosterLightbox from '@/components/PosterLightbox';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -40,8 +41,8 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
     byTheater.get(s.theaterId)!.push({ screen: s.screen, shows: movieShows });
   }
 
-  const posterStyle: React.CSSProperties = movie.colors
-    ? { background: `linear-gradient(rgba(0,0,0,0.22),rgba(0,0,0,0.32)), url('${movie.poster}') center/cover no-repeat` }
+  const posterStyle: React.CSSProperties = movie.poster
+    ? { background: `url('${movie.poster}') center/cover no-repeat` }
     : { backgroundImage: `linear-gradient(160deg,#0a2060,#1a4a8a)` };
 
   return (
@@ -52,7 +53,16 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
         </div>
 
         <div className={shared.movieHeroGrid}>
-          <div className={shared.moviePosterCard} style={posterStyle}></div>
+          {movie.poster ? (
+            <PosterLightbox
+              posterUrl={movie.poster}
+              title={movie.title}
+              posterClassName={shared.moviePosterCard}
+              style={posterStyle}
+            />
+          ) : (
+            <div className={shared.moviePosterCard} style={posterStyle} />
+          )}
           <div>
             <div className={shared.movieDetailGenre}>{movie.category}</div>
             <h1 className={shared.movieDetailTitle}>{movie.title}</h1>
@@ -93,11 +103,47 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
               );
             })()}
             <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtn}`}>
-              劇場窓口で予約する
+              チケット購入について
             </Link>
           </div>
         </div>
       </section>
+
+      {/* ── Related Movies ── */}
+      {(() => {
+        const related = movies
+          .filter(m => m.category === movie.category && m.id !== movie.id && m.status === 'now_showing')
+          .slice(0, 4);
+        if (!related.length) return null;
+        return (
+          <section className={`${shared.section} ${s.relatedSection}`}>
+            <div className={shared.sectionHead}>
+              <div>
+                <div className={shared.sectionHint}>Same Genre</div>
+                <h2 className={shared.sectionTitle}>同ジャンルの作品</h2>
+              </div>
+              <Link href="/movies" className={shared.textLink}>すべて見る →</Link>
+            </div>
+            <div className={`${shared.filmGrid} ${shared.filmGridMovies}`}>
+              {related.map(m => (
+                <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
+                  <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
+                    <div className={shared.filmCardPosterOverlay} />
+                    <div className={shared.filmCardBadge}>{m.category}</div>
+                  </div>
+                  <div className={shared.filmCardBody}>
+                    <div className={shared.filmCardTitle}>{m.title}</div>
+                    <div className={shared.filmCardFooter}>
+                      <div className={shared.filmCardMeta}>{m.formats?.join('・') ?? '—'}</div>
+                      <span className={shared.filmCardCta}>詳細 →</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
       {byTheater.size > 0 && (
         <section className={`${shared.section} ${s.scheduleSection}`}>
