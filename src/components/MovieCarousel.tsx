@@ -6,48 +6,96 @@ import type { Movie } from '@/types';
 import shared from '@/styles/shared.module.css';
 import s from './MovieCarousel.module.css';
 
-interface Props {
-  movies: Movie[];
-}
+interface Props { movies: Movie[] }
 
 const CARD_W = 175;
 const GAP    = 12;
-const ARROW_AREA = 80; // 40px padding each side for arrow buttons
+const SLOT   = CARD_W + GAP; // 187px per card slot
+const ARROW  = 80;            // 40px padding × 2 for arrow buttons
 
 export default function MovieCarousel({ movies }: Props) {
+  const M           = movies.length;
   const carouselRef = useRef<HTMLDivElement>(null);
   const trackRef    = useRef<HTMLDivElement>(null);
+  const busyRef     = useRef(false);
 
+  /* ── Sizing: fit N whole cards, set carousel width to match ── */
   useEffect(() => {
     const carousel = carouselRef.current;
     const track    = trackRef.current;
     if (!carousel || !track) return;
-
-    // Observe the parent (grid column) so resizing the carousel itself
-    // doesn't create an observer loop, and window resizes are caught.
     const parent = carousel.parentElement;
     if (!parent) return;
 
     const fit = () => {
-      const inner = parent.clientWidth - ARROW_AREA;
-      const n     = Math.max(1, Math.floor((inner + GAP) / (CARD_W + GAP)));
-      const trackW = n * (CARD_W + GAP) - GAP;
-      track.style.width   = `${trackW}px`;
-      carousel.style.width = `${trackW + ARROW_AREA}px`;
+      const n      = Math.max(1, Math.floor((parent.clientWidth - ARROW + GAP) / SLOT));
+      const trackW = n * SLOT - GAP;
+      track.style.width    = `${trackW}px`;
+      carousel.style.width = `${trackW + ARROW}px`;
     };
 
     const ro = new ResizeObserver(fit);
     ro.observe(parent);
     fit();
-    return () => ro.disconnect();
-  }, []);
 
+    // Start at the real cards section (past the clone-start block)
+    track.scrollLeft = M * SLOT;
+
+    return () => ro.disconnect();
+  }, [M]);
+
+  /* ── Loop: after scroll settles, jump if inside clone zone ── */
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const onScrollEnd = () => {
+      const sl = track.scrollLeft;
+      if (sl < M * SLOT)           track.scrollLeft = sl + M * SLOT;
+      else if (sl >= 2 * M * SLOT) track.scrollLeft = sl - M * SLOT;
+      busyRef.current = false;
+    };
+
+    track.addEventListener('scrollend', onScrollEnd);
+    return () => track.removeEventListener('scrollend', onScrollEnd);
+  }, [M]);
+
+  /* ── Arrow buttons ── */
   const scroll = (dir: 'left' | 'right') => {
-    trackRef.current?.scrollBy({
-      left: dir === 'left' ? -(CARD_W + GAP) : CARD_W + GAP,
+    const track = trackRef.current;
+    if (!track || busyRef.current) return;
+    busyRef.current = true;
+    track.scrollTo({
+      left: track.scrollLeft + (dir === 'right' ? SLOT : -SLOT),
       behavior: 'smooth',
     });
+    // Fallback unlock for browsers without scrollend support
+    setTimeout(() => { busyRef.current = false; }, 600);
   };
+
+  /* ── Render helper ── */
+  const renderCards = (keyPrefix: string, interactive: boolean) =>
+    movies.map((m, i) => (
+      <Link
+        key={`${keyPrefix}${i}`}
+        className={`${shared.filmCardPortrait} ${s.card}`}
+        href={`/movies/${m.id}`}
+        tabIndex={interactive ? 0 : -1}
+        aria-hidden={interactive ? undefined : true}
+      >
+        <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
+          <div className={shared.filmCardPosterOverlay} />
+          <div className={shared.filmCardBadge}>{m.category}</div>
+        </div>
+        <div className={shared.filmCardBody}>
+          <div className={shared.filmCardTitle}>{m.title}</div>
+          <div className={shared.filmCardFooter}>
+            <div className={shared.filmCardMeta}>{m.formats?.join('・') ?? '—'}</div>
+            <span className={shared.filmCardCta}>詳細 →</span>
+          </div>
+        </div>
+      </Link>
+    ));
 
   return (
     <div className={s.carousel} ref={carouselRef}>
@@ -58,25 +106,9 @@ export default function MovieCarousel({ movies }: Props) {
       </button>
 
       <div className={s.track} ref={trackRef}>
-        {movies.map(m => (
-          <Link
-            key={m.id}
-            className={`${shared.filmCardPortrait} ${s.card}`}
-            href={`/movies/${m.id}`}
-          >
-            <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
-              <div className={shared.filmCardPosterOverlay} />
-              <div className={shared.filmCardBadge}>{m.category}</div>
-            </div>
-            <div className={shared.filmCardBody}>
-              <div className={shared.filmCardTitle}>{m.title}</div>
-              <div className={shared.filmCardFooter}>
-                <div className={shared.filmCardMeta}>{m.formats?.join('・') ?? '—'}</div>
-                <span className={shared.filmCardCta}>詳細 →</span>
-              </div>
-            </div>
-          </Link>
-        ))}
+        {renderCards('s', false)} {/* clone-start: copies of real cards, scrolled into when going prev past card 0 */}
+        {renderCards('r', true)}  {/* real cards */}
+        {renderCards('e', false)} {/* clone-end: copies of real cards, scrolled into when going next past last card */}
       </div>
 
       <button className={`${s.arrow} ${s.arrowRight}`} onClick={() => scroll('right')} aria-label="次へ">
