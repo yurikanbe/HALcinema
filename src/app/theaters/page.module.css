@@ -286,9 +286,14 @@
 
 .theaterChapterCols {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 44px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.5fr);
   align-items: flex-start;
+  padding-right: 1rem;
+}
+
+.theaterScheduleSection {
+  width: 100%;
+  min-width: fit-content;
 }
 
 .theaterChapterSubhead {

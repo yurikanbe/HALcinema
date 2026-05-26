@@ -1,0 +1,55 @@
+.carousel {
+  position: relative;
+  overflow-x: clip; /* clips partial cards without creating a scroll context */
+  overflow-y: visible;
+  padding: 0 40px;
+  min-width: 0;
+}
+
+.track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 175px;
+  width: 175px;
+  scroll-snap-align: start;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(200, 164, 91, 0.25);
+  box-shadow: 0 4px 14px rgba(10, 22, 40, 0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.arrow:hover {
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(10, 22, 40, 0.2);
+  color: var(--ink-900);
+}
+
+.arrowLeft  { left:  0px; }
+.arrowRight { right: 0px; }
