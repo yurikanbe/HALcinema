@@ -9,6 +9,7 @@ import type { Theater, ScreenSchedule, Movie } from '@/types';
 import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
 import { THEATER_CONFIG } from '@/lib/theaterConfig';
 import BackToTop from '@/components/BackToTop';
+import ZoomableImage from '@/components/ZoomableImage';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -152,38 +153,37 @@ export default function TheatersPage() {
 
               {/* Body */}
               <div className={s.theaterChapterBody}>
-                <div className={s.theaterChapterDescRow}>
-                  <p className={s.theaterChapterDesc}>{theater.description}</p>
-                  <div className={s.theaterChapterStats}>
-                    {theater.stats.map(stat => (
-                      <div
-                        key={stat.label}
-                        className={shared.lineupStat}
-                        style={stat.value.length > 3 ? { fontSize: '20px', letterSpacing: '0.04em' } : undefined}
-                      >
-                        {stat.value}<span>{stat.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Seat layout */}
                 <div className={s.seatLayoutSection}>
                   <div className={s.theaterChapterSubhead}>
                     <div className={shared.sectionHint}>Seat Layout</div>
                     <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>座席レイアウト</h3>
                   </div>
-                  <div className={s.seatLayoutImgWrap}>
-                    <img
-                      src={`/images/${theater.id}/seatmap.png`}
-                      alt={`${theater.name} 座席レイアウト`}
-                      className={s.seatLayoutImg}
-                    />
+                  <div className={s.seatLayoutGrid}>
+                    <div className={s.seatLayoutImgWrap}>
+                      <ZoomableImage
+                        src={`/images/${theater.id}/seatmap.png`}
+                        alt={`${theater.name} 座席レイアウト`}
+                        className={s.seatLayoutImg}
+                      />
+                    </div>
+                    <div className={s.seatLayoutInfo}>
+                      <p className={s.seatLayoutDesc}>{theater.description}</p>
+                      <div className={s.seatLayoutStats}>
+                        {theater.stats.map(stat => (
+                          <div key={stat.label} className={s.seatLayoutStat}>
+                            <span className={s.seatLayoutStatValue}>{stat.value}</span>
+                            <span className={s.seatLayoutStatLabel}>{stat.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className={s.seatLayoutFeatures}>
+                        {theater.features.map(f => (
+                          <span key={f} className={s.seatLayoutFeatureChip}>{f}</span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <p className={s.seatLayoutNote}>
-                    ● 金色表示の座席（A・B列）はプレミアム席です（+¥500）。
-                    座席ごとの見え方は「視点プレビュー」機能でご確認いただけます。
-                  </p>
                 </div>
 
                 <div className={s.theaterChapterCols}>

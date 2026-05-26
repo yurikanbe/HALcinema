@@ -48,10 +48,13 @@
   max-height: 100dvh;
   width: 100vw;
   height: 100dvh;
+  overflow: hidden;
+}
+
+.dialog[open] {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 .dialog::backdrop {
