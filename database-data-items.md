@@ -1,26 +1,4 @@
-# HAL Cinema データベーステーブル設計
-
-## テーブル一覧
-
-| テーブル名 | 説明 |
-|---|---|
-| `users` | 会員情報 |
-| `movies` | 映画情報 |
-| `creators` | 監督・俳優 |
-| `movie_creators` | 映画×クリエイター（中間テーブル） |
-| `theaters` | 館（会場）— HAL Cinema 全体の情報（1館のみ） |
-| `screens` | スクリーン — 館内の上映室。スクリーンごとにコンセプトが異なる |
-| `seats` | 座席 |
-| `screenings` | 上映スケジュール |
-| `ticket_types` | チケット種別・料金 |
-| `bookings` | 予約（購入） |
-| `booking_seats` | 予約座席明細 |
-| `seat_move_requests` | 隣席リクエスト |
-| `user_favorites` | 推しクリエイター登録 |
-| `notification_settings` | 通知設定 |
-| `news` | お知らせ・キャンペーン |
-
----
+# HAL Cinema データ化項目（カラム定義）
 
 ## 各テーブル定義
 
@@ -33,6 +11,7 @@
 | `email` | VARCHAR(255) | UNIQUE, NOT NULL | |
 | `password_hash` | VARCHAR(255) | NOT NULL | |
 | `name` | VARCHAR(100) | NOT NULL | |
+| `visit_count` | INT | NOT NULL, DEFAULT 0 | 来場回数 |
 | `created_at` | DATETIME | NOT NULL | |
 | `updated_at` | DATETIME | NOT NULL | |
 
@@ -235,28 +214,3 @@ HAL Cinema は物理的な館が1つのみ。館全体の名称・紹介文・�
 
 ---
 
-## ER図（主要な関連）
-
-```
-theaters (館1件)          screens (スクリーン番号 × コンセプト)
-                              │
-users ──── bookings ──── booking_seats ──── seats
-  │              └──────── screenings ──── movies
-  │                              └──────── screens
-  │
-  ├── user_favorites ──── creators ──── movie_creators ──── movies
-  └── notification_settings
-
-booking_seats ←── seat_move_requests ──→ booking_seats
-```
-
----
-
-## 設計ポイント
-
-| 項目 | 判断内容 |
-|---|---|
-| **館とスクリーン** | 物理的な館は `theaters` に1件のみ登録。Starry / Abyss / Cyber 等の世界観は `screens.concept_name` で管理し、スクリーン番号 (`screen_number`) とセットで識別する |
-| **隣席リクエスト** | `seat_move_requests` を独立テーブルに。リクエスト元・対象ともに `booking_seats.id` で参照し、誰がどの席を狙っているか追跡可能 |
-| **推し通知** | `creators` テーブルで監督・俳優を管理し、`movie_creators` で紐付け。`user_favorites` と組み合わせて上映スケジュール追加時に通知対象ユーザーを特定できる |
-| **座席の一意性** | `booking_seats` に `(booking_id, seat_id)` のUNIQUE制約。さらに同じ `screening_id` での二重予約はアプリ層または複合UNIQUE制約で防ぐ必要あり |
