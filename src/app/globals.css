@@ -957,6 +957,15 @@ body::after {
   line-height: 1.6;
 }
 
+/* ── Carousel desktop/mobile toggle ─────────────────────── */
+.carousel3dDesktop { display: block; }
+.carouselMobileWrap { display: none; }
+
+@media (max-width: 768px) {
+  .carousel3dDesktop { display: none; }
+  .carouselMobileWrap { display: block; }
+}
+
 /* ── Menu page anchor scroll margins ────────────────────── */
 #section-ticket,
 #section-menu,

@@ -29,6 +29,11 @@
 .moviesHeroHint { font-size: 11px; letter-spacing: 0.18em; color: rgba(255,255,255,0.35); text-align: center; padding: 0 0 2rem; position: relative; z-index: 2; margin: 0; }
 .topCarousel { position: relative; z-index: 2; }
 
+@media (max-width: 768px) {
+  .topCarousel { padding: 0 16px; }
+}
+
 @media (max-width: 640px) {
-  .moviesHeroTitle { font-size: 36px; }
+  .moviesHeroTitle { font-size: 30px; }
+  .moviesHeroHeader { padding-top: 44px; }
 }

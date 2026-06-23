@@ -596,4 +596,11 @@
   .seatLayoutStats {
     grid-template-columns: repeat(3, 1fr);
   }
+  .seatLayoutInfo {
+    min-width: 0;
+    height: auto;
+  }
+  .theaterScheduleSection {
+    min-width: 0;
+  }
 }

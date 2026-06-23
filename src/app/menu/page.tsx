@@ -3,7 +3,6 @@
 import { Fragment, useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
-import BackToTop from '@/components/BackToTop';
 import { MENU_ITEMS } from '@/lib/menuData';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
@@ -213,8 +212,6 @@ export default function MenuPage() {
           ※ フード＆ドリンクはシアター内へお持ち込みいただけます。
         </p>
       </section>
-
-      <BackToTop threshold={400} />
 
       {/* Lightbox */}
       {lbItem && (

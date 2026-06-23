@@ -177,20 +177,6 @@ export default function AccessPage() {
         </div>
       </section>
 
-      {/* ── Facility companion link ── */}
-      <section className={`${shared.section} ${s.facilityCtaSection}`} data-reveal>
-        <div className={s.facilityCta}>
-          <div className={s.facilityCtaLeft}>
-            <div className={shared.sectionHint}>Facility Guide</div>
-            <h2 className={s.facilityCtaTitle}>施設案内</h2>
-            <p className={s.facilityCtaDesc}>フロアマップ・各種設備・バリアフリー情報をご確認いただけます。</p>
-          </div>
-          <Link href="/facility" className={`${shared.btn} ${shared.btnSolid}`}>
-            施設案内を見る →
-          </Link>
-        </div>
-      </section>
-
       {/* ── Parking ── */}
       <section className={shared.section} data-reveal>
         <div className={shared.sectionHead}>
@@ -224,6 +210,20 @@ export default function AccessPage() {
               公共交通機関でのご来館をおすすめします。
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ── Facility companion link ── */}
+      <section className={`${shared.section} ${s.facilityCtaSection}`} data-reveal>
+        <div className={s.facilityCta}>
+          <div className={s.facilityCtaLeft}>
+            <div className={shared.sectionHint}>Facility Guide</div>
+            <h2 className={s.facilityCtaTitle}>施設案内</h2>
+            <p className={s.facilityCtaDesc}>フロアマップ・各種設備・バリアフリー情報をご確認いただけます。</p>
+          </div>
+          <Link href="/facility" className={`${shared.btn} ${shared.btnSolid}`}>
+            施設案内を見る →
+          </Link>
         </div>
       </section>
     </>

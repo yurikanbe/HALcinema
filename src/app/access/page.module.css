@@ -459,4 +459,6 @@
   .stationLine { gap: 12px; padding: 12px 14px; }
   .stationLineName { font-size: 12px; }
   .stationWalkNum { font-size: 30px; }
+  .exteriorImg { aspect-ratio: 16 / 9; }
+  .facilityCta { flex-direction: column; padding: 24px 22px; }
 }

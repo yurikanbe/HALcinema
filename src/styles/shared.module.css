@@ -1061,3 +1061,41 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .sectionTitle::after {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .pageHeroTitle {
+    font-size: 28px;
+  }
+
+  .newsFeaturedLeft {
+    padding: 20px 20px 14px 28px;
+  }
+
+  .newsFeaturedBody {
+    padding: 14px 20px 20px 28px;
+    gap: 16px;
+  }
+
+  .newsCard {
+    padding: 1rem 14px;
+    gap: 10px;
+  }
+
+  .movieHeroGrid {
+    gap: 24px;
+  }
+
+  .movieDetailTitle {
+    font-size: 26px;
+  }
+}

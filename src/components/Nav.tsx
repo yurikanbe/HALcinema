@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import styles from './Nav.module.css';
-import shared from '@/styles/shared.module.css';
 import { NAV_LINKS } from '@/lib/navLinks';
 import SearchModal from './SearchModal';
 
@@ -12,6 +11,7 @@ export default function Nav() {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ export default function Nav() {
         e.preventDefault();
         setSearchOpen(p => !p);
       }
+      if (e.key === 'Escape') setMenuOpen(false);
     };
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
@@ -41,6 +42,13 @@ export default function Nav() {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   return (
     <>
@@ -78,12 +86,45 @@ export default function Nav() {
                 </svg>
                 <span className={styles.searchBtnLabel}>検索</span>
               </div>
-              
               <kbd className={styles.searchKbd}>Ctrl K</kbd>
+            </button>
+            <button
+              className={`${styles.hamburger}${menuOpen ? ' ' + styles.hamburgerOpen : ''}`}
+              onClick={() => setMenuOpen(p => !p)}
+              aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
+              aria-expanded={menuOpen}
+            >
+              <span className={styles.hamburgerBar} />
             </button>
           </div>
         </div>
       </header>
+
+      {menuOpen && (
+        <div
+          className={styles.mobileMenuBackdrop}
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <div
+        className={`${styles.mobileMenu}${menuOpen ? ' ' + styles.mobileMenuOpen : ''}`}
+        aria-hidden={!menuOpen}
+      >
+        <nav className={styles.mobileMenuNav}>
+          {NAV_LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`${styles.mobileMenuLink}${pathname === href ? ' ' + styles.mobileMenuLinkActive : ''}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );

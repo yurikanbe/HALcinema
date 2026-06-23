@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import shared from '@/styles/shared.module.css';
+import MobileCarousel from './MobileCarousel';
 
 const ALL_LETTERS = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v'];
 
@@ -130,29 +131,37 @@ export default function Carousel3D({ movies, itemCount = 18, hasInfoPanel = fals
   const carouselItems = letters.map(l => <div key={l} className={`item ${l}`} />);
 
   return (
-    <div className="carousel-wrapper" ref={wrapperRef}>
-      {hasInfoPanel ? (
-        <div className="carousel-inner container-row">
-          <div className="carousel-info card" aria-live="polite">
-            <div className="card__tag carousel__badge">Category</div>
-            <h3 className="card__title">映画タイトル</h3>
-            <p className="card__short">映画の概要がここに表示されます。</p>
-            <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '14px' }}>
-              <a className={`${shared.btn} ${shared.btnSolid}`} href="/reserve" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>チケット購入について</a>
-              <a className={`${shared.btn} ${shared.btnOutline}`} href="/movies" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>詳細を見る</a>
+    <>
+      {/* デスクトップ用 3D カルーセル（> 768px） */}
+      <div className="carousel-wrapper carousel3dDesktop" ref={wrapperRef}>
+        {hasInfoPanel ? (
+          <div className="carousel-inner container-row">
+            <div className="carousel-info card" aria-live="polite">
+              <div className="card__tag carousel__badge">Category</div>
+              <h3 className="card__title">映画タイトル</h3>
+              <p className="card__short">映画の概要がここに表示されます。</p>
+              <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '14px' }}>
+                <a className={`${shared.btn} ${shared.btnSolid}`} href="/reserve" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>チケット購入について</a>
+                <a className={`${shared.btn} ${shared.btnOutline}`} href="/movies" style={{ flex: 1, fontSize: '12px', padding: '10px 14px' }}>詳細を見る</a>
+              </div>
+            </div>
+            <div className="container">
+              <div className="carousel">{carouselItems}</div>
             </div>
           </div>
+        ) : (
           <div className="container">
             <div className="carousel">{carouselItems}</div>
           </div>
-        </div>
-      ) : (
-        <div className="container">
-          <div className="carousel">{carouselItems}</div>
-        </div>
-      )}
-      <div className="next">Next</div>
-      <div className="prev">Prev</div>
-    </div>
+        )}
+        <div className="next">Next</div>
+        <div className="prev">Prev</div>
+      </div>
+
+      {/* モバイル用フラットカルーセル（≤ 768px） */}
+      <div className="carouselMobileWrap">
+        <MobileCarousel movies={movies} variant={hasInfoPanel ? 'home' : 'movies'} />
+      </div>
+    </>
   );
 }

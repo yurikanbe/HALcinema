@@ -106,9 +106,9 @@ export default function MovieCarousel({ movies }: Props) {
       </button>
 
       <div className={s.track} ref={trackRef}>
-        {renderCards('s', false)} {/* clone-start: copies of real cards, scrolled into when going prev past card 0 */}
-        {renderCards('r', true)}  {/* real cards */}
-        {renderCards('e', false)} {/* clone-end: copies of real cards, scrolled into when going next past last card */}
+        {renderCards('s', false)}
+        {renderCards('r', true)}
+        {renderCards('e', false)}
       </div>
 
       <button className={`${s.arrow} ${s.arrowRight}`} onClick={() => scroll('right')} aria-label="次へ">

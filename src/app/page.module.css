@@ -325,6 +325,13 @@
 }
 @media (max-width: 860px) {
   .lobbyShowcase { grid-template-columns: 1fr; }
+  .lobbyContent { height: auto; margin-left: 0; }
+  .lobbyVisual { border-radius: 16px; mask-image: none; -webkit-mask-image: none; }
+}
+
+@media (max-width: 640px) {
+  .heroBrand { min-height: 520px; }
+  .hbLogotype { padding: 2rem 20px 1rem; }
 }
 @media (max-width: 520px) {
   .lobbyAccessHead { flex-direction: column; align-items: flex-start; }

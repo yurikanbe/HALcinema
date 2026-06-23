@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 import FilterButtonGroup from '@/components/FilterButtonGroup';
-import BackToTop from '@/components/BackToTop';
 import shared from '@/styles/shared.module.css';
 import styles from './page.module.css';
 
@@ -365,7 +364,6 @@ export default function FaqClient() {
         </div>
       </section>
 
-      <BackToTop />
     </>
   );
 }

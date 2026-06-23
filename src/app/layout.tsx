@@ -4,6 +4,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import RevealObserver from '@/components/RevealObserver';
+import BackToTop from '@/components/BackToTop';
 
 export const metadata: Metadata = {
   title: 'HAL CINEMA | Dive into Cinema',
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <RevealObserver />
           {children}
           <Footer />
+          <BackToTop />
         </div>
       </body>
     </html>

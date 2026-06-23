@@ -197,3 +197,8 @@
   .lobbyBannerLead { font-size: 13px; }
   .facilityCta { padding: 24px 22px; }
 }
+
+@media (max-width: 640px) {
+  .lobbyBannerImg { aspect-ratio: 16 / 9; }
+  .floorRow { grid-template-columns: 88px 1fr; }
+}
