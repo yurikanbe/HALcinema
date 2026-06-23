@@ -10,6 +10,7 @@ import { useLightboxKeyboard } from '@/hooks/useLightboxKeyboard';
 import { THEATER_CONFIG } from '@/lib/theaterConfig';
 import BackToTop from '@/components/BackToTop';
 import ZoomableImage from '@/components/ZoomableImage';
+import MovieCarousel from '@/components/MovieCarousel';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
 
@@ -193,27 +194,11 @@ export default function TheatersPage() {
                       <div className={shared.sectionHint}>Now Showing</div>
                       <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>上映中の作品</h3>
                     </div>
-                    <div className={`${shared.filmGrid} ${shared.filmGridTheater}`}>
-                      {theaterMovies.map(m => (
-                        <Link key={m.id} className={`${shared.filmCard} ${shared.filmCardPortrait}`} href={`/movies/${m.id}`}>
-                          <div className={shared.filmCardPoster} style={{ backgroundImage: `url('${m.poster}')` }}>
-                            <div className={shared.filmCardPosterOverlay}></div>
-                            <div className={shared.filmCardBadge}>{m.category}</div>
-                          </div>
-                          <div className={shared.filmCardBody}>
-                            <div className={shared.filmCardTitle}>{m.title}</div>
-                            <div className={shared.filmCardFooter}>
-                              <div className={shared.filmCardMeta}>{m.formats?.join('・') ?? '—'}</div>
-                              <span className={shared.filmCardCta}>詳細 →</span>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+                    <MovieCarousel movies={theaterMovies} />
                   </div>
 
                   {/* Schedule card */}
-                  <div>
+                  <div className={s.theaterScheduleSection}>
                     <div className={s.theaterChapterSubhead}>
                       <div className={shared.sectionHint}>Today&apos;s Showtime</div>
                       <h3 className={shared.sectionTitle} style={{ fontSize: '22px' }}>本日の上映</h3>
