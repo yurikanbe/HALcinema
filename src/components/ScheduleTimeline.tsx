@@ -8,6 +8,7 @@ import tl from './ScheduleTimeline.module.css';
 import shared from '@/styles/shared.module.css';
 import { THEATER_IDS, THEATER_CONFIG } from '@/lib/theaterConfig';
 import FilterButtonGroup from '@/components/FilterButtonGroup';
+import { buildReserveUrl } from '@/lib/reserveData';
 
 const DAYS   = ['日','月','火','水','木','金','土'];
 const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
@@ -35,6 +36,12 @@ function toMin(t: string) {
   return h * 60 + m;
 }
 function timeLeft(t: string)    { return (toMin(t) - TL_START * 60) / 60 * PX_HR; }
+function toISODate(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
 function durWidth(min: number)  { return min / 60 * PX_HR - 4; }
 
 const THEATER_VARIANT: Record<string, string> = {
@@ -206,7 +213,19 @@ export default function ScheduleTimeline({ initialTheater }: { initialTheater?: 
                           }
 
                           return (
-                            <a key={showIdx} className={tl.tlBlock} href="/reserve" style={blockStyle}>
+                            <a
+                              key={showIdx}
+                              className={tl.tlBlock}
+                              href={selectedDate ? buildReserveUrl({
+                                movieId: show.movieId,
+                                theaterId: theater.id,
+                                screen: screen.screen,
+                                time: show.start,
+                                date: toISODate(selectedDate),
+                                format: show.format,
+                              }) : '/reserve'}
+                              style={blockStyle}
+                            >
                               <span className={tl.tlBlockTime}>{show.start}</span>
                               <span className={tl.tlBlockTitle}>{show.title}</span>
                               <div className={tl.tlBlockFoot}>
