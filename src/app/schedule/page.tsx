@@ -21,7 +21,7 @@ export default async function SchedulePage({
         <h1 className={shared.pageHeroTitle}>上映スケジュール</h1>
         <p className={shared.pageHeroLead}>
           日付を選択し、シアターで絞り込んで上映時間をご確認ください。
-          チケットは劇場窓口にてご購入いただけます。
+          回をクリックするとオンライン予約へ進めます。
         </p>
       </section>
 

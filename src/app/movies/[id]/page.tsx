@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import PosterLightbox from '@/components/PosterLightbox';
 import shared from '@/styles/shared.module.css';
 import s from './page.module.css';
+import { buildReserveUrl } from '@/lib/reserveData';
 
 const movies    = moviesData    as Movie[];
 const schedules = schedulesData as ScreenSchedule[];
@@ -40,6 +41,9 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
     if (!byTheater.has(s.theaterId)) byTheater.set(s.theaterId, []);
     byTheater.get(s.theaterId)!.push({ screen: s.screen, shows: movieShows });
   }
+
+  const today = new Date();
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   const posterStyle: React.CSSProperties = movie.poster
     ? { background: `url('${movie.poster}') center/cover no-repeat` }
@@ -102,8 +106,8 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
               </div>
               );
             })()}
-            <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtn}`}>
-              チケット購入について
+            <Link href={`/reserve?movieId=${movie.id}`} className={`${shared.btn} ${shared.btnSolid} ${s.reserveBtn}`}>
+              オンライン予約
             </Link>
           </div>
         </div>
@@ -170,7 +174,18 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
                           <span className={shared.timeBtnInfo}>満席</span>
                         </button>
                       ) : (
-                        <Link key={show.start} href="/reserve" className={shared.timeBtn}>
+                        <Link
+                          key={show.start}
+                          href={buildReserveUrl({
+                            movieId: id,
+                            theaterId: theaterId as 'starry' | 'abyss' | 'cyber',
+                            screen,
+                            time: show.start,
+                            date: todayIso,
+                            format: show.format,
+                          })}
+                          className={shared.timeBtn}
+                        >
                           <span className={shared.timeBtnTime}>{show.start}</span>
                           <span className={shared.timeBtnInfo}>残席 {show.seats}</span>
                         </Link>
