@@ -16,7 +16,7 @@ export default function Nav() {
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      if ((e.ctrlKey || e.metaKey) && e.key === '/') {
         e.preventDefault();
         setSearchOpen(p => !p);
       }
@@ -79,7 +79,7 @@ export default function Nav() {
                 <span className={styles.searchBtnLabel}>検索</span>
               </div>
               
-              <kbd className={styles.searchKbd}>Ctrl K</kbd>
+              <kbd className={styles.searchKbd}>Ctrl /</kbd>
             </button>
           </div>
         </div>
