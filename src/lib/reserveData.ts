@@ -10,6 +10,7 @@ const movies = moviesData as Movie[];
 /** database-data-items: ticket_types */
 export interface TicketType {
   id: string;
+  dbId?: string;
   nameJa: string;
   basePrice: number;
 }
@@ -26,10 +27,12 @@ export const MAX_SEATS_PER_BOOKING = 6;
 
 export interface SeatCell {
   id: string;
+  dbId?: string;
   row: string;
   number: number;
   isPremium: boolean;
   isAccessible: boolean;
+  status?: 'AVAILABLE' | 'HELD' | 'CONFIRMED';
 }
 
 export interface SeatLayout {
@@ -47,6 +50,7 @@ export const SEAT_LAYOUTS: Record<TheaterId, SeatLayout> = {
 };
 
 export interface ScreeningSelection {
+  screeningId?: string;
   movieId: string;
   movieTitle: string;
   poster?: string;
@@ -61,6 +65,9 @@ export interface ScreeningSelection {
   date: string;
   dateLabel: string;
   remainingSeats?: number;
+  seats?: SeatCell[];
+  ticketTypes?: TicketType[];
+  isApiBacked?: boolean;
 }
 
 export interface ReserveShowOption extends ScreeningSelection {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import BackButton from '@/components/BackButton';
@@ -18,6 +18,7 @@ import {
   formatYen,
   buildReserveUrl,
   type ScreeningSelection,
+  type ReserveShowOption,
   type SeatCell,
 } from '@/lib/reserveData';
 import type { TheaterId } from '@/lib/theaterConfig';
@@ -61,6 +62,14 @@ interface PendingSeatMove {
   requesterSeatId?: string;
 }
 
+interface BookingApiResponse {
+  booking?: {
+    id: string;
+    bookingNumber: string;
+  };
+  error?: string;
+}
+
 const STEPS: { id: Step; label: string }[] = [
   { id: 'show', label: '上映回' },
   { id: 'seats', label: '座席' },
@@ -77,7 +86,7 @@ const THEATER_THEME: Record<TheaterId, string> = {
 export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const router = useRouter();
   const initialShow = useMemo(() => findShowFromParams(initialParams ?? {}), [initialParams]);
-  const showOptions = useMemo(() => {
+  const fallbackShowOptions = useMemo(() => {
     const options = listAvailableShows();
     if (initialParams?.movieId) {
       return options.filter((option) => option.movieId === initialParams.movieId);
@@ -85,33 +94,95 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     return options;
   }, [initialParams?.movieId]);
 
+  const [showOptions, setShowOptions] = useState(fallbackShowOptions);
+  const [ticketTypes, setTicketTypes] = useState(TICKET_TYPES);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(true);
   const [step, setStep] = useState<Step>(initialShow ? 'seats' : 'show');
   const [selection, setSelection] = useState<ScreeningSelection | null>(initialShow);
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeat[]>([]);
   const [bookingNumber, setBookingNumber] = useState('');
   const [savedBookingId, setSavedBookingId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [pendingMoves, setPendingMoves] = useState<PendingSeatMove[]>([]);
   const [moveTargetSeatId, setMoveTargetSeatId] = useState<string | null>(null);
   const [offerSeatId, setOfferSeatId] = useState<string>('');
   const [seatMessage, setSeatMessage] = useState<string | null>(null);
 
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadApiOptions() {
+      setIsLoadingOptions(true);
+      try {
+        const q = new URLSearchParams();
+        if (initialParams?.movieId) q.set('movieId', initialParams.movieId);
+        const res = await fetch(`/api/screenings${q.toString() ? `?${q}` : ''}`, {
+          cache: 'no-store',
+        });
+        if (!res.ok) throw new Error('Failed to load screenings');
+        const data = (await res.json()) as { screenings?: ReserveShowOption[] };
+        const apiOptions = data.screenings ?? [];
+        if (ignore || apiOptions.length === 0) return;
+
+        setShowOptions(apiOptions);
+        setTicketTypes(apiOptions[0].ticketTypes ?? TICKET_TYPES);
+
+        if (initialParams?.movieId && initialParams?.theater && initialParams?.screen && initialParams?.time) {
+          const matched = apiOptions.find(
+            (option) =>
+              option.movieId === initialParams.movieId &&
+              option.theaterId === initialParams.theater &&
+              option.time === initialParams.time &&
+              option.format === initialParams.format,
+          );
+          if (matched) {
+            setSelection(matched);
+            setStep('seats');
+          }
+        }
+      } catch {
+        if (!ignore) {
+          setShowOptions(fallbackShowOptions);
+          setTicketTypes(TICKET_TYPES);
+        }
+      } finally {
+        if (!ignore) setIsLoadingOptions(false);
+      }
+    }
+
+    loadApiOptions();
+    return () => {
+      ignore = true;
+    };
+  }, [fallbackShowOptions, initialParams]);
+
   const layout = selection ? SEAT_LAYOUTS[selection.theaterId] : null;
   const screeningKey = selection ? buildScreeningKey(selection) : '';
   const occupied = useMemo(
-    () => (layout ? getOccupiedSeatIds(screeningKey, layout) : new Set<string>()),
-    [layout, screeningKey],
+    () => {
+      if (selection?.seats) {
+        return new Set(
+          selection.seats
+            .filter((seat) => seat.status && seat.status !== 'AVAILABLE')
+            .map((seat) => seat.id),
+        );
+      }
+      return layout ? getOccupiedSeatIds(screeningKey, layout) : new Set<string>();
+    },
+    [layout, screeningKey, selection],
   );
-  const seatGrid = layout ? buildSeatGrid(layout) : [];
+  const seatGrid = selection?.seats ?? (layout ? buildSeatGrid(layout) : []);
   const ownSeatIds = selectedSeats.map((item) => item.seat.id);
   const requestableTakenSeatIds = useMemo(() => {
     const ids = new Set<string>();
+    if (selection?.isApiBacked) return ids;
     for (const takenId of occupied) {
       if (ownSeatIds.includes(takenId)) continue;
       if (pendingMoves.some((move) => move.targetSeatId === takenId)) continue;
       ids.add(takenId);
     }
     return ids;
-  }, [occupied, ownSeatIds, pendingMoves]);
+  }, [occupied, ownSeatIds, pendingMoves, selection?.isApiBacked]);
 
   const moveTargetSeat = moveTargetSeatId
     ? seatGrid.find((seat) => seat.id === moveTargetSeatId) ?? null
@@ -119,7 +190,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
 
   const exchangeFees = pendingMoves.length * SEAT_MOVE_FEE;
   const seatFees = selectedSeats.reduce(
-    (sum, item) => sum + calcSeatPrice(item.ticketTypeId, item.seat.isPremium),
+    (sum, item) => sum + calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium),
     0,
   );
   const totalAmount = seatFees + exchangeFees;
@@ -127,7 +198,11 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
 
   const toggleSeat = (seat: SeatCell) => {
     if (occupied.has(seat.id)) {
-      handleTakenSeatClick(seat);
+      if (requestableTakenSeatIds.has(seat.id)) {
+        handleTakenSeatClick(seat);
+      } else {
+        setSeatMessage('この席はすでに確保されています。別の席をお選びください。');
+      }
       return;
     }
 
@@ -142,7 +217,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
 
     if (selectedSeats.length >= MAX_SEATS_PER_BOOKING) return;
 
-    setSelectedSeats((prev) => [...prev, { seat, ticketTypeId: 'general' }]);
+    setSelectedSeats((prev) => [...prev, { seat, ticketTypeId: ticketTypes[0]?.id ?? 'general' }]);
     setSeatMessage(null);
   };
 
@@ -188,7 +263,13 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     );
   };
 
-  const handleComplete = () => {
+  function calcSeatPriceFromList(ticketTypeId: string, isPremium: boolean): number {
+    const ticket = ticketTypes.find((t) => t.id === ticketTypeId) ?? TICKET_TYPES.find((t) => t.id === ticketTypeId);
+    if (!ticket) return calcSeatPrice(ticketTypeId, isPremium);
+    return ticket.basePrice + (isPremium ? 500 : 0);
+  }
+
+  const savePrototypeBooking = () => {
     if (!selection) return;
 
     const num = `HAL-${Date.now().toString(36).toUpperCase().slice(-8)}`;
@@ -202,7 +283,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
         id: createBookingSeatId(),
         seatId: item.seat.id,
         ticketTypeId: item.ticketTypeId,
-        unitPrice: calcSeatPrice(item.ticketTypeId, item.seat.isPremium),
+        unitPrice: calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium),
       })),
       totalAmount,
       createdAt: new Date().toISOString(),
@@ -239,6 +320,84 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     setBookingNumber(num);
     setSavedBookingId(bookingId);
     setStep('complete');
+  };
+
+  const handleComplete = async () => {
+    if (!selection || isSubmitting) return;
+
+    if (!selection.isApiBacked || !selection.screeningId) {
+      savePrototypeBooking();
+      return;
+    }
+
+    const apiSeats = selectedSeats
+      .filter((item) => item.seat.dbId)
+      .map((item) => ({
+        seatId: item.seat.dbId!,
+        ticketTypeId: item.ticketTypeId,
+      }));
+
+    if (apiSeats.length !== selectedSeats.length) {
+      setSeatMessage('座席情報を取得できませんでした。上映回を選び直してください。');
+      setStep('seats');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const bookingRes = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          screeningId: selection.screeningId,
+          bookingType: 'GUEST',
+          guestName: 'デモ予約',
+          guestEmail: 'demo@example.com',
+          seats: apiSeats,
+        }),
+      });
+      const bookingData = (await bookingRes.json()) as BookingApiResponse;
+      if (!bookingRes.ok || !bookingData.booking) {
+        throw new Error(bookingData.error ?? '予約の作成に失敗しました。');
+      }
+
+      const paymentRes = await fetch(`/api/bookings/${bookingData.booking.id}/payments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ method: 'CREDIT_CARD', provider: 'mock' }),
+      });
+      const paymentData = (await paymentRes.json()) as BookingApiResponse;
+      if (!paymentRes.ok || !paymentData.booking) {
+        throw new Error(paymentData.error ?? '決済確定に失敗しました。');
+      }
+
+      const bookingId = paymentData.booking.id;
+      const num = paymentData.booking.bookingNumber;
+      setBookingNumber(num);
+      setSavedBookingId(bookingId);
+
+      const storedBooking: StoredBooking = {
+        id: bookingId,
+        bookingNumber: num,
+        screeningKey: selection.screeningId,
+        selection,
+        seats: selectedSeats.map((item) => ({
+          id: item.seat.dbId ?? createBookingSeatId(),
+          seatId: item.seat.id,
+          ticketTypeId: item.ticketTypeId,
+          unitPrice: calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium),
+        })),
+        totalAmount,
+        createdAt: new Date().toISOString(),
+      };
+      saveBooking(storedBooking);
+      setStep('complete');
+    } catch (error) {
+      setSeatMessage(error instanceof Error ? error.message : '予約処理に失敗しました。');
+      setStep('seats');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const goToStep = (next: Step) => {
@@ -282,7 +441,11 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           <div className={s.panelHead}>
             <div className={shared.sectionHint}>Step 1</div>
             <h2 className={s.panelTitle}>上映回を選択</h2>
-            <p className={s.panelLead}>本日予約可能な上映回からお選びください。</p>
+            <p className={s.panelLead}>
+              {isLoadingOptions
+                ? '予約可能な上映回を読み込んでいます。'
+                : '予約可能な上映回からお選びください。'}
+            </p>
           </div>
           <div className={s.showList}>
             {showOptions.map((option) => (
@@ -292,6 +455,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                 className={`${s.showCard} ${THEATER_THEME[option.theaterId]}`}
                 onClick={() => {
                   setSelection(option);
+                  setTicketTypes(option.ticketTypes ?? TICKET_TYPES);
                   setSelectedSeats([]);
                   setPendingMoves([]);
                   setMoveTargetSeatId(null);
@@ -335,7 +499,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <div className={shared.sectionHint}>Step 2</div>
             <h2 className={s.panelTitle}>座席を選択</h2>
             <p className={s.panelLead}>
-              空席を選ぶか、売り切れの席に {formatYen(SEAT_MOVE_FEE)} で席交換リクエストを送れます。席がなくてもリクエストのみで進められます。
+              {selection.isApiBacked
+                ? '空席を選ぶと予約確定時に座席を確保します。確定処理中に他のお客様が先に確保した場合は、別の席を選び直してください。'
+                : `空席を選ぶか、売り切れの席に ${formatYen(SEAT_MOVE_FEE)} で席交換リクエストを送れます。席がなくてもリクエストのみで進められます。`}
             </p>
           </div>
 
@@ -407,7 +573,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </div>
           </div>
 
-          {moveTargetSeat && (
+          {moveTargetSeat && !selection.isApiBacked && (
             <div className={s.seatMovePanel}>
               <div className={s.seatMovePanelTitle}>席交換リクエスト</div>
               <p className={s.seatMovePanelText}>
@@ -450,7 +616,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </div>
           )}
 
-          {pendingMoves.length > 0 && (
+          {pendingMoves.length > 0 && !selection.isApiBacked && (
             <div className={s.pendingMoveList}>
               <div className={s.pendingMoveTitle}>送信予定の席交換リクエスト</div>
               {pendingMoves.map((move) => (
@@ -507,7 +673,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <p className={s.panelLead}>
               {selectedSeats.length > 0
                 ? '座席ごとに券種をお選びください。'
-                : '席交換リクエストのみの予約です。承認後に席が確定します。'}
+                : selection.isApiBacked
+                  ? '座席を選んでから券種を指定してください。'
+                  : '席交換リクエストのみの予約です。承認後に席が確定します。'}
             </p>
           </div>
 
@@ -527,9 +695,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                   value={item.ticketTypeId}
                   onChange={(e) => updateTicketType(item.seat.id, e.target.value)}
                 >
-                  {TICKET_TYPES.map((ticket) => (
+                  {ticketTypes.map((ticket) => (
                     <option key={ticket.id} value={ticket.id}>
-                      {ticket.nameJa} — {formatYen(calcSeatPrice(ticket.id, item.seat.isPremium))}
+                      {ticket.nameJa} — {formatYen(calcSeatPriceFromList(ticket.id, item.seat.isPremium))}
                     </option>
                   ))}
                 </select>
@@ -573,7 +741,11 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           <div className={s.panelHead}>
             <div className={shared.sectionHint}>Step 4</div>
             <h2 className={s.panelTitle}>予約内容の確認</h2>
-            <p className={s.panelLead}>プロトタイプのため、決済は行われません。</p>
+            <p className={s.panelLead}>
+              {selection.isApiBacked
+                ? '予約内容を確認し、mock決済で座席を確定します。'
+                : 'プロトタイプのため、決済は行われません。'}
+            </p>
           </div>
 
           <div className={s.confirmCard}>
@@ -608,8 +780,8 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
               </div>
             )}
             {selectedSeats.map((item) => {
-              const ticket = TICKET_TYPES.find((t) => t.id === item.ticketTypeId)!;
-              const price = calcSeatPrice(item.ticketTypeId, item.seat.isPremium);
+              const ticket = ticketTypes.find((t) => t.id === item.ticketTypeId) ?? TICKET_TYPES[0];
+              const price = calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium);
               return (
                 <div key={item.seat.id} className={s.confirmSeatRow}>
                   <span>
@@ -640,15 +812,22 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           </div>
 
           <div className={s.prototypeNote}>
-            本画面は座席予約機能のプロトタイプです。予約確定後も実際のチケット発行・決済は行われません。
+            {selection.isApiBacked
+              ? '現在の決済はモックです。予約確定時にDBへ予約・座席ロック・決済レコードを保存します。'
+              : '本画面は座席予約機能のプロトタイプです。予約確定後も実際のチケット発行・決済は行われません。'}
           </div>
 
           <div className={s.actions}>
             <button type="button" className={shared.btn} onClick={() => setStep('tickets')}>
               券種に戻る
             </button>
-            <button type="button" className={`${shared.btn} ${shared.btnSolid}`} onClick={handleComplete}>
-              予約を確定する（デモ）
+            <button
+              type="button"
+              className={`${shared.btn} ${shared.btnSolid}`}
+              disabled={isSubmitting}
+              onClick={handleComplete}
+            >
+              {isSubmitting ? '予約処理中' : selection.isApiBacked ? '予約を確定する' : '予約を確定する（デモ）'}
             </button>
           </div>
         </div>
@@ -661,7 +840,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <div className={s.completeLabel}>Reservation Complete</div>
             <h2 className={s.completeTitle}>予約が完了しました</h2>
             <p className={s.completeDesc}>
-              プロトタイプのデモ予約です。予約番号は画面表示のみで、実際の発券は行われません。
+              {selection.isApiBacked
+                ? '予約情報をDBに保存し、mock決済で座席を確定しました。'
+                : 'プロトタイプのデモ予約です。予約番号は画面表示のみで、実際の発券は行われません。'}
             </p>
             <div className={s.bookingNumber}>{bookingNumber}</div>
             <div className={s.completeSummary}>
@@ -704,7 +885,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
               </div>
             )}
 
-            {pendingMoves.length === 0 && (
+            {pendingMoves.length === 0 && !selection.isApiBacked && (
               <div className={s.seatMovePromo}>
                 <div className={s.seatMovePromoLabel}>Seat Exchange</div>
                 <p className={s.seatMovePromoText}>

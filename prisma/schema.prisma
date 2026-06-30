@@ -13,3 +13,402 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+enum UserRole {
+  MEMBER
+  ADMIN
+
+  @@map("user_role")
+}
+
+enum CreatorRole {
+  DIRECTOR
+  ACTOR
+  BOTH
+
+  @@map("creator_role")
+}
+
+enum MovieCreatorRole {
+  DIRECTOR
+  ACTOR
+
+  @@map("movie_creator_role")
+}
+
+enum ScreeningFormat {
+  SUBTITLED
+  DUBBED
+  ORIGINAL
+
+  @@map("screening_format")
+}
+
+enum ScreeningStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+
+  @@map("screening_status")
+}
+
+enum BookingType {
+  MEMBER
+  GUEST
+
+  @@map("booking_type")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+
+  @@map("booking_status")
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  QR
+
+  @@map("payment_method")
+}
+
+enum PaymentStatus {
+  UNPAID
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+
+  @@map("payment_status")
+}
+
+enum SeatLockStatus {
+  HELD
+  CONFIRMED
+
+  @@map("seat_lock_status")
+}
+
+enum SeatMoveStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  EXPIRED
+  CANCELLED
+
+  @@map("seat_move_status")
+}
+
+enum NewsCategory {
+  CAMPAIGN
+  EVENT
+  ANNOUNCEMENT
+
+  @@map("news_category")
+}
+
+model User {
+  id           BigInt   @id @default(autoincrement())
+  memberId     String   @unique @map("member_id") @db.VarChar(20)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String?  @map("password_hash") @db.VarChar(255)
+  name         String   @db.VarChar(100)
+  role         UserRole @default(MEMBER)
+  visitCount   Int      @default(0) @map("visit_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  bookings            Booking[]
+  notificationSetting NotificationSetting?
+  screeningSeatLocks  ScreeningSeatLock[]
+  userFavorites       UserFavorite[]
+
+  @@map("users")
+}
+
+model Movie {
+  id              BigInt    @id @default(autoincrement())
+  slug            String    @unique @db.VarChar(100)
+  titleJa         String    @map("title_ja") @db.VarChar(200)
+  titleEn         String?   @map("title_en") @db.VarChar(200)
+  genre           String?   @db.VarChar(50)
+  durationMinutes Int       @map("duration_minutes")
+  description     String?
+  posterImageUrl  String?   @map("poster_image_url") @db.VarChar(500)
+  isActive        Boolean   @default(true) @map("is_active")
+  releaseDate     DateTime? @map("release_date") @db.Date
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  creators   MovieCreator[]
+  screenings Screening[]
+
+  @@map("movies")
+}
+
+model Creator {
+  id        BigInt      @id @default(autoincrement())
+  name      String      @db.VarChar(100)
+  role      CreatorRole
+  imageUrl  String?     @map("image_url") @db.VarChar(500)
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  movies        MovieCreator[]
+  userFavorites UserFavorite[]
+
+  @@map("creators")
+}
+
+model MovieCreator {
+  movieId       BigInt           @map("movie_id")
+  creatorId     BigInt           @map("creator_id")
+  role          MovieCreatorRole
+  characterName String?          @map("character_name") @db.VarChar(100)
+
+  movie   Movie   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  creator Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@id([movieId, creatorId, role])
+  @@map("movie_creators")
+}
+
+model Theater {
+  id          BigInt   @id @default(autoincrement())
+  name        String   @db.VarChar(50)
+  description String?
+  imageUrl    String?  @map("image_url") @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  screens Screen[]
+
+  @@map("theaters")
+}
+
+model Screen {
+  id           BigInt  @id @default(autoincrement())
+  theaterId    BigInt? @map("theater_id")
+  screenNumber Int     @unique @map("screen_number")
+  conceptName  String  @map("concept_name") @db.VarChar(50)
+  description  String?
+  imageUrl     String? @map("image_url") @db.VarChar(500)
+  seatCount    Int     @map("seat_count")
+
+  theater    Theater?    @relation(fields: [theaterId], references: [id], onDelete: SetNull)
+  seats      Seat[]
+  screenings Screening[]
+
+  @@map("screens")
+}
+
+model Seat {
+  id           BigInt  @id @default(autoincrement())
+  screenId     BigInt  @map("screen_id")
+  rowLabel     String  @map("row_label") @db.VarChar(2)
+  seatNumber   Int     @map("seat_number")
+  isAccessible Boolean @default(false) @map("is_accessible")
+  isPremium    Boolean @default(false) @map("is_premium")
+
+  screen             Screen              @relation(fields: [screenId], references: [id], onDelete: Cascade)
+  bookingSeats       BookingSeat[]
+  screeningSeatLocks ScreeningSeatLock[]
+
+  @@unique([screenId, rowLabel, seatNumber])
+  @@map("seats")
+}
+
+model Screening {
+  id        BigInt          @id @default(autoincrement())
+  movieId   BigInt          @map("movie_id")
+  screenId  BigInt          @map("screen_id")
+  startTime DateTime        @map("start_time")
+  endTime   DateTime        @map("end_time")
+  format    ScreeningFormat
+  status    ScreeningStatus @default(SCHEDULED)
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  movie              Movie               @relation(fields: [movieId], references: [id], onDelete: Restrict)
+  screen             Screen              @relation(fields: [screenId], references: [id], onDelete: Restrict)
+  bookings           Booking[]
+  bookingSeats       BookingSeat[]
+  screeningSeatLocks ScreeningSeatLock[]
+
+  @@index([movieId, startTime])
+  @@index([screenId, startTime, endTime])
+  @@map("screenings")
+}
+
+model TicketType {
+  id        BigInt  @id @default(autoincrement())
+  nameJa    String  @map("name_ja") @db.VarChar(50)
+  basePrice Int     @map("base_price")
+  isActive  Boolean @default(true) @map("is_active")
+
+  bookingSeats BookingSeat[]
+
+  @@map("ticket_types")
+}
+
+model Booking {
+  id                        BigInt         @id @default(autoincrement())
+  userId                    BigInt?        @map("user_id")
+  screeningId               BigInt         @map("screening_id")
+  bookingNumber             String         @unique @map("booking_number") @db.VarChar(30)
+  bookingType               BookingType    @map("booking_type")
+  guestName                 String?        @map("guest_name") @db.VarChar(100)
+  guestEmail                String?        @map("guest_email") @db.VarChar(255)
+  guestPhone                String?        @map("guest_phone") @db.VarChar(30)
+  guestLookupTokenHash      String?        @map("guest_lookup_token_hash") @db.VarChar(255)
+  guestLookupTokenExpiresAt DateTime?      @map("guest_lookup_token_expires_at")
+  guestLookupTokenSentAt    DateTime?      @map("guest_lookup_token_sent_at")
+  totalAmount               Int            @map("total_amount")
+  paymentMethod             PaymentMethod? @map("payment_method")
+  paymentStatus             PaymentStatus  @default(UNPAID) @map("payment_status")
+  status                    BookingStatus  @default(PENDING)
+  expiresAt                 DateTime?      @map("expires_at")
+  cancelledAt               DateTime?      @map("cancelled_at")
+  checkedInAt               DateTime?      @map("checked_in_at")
+  createdAt                 DateTime       @default(now()) @map("created_at")
+  updatedAt                 DateTime       @updatedAt @map("updated_at")
+
+  user               User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  screening          Screening           @relation(fields: [screeningId], references: [id], onDelete: Restrict)
+  bookingSeats       BookingSeat[]
+  payments           Payment[]
+  screeningSeatLocks ScreeningSeatLock[]
+  requestedSeatMoves SeatMoveRequest[]   @relation("RequesterBooking")
+  targetedSeatMoves  SeatMoveRequest[]   @relation("TargetBooking")
+
+  @@index([userId, createdAt])
+  @@index([guestEmail])
+  @@index([screeningId, status])
+  @@map("bookings")
+}
+
+model BookingSeat {
+  id           BigInt @id @default(autoincrement())
+  bookingId    BigInt @map("booking_id")
+  screeningId  BigInt @map("screening_id")
+  seatId       BigInt @map("seat_id")
+  ticketTypeId BigInt @map("ticket_type_id")
+  unitPrice    Int    @map("unit_price")
+
+  booking                   Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  screening                 Screening         @relation(fields: [screeningId], references: [id], onDelete: Restrict)
+  seat                      Seat              @relation(fields: [seatId], references: [id], onDelete: Restrict)
+  ticketType                TicketType        @relation(fields: [ticketTypeId], references: [id], onDelete: Restrict)
+  requesterSeatMoveRequests SeatMoveRequest[] @relation("RequesterBookingSeat")
+  targetSeatMoveRequests    SeatMoveRequest[] @relation("TargetBookingSeat")
+
+  @@unique([bookingId, seatId])
+  @@index([screeningId, seatId])
+  @@map("booking_seats")
+}
+
+model ScreeningSeatLock {
+  id             BigInt         @id @default(autoincrement())
+  screeningId    BigInt         @map("screening_id")
+  seatId         BigInt         @map("seat_id")
+  userId         BigInt?        @map("user_id")
+  guestTokenHash String?        @map("guest_token_hash") @db.VarChar(255)
+  bookingId      BigInt?        @map("booking_id")
+  status         SeatLockStatus @default(HELD)
+  expiresAt      DateTime?      @map("expires_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  screening Screening @relation(fields: [screeningId], references: [id], onDelete: Cascade)
+  seat      Seat      @relation(fields: [seatId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  booking   Booking?  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([screeningId, seatId])
+  @@index([status, expiresAt])
+  @@index([bookingId])
+  @@map("screening_seat_locks")
+}
+
+model Payment {
+  id                    BigInt        @id @default(autoincrement())
+  bookingId             BigInt        @map("booking_id")
+  provider              String        @db.VarChar(50)
+  providerTransactionId String?       @unique @map("provider_transaction_id") @db.VarChar(100)
+  method                PaymentMethod
+  amount                Int
+  status                PaymentStatus
+  paidAt                DateTime?     @map("paid_at")
+  refundedAt            DateTime?     @map("refunded_at")
+  failureReason         String?       @map("failure_reason") @db.VarChar(255)
+  createdAt             DateTime      @default(now()) @map("created_at")
+  updatedAt             DateTime      @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("payments")
+}
+
+model SeatMoveRequest {
+  id                     BigInt         @id @default(autoincrement())
+  requesterBookingSeatId BigInt?        @map("requester_booking_seat_id")
+  targetBookingSeatId    BigInt         @map("target_booking_seat_id")
+  requesterBookingId     BigInt         @map("requester_booking_id")
+  targetBookingId        BigInt         @map("target_booking_id")
+  fee                    Int            @default(100)
+  cashbackAmount         Int            @map("cashback_amount")
+  status                 SeatMoveStatus @default(PENDING)
+  requestedAt            DateTime       @default(now()) @map("requested_at")
+  respondedAt            DateTime?      @map("responded_at")
+
+  requesterBookingSeat BookingSeat? @relation("RequesterBookingSeat", fields: [requesterBookingSeatId], references: [id], onDelete: SetNull)
+  targetBookingSeat    BookingSeat  @relation("TargetBookingSeat", fields: [targetBookingSeatId], references: [id], onDelete: Cascade)
+  requesterBooking     Booking      @relation("RequesterBooking", fields: [requesterBookingId], references: [id], onDelete: Cascade)
+  targetBooking        Booking      @relation("TargetBooking", fields: [targetBookingId], references: [id], onDelete: Cascade)
+
+  @@index([requesterBookingId, status])
+  @@index([targetBookingId, status])
+  @@map("seat_move_requests")
+}
+
+model UserFavorite {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  creatorId BigInt   @map("creator_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creator Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, creatorId])
+  @@map("user_favorites")
+}
+
+model NotificationSetting {
+  id                    BigInt   @id @default(autoincrement())
+  userId                BigInt   @unique @map("user_id")
+  pushEnabled           Boolean  @default(true) @map("push_enabled")
+  emailEnabled          Boolean  @default(true) @map("email_enabled")
+  favoriteCreatorNotify Boolean  @default(true) @map("favorite_creator_notify")
+  bookingRemindNotify   Boolean  @default(true) @map("booking_remind_notify")
+  campaignNotify        Boolean  @default(true) @map("campaign_notify")
+  seatMoveNotify        Boolean  @default(true) @map("seat_move_notify")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_settings")
+}
+
+model News {
+  id           BigInt       @id @default(autoincrement())
+  title        String       @db.VarChar(300)
+  body         String?
+  category     NewsCategory
+  thumbnailUrl String?      @map("thumbnail_url") @db.VarChar(500)
+  isFeatured   Boolean      @default(false) @map("is_featured")
+  publishedAt  DateTime?    @map("published_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+
+  @@map("news")
+}
