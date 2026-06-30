@@ -4,6 +4,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import RevealObserver from '@/components/RevealObserver';
+import SessionProviderWrapper from '@/components/SessionProviderWrapper';
 
 export const metadata: Metadata = {
   title: 'HAL CINEMA | Dive into Cinema',
@@ -35,11 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="accent-lines accent-lines--short-6" aria-hidden="true"></div>
         <div className="accent-lines accent-lines--short-7" aria-hidden="true"></div>
         <div className="page">
-          <Nav />
-          <AnnouncementBanner />
-          <RevealObserver />
-          {children}
-          <Footer />
+          <SessionProviderWrapper>
+            <Nav />
+            <AnnouncementBanner />
+            <RevealObserver />
+            {children}
+            <Footer />
+          </SessionProviderWrapper>
         </div>
       </body>
     </html>

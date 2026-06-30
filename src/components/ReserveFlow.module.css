@@ -493,6 +493,26 @@
   color: var(--ink-800);
 }
 
+.guestField {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink-700, #2b3d5f);
+}
+
+.guestInput {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(200, 164, 91, 0.35);
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink-800);
+}
+
 .exchangeOnlyNote {
   margin-bottom: 1rem;
   padding: 14px 16px;

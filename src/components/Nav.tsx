@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 import styles from './Nav.module.css';
 import shared from '@/styles/shared.module.css';
 import { NAV_LINKS } from '@/lib/navLinks';
@@ -10,6 +11,7 @@ import SearchModal from './SearchModal';
 
 export default function Nav() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -81,6 +83,25 @@ export default function Nav() {
               
               <kbd className={styles.searchKbd}>Ctrl K</kbd>
             </button>
+            {status === 'authenticated' && session?.user ? (
+              <div className={styles.authArea}>
+                <Link href="/mypage" className={styles.authLink}>
+                  マイページ
+                </Link>
+                <span className={styles.authUserName}>{session.user.name}</span>
+                <button
+                  type="button"
+                  className={styles.authLink}
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                >
+                  ログアウト
+                </button>
+              </div>
+            ) : status === 'unauthenticated' ? (
+              <Link href="/login" className={styles.authLink}>
+                ログイン
+              </Link>
+            ) : null}
           </div>
         </div>
       </header>

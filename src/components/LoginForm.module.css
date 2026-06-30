@@ -1,0 +1,61 @@
+.formWrap {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.backRow {
+  margin-bottom: 16px;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: var(--ink-600, #5a6b8c);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+  border: 1px solid rgba(200, 164, 91, 0.22);
+  border-radius: 12px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-700, #2b3d5f);
+}
+
+.field input {
+  border: 1px solid rgba(200, 164, 91, 0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: rgba(200, 164, 91, 0.7);
+}
+
+.error {
+  font-size: 13px;
+  color: #b3261e;
+  background: rgba(179, 38, 30, 0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.switchLink {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-600, #5a6b8c);
+  margin: 0;
+}

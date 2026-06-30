@@ -116,8 +116,36 @@
   padding: 1px 5px;
 }
 
+/* ── Auth area ── */
+.authArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.authLink {
+  background: none;
+  border: none;
+  color: var(--ink-700);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+}
+
+.authLink:hover {
+  color: var(--gold-500);
+}
+
+.authUserName {
+  font-size: 12px;
+  color: var(--ink-600, #5a6b8c);
+}
+
 @media (max-width: 640px) {
   .navLinks { display: none; }
   .searchBtnLabel { display: none; }
   .searchKbd { display: none; }
+  .authUserName { display: none; }
 }

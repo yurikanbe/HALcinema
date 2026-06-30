@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import BackButton from '@/components/BackButton';
 import shared from '@/styles/shared.module.css';
 import {
@@ -86,6 +87,7 @@ const THEATER_THEME: Record<TheaterId, string> = {
 
 export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const router = useRouter();
+  const { data: session, status: sessionStatus } = useSession();
   const initialShow = useMemo(() => findShowFromParams(initialParams ?? {}), [initialParams]);
   const fallbackShowOptions = useMemo(() => {
     const options = listAvailableShows();
@@ -112,6 +114,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const [moveTargetSeatId, setMoveTargetSeatId] = useState<string | null>(null);
   const [offerSeatId, setOfferSeatId] = useState<string>('');
   const [seatMessage, setSeatMessage] = useState<string | null>(null);
+  const [guestName, setGuestName] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
+  const [guestFormError, setGuestFormError] = useState<string | null>(null);
 
   const hasRestoredFromParams = useRef(false);
 
@@ -377,6 +382,15 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
       return;
     }
 
+    const isLoggedIn = sessionStatus === 'authenticated' && !!session?.user;
+    if (!isLoggedIn) {
+      if (!guestName.trim() || !guestEmail.trim()) {
+        setGuestFormError('ご予約者様のお名前とメールアドレスを入力してください。');
+        return;
+      }
+    }
+    setGuestFormError(null);
+
     setIsSubmitting(true);
     try {
       const bookingRes = await fetch('/api/bookings', {
@@ -384,10 +398,10 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           screeningId: selection.screeningId,
-          bookingType: 'GUEST',
-          guestName: 'デモ予約',
-          guestEmail: 'demo@example.com',
           seats: apiSeats,
+          // ログイン中はサーバーがセッションからuserId/bookingTypeを決定するため省略する。
+          // 未ログイン時のみゲスト情報を送る。
+          ...(isLoggedIn ? {} : { guestName: guestName.trim(), guestEmail: guestEmail.trim() }),
         }),
       });
       const bookingData = (await bookingRes.json()) as BookingApiResponse;
@@ -816,6 +830,35 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
               <strong>{selection.format}</strong>
             </div>
           </div>
+
+          {selection.isApiBacked && sessionStatus !== 'authenticated' && (
+            <div className={s.confirmCard}>
+              <div className={s.panelHead}>
+                <h3 className={s.panelTitle} style={{ fontSize: 16 }}>ご予約者様情報</h3>
+              </div>
+              {guestFormError && <div className={s.seatMessage}>{guestFormError}</div>}
+              <label className={s.guestField}>
+                <span>お名前</span>
+                <input
+                  className={s.guestInput}
+                  type="text"
+                  value={guestName}
+                  onChange={(e) => setGuestName(e.target.value)}
+                  required
+                />
+              </label>
+              <label className={s.guestField}>
+                <span>メールアドレス</span>
+                <input
+                  className={s.guestInput}
+                  type="email"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+          )}
 
           <div className={s.confirmSeats}>
             {selectedSeats.length === 0 && pendingMoves.length > 0 && (

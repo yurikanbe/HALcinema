@@ -1,7 +1,8 @@
 import { Prisma, type BookingStatus, type PaymentStatus } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { assertCreateBookingPayload, asBigIntId, createBookingNumber, optionalBigIntId } from '@/lib/api/bookingPayload';
+import { assertCreateBookingPayload, asBigIntId, createBookingNumber } from '@/lib/api/bookingPayload';
 import { jsonError, jsonOk } from '@/lib/api/response';
+import { getSessionUser } from '@/lib/api/session';
 
 const HOLD_MINUTES = 15;
 
@@ -9,17 +10,15 @@ function addMinutes(date: Date, minutes: number): Date {
   return new Date(date.getTime() + minutes * 60 * 1000);
 }
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const userId = optionalBigIntId(searchParams.get('userId'), 'userId');
-  const guestEmail = searchParams.get('guestEmail')?.trim();
+export async function GET() {
+  const sessionUser = await getSessionUser();
 
-  if (!userId && !guestEmail) {
-    return jsonError('userId or guestEmail is required until authentication is wired', 400);
+  if (!sessionUser) {
+    return jsonError('Sign in to view your bookings. Guests can look up a booking via /api/guest-bookings/lookup', 401);
   }
 
   const bookings = await prisma.booking.findMany({
-    where: userId ? { userId } : { guestEmail },
+    where: { userId: sessionUser.id },
     orderBy: { createdAt: 'desc' },
     include: {
       screening: {
@@ -56,7 +55,16 @@ export async function POST(request: Request) {
 
   const now = new Date();
   const screeningId = asBigIntId(payload.screeningId, 'screeningId');
-  const userId = optionalBigIntId(payload.userId, 'userId');
+  // ログイン中はセッション由来のuserIdを強制し、クライアントが送ったuserId/bookingTypeは無視する
+  // （なりすまし防止）。未ログイン時は従来通りゲスト予約として扱う。
+  const sessionUser = await getSessionUser();
+  const userId = sessionUser?.id ?? null;
+
+  if (!userId) {
+    if (!payload.guestName?.trim()) return jsonError('guestName is required for guest booking', 400);
+    if (!payload.guestEmail?.trim()) return jsonError('guestEmail is required for guest booking', 400);
+  }
+
   const requestedSeats = payload.seats!.map((seat) => ({
     seatId: asBigIntId(seat.seatId, 'seatId'),
     ticketTypeId: asBigIntId(seat.ticketTypeId, 'ticketTypeId'),

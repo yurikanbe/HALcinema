@@ -5,8 +5,6 @@ export interface CreateBookingSeatInput {
 
 export interface CreateBookingPayload {
   screeningId?: string | number;
-  userId?: string | number | null;
-  bookingType?: 'MEMBER' | 'GUEST';
   guestName?: string;
   guestEmail?: string;
   guestPhone?: string;
@@ -51,11 +49,6 @@ export function assertCreateBookingPayload(value: unknown): CreateBookingPayload
     }
     asBigIntId(seat.seatId, 'seatId');
     asBigIntId(seat.ticketTypeId, 'ticketTypeId');
-  }
-
-  if (payload.bookingType === 'GUEST' || !payload.userId) {
-    if (!payload.guestName?.trim()) throw new Error('guestName is required for guest booking');
-    if (!payload.guestEmail?.trim()) throw new Error('guestEmail is required for guest booking');
   }
 
   return payload;
