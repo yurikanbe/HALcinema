@@ -114,6 +114,32 @@
   letter-spacing: 0.04em;
 }
 
+.dateTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.dateTab {
+  border: 1px solid rgba(200, 164, 91, 0.3);
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-700, #2b3d5f);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.dateTabActive {
+  background: var(--ink-900, #15233f);
+  border-color: var(--ink-900, #15233f);
+  color: #fff;
+}
+
 .showList {
   display: grid;
   gap: 12px;

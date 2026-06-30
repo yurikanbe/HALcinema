@@ -25,7 +25,21 @@ const THEATER_CONCEPT_NAMES = {
   cyber: 'Cyber',
 };
 
-const BASE_SCREENING_DATE = '2026-06-24';
+function toIsoDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function addDays(dateString, days) {
+  const date = new Date(`${dateString}T00:00:00`);
+  date.setDate(date.getDate() + days);
+  return toIsoDate(date);
+}
+
+const BASE_SCREENING_DATE = toIsoDate(new Date());
+const SCREENING_DAY_OFFSETS = [0, 1, 2, 3];
 
 function toDirectors(value) {
   if (!value) return '';
@@ -191,25 +205,29 @@ async function seedTheatersScreensAndSeats() {
 async function seedScreenings(movieIdBySlug, screenIdByKey) {
   const screenings = [];
 
-  for (const schedule of schedules) {
-    const screenId = screenIdByKey.get(`${schedule.theaterId}:${schedule.screen}`);
-    if (!screenId) continue;
+  for (const dayOffset of SCREENING_DAY_OFFSETS) {
+    const screeningDate = addDays(BASE_SCREENING_DATE, dayOffset);
 
-    for (const show of schedule.shows) {
-      const movieId = movieIdBySlug.get(show.movieId);
-      if (!movieId) continue;
+    for (const schedule of schedules) {
+      const screenId = screenIdByKey.get(`${schedule.theaterId}:${schedule.screen}`);
+      if (!screenId) continue;
 
-      const startTime = toDateTime(BASE_SCREENING_DATE, show.start);
-      const endTime = addMinutes(startTime, show.duration);
+      for (const show of schedule.shows) {
+        const movieId = movieIdBySlug.get(show.movieId);
+        if (!movieId) continue;
 
-      screenings.push({
-        movieId,
-        screenId,
-        startTime,
-        endTime,
-        format: toScreeningFormat(show.format),
-        status: show.taken ? 'CANCELLED' : 'SCHEDULED',
-      });
+        const startTime = toDateTime(screeningDate, show.start);
+        const endTime = addMinutes(startTime, show.duration);
+
+        screenings.push({
+          movieId,
+          screenId,
+          startTime,
+          endTime,
+          format: toScreeningFormat(show.format),
+          status: 'SCHEDULED',
+        });
+      }
     }
   }
 

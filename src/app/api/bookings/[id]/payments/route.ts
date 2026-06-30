@@ -71,7 +71,7 @@ export async function POST(request: Request, context: RouteContext) {
           screening: { include: { movie: true, screen: { include: { theater: true } } } },
         },
       });
-    });
+    }, { timeout: 15000 });
 
     return jsonOk({ booking });
   } catch (error) {

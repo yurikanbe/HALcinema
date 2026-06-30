@@ -47,9 +47,19 @@ function formatDateLabel(date: Date): string {
   return `${year}年${month}月${day}日（${weekday}）`;
 }
 
+function jstDateRange(isoDate: string): { gte: Date; lt: Date } | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return null;
+  const start = new Date(`${isoDate}T00:00:00+09:00`);
+  if (Number.isNaN(start.getTime())) return null;
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  return { gte: start, lt: end };
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const movieId = searchParams.get('movieId');
+  const date = searchParams.get('date');
+  const dateRange = date ? jstDateRange(date) : null;
 
   await prisma.screeningSeatLock.deleteMany({
     where: {
@@ -67,6 +77,7 @@ export async function GET(request: Request) {
     where: {
       status: 'SCHEDULED',
       movie: movieId ? { slug: movieId } : undefined,
+      startTime: dateRange ?? undefined,
     },
     orderBy: { startTime: 'asc' },
     include: {

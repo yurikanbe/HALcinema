@@ -39,7 +39,7 @@ export async function POST(_request: Request, context: RouteContext) {
           payments: { orderBy: { createdAt: 'desc' } },
         },
       });
-    });
+    }, { timeout: 15000 });
 
     return jsonOk({ booking });
   } catch (error) {

@@ -95,6 +95,22 @@ export function buildScreeningKey(selection: Pick<ScreeningSelection, 'movieId' 
   return `${selection.date}:${selection.theaterId}:${selection.screen}:${selection.time}:${selection.movieId}`;
 }
 
+export interface ReserveDateOption {
+  date: string;
+  label: string;
+}
+
+const RESERVABLE_DAY_COUNT = 4;
+
+export function listReservableDates(from = new Date()): ReserveDateOption[] {
+  const options: ReserveDateOption[] = [];
+  for (let i = 0; i < RESERVABLE_DAY_COUNT; i += 1) {
+    const date = new Date(from.getFullYear(), from.getMonth(), from.getDate() + i);
+    options.push({ date: toISODate(date), label: formatDateLabel(date) });
+  }
+  return options;
+}
+
 export function buildSeatGrid(layout: SeatLayout): SeatCell[] {
   const premiumRows = new Set(['A', 'B']);
   const seats: SeatCell[] = [];

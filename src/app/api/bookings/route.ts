@@ -67,15 +67,18 @@ export async function POST(request: Request) {
     return jsonError('Duplicate seats are not allowed in one booking', 400);
   }
 
+  // 期限切れHELDロックの掃除はトランザクション本体と独立しているため、外で済ませて
+  // インタラクティブトランザクションのラウンドトリップ数を減らす（Neonのコールドスタート時に
+  // タイムアウトしやすいため）。
+  await prisma.screeningSeatLock.deleteMany({
+    where: {
+      status: 'HELD',
+      expiresAt: { lt: now },
+    },
+  });
+
   try {
     const booking = await prisma.$transaction(async (tx) => {
-      await tx.screeningSeatLock.deleteMany({
-        where: {
-          status: 'HELD',
-          expiresAt: { lt: now },
-        },
-      });
-
       const screening = await tx.screening.findUnique({
         where: { id: screeningId },
         include: { screen: true },
@@ -175,7 +178,7 @@ export async function POST(request: Request) {
       });
 
       return created;
-    });
+    }, { timeout: 15000 });
 
     return jsonOk({ booking }, { status: 201 });
   } catch (error) {

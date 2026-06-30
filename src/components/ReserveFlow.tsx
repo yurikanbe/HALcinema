@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import BackButton from '@/components/BackButton';
@@ -13,6 +13,7 @@ import {
   buildSeatGrid,
   getOccupiedSeatIds,
   listAvailableShows,
+  listReservableDates,
   findShowFromParams,
   calcSeatPrice,
   formatYen,
@@ -94,6 +95,10 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     return options;
   }, [initialParams?.movieId]);
 
+  const reservableDates = useMemo(() => listReservableDates(), []);
+  const [selectedDate, setSelectedDate] = useState(
+    initialParams?.date ?? reservableDates[0]?.date ?? '',
+  );
   const [showOptions, setShowOptions] = useState(fallbackShowOptions);
   const [ticketTypes, setTicketTypes] = useState(TICKET_TYPES);
   const [isLoadingOptions, setIsLoadingOptions] = useState(true);
@@ -108,26 +113,52 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const [offerSeatId, setOfferSeatId] = useState<string>('');
   const [seatMessage, setSeatMessage] = useState<string | null>(null);
 
+  const hasRestoredFromParams = useRef(false);
+
   useEffect(() => {
     let ignore = false;
+    const isInitialLoad = !hasRestoredFromParams.current;
+    hasRestoredFromParams.current = true;
+
+    // API由来ではない（isApiBackedを持たない）選択肢をユーザーが誤ってクリックできない
+    // ように、fetch中は一覧を空にしてローディング表示にする。初回ロード時のみ、API応答前の
+    // 表示が空白にならないよう静的フォールバックを暫定表示する。
+    if (isInitialLoad) {
+      setShowOptions(fallbackShowOptions);
+    } else {
+      setShowOptions([]);
+    }
 
     async function loadApiOptions() {
       setIsLoadingOptions(true);
       try {
         const q = new URLSearchParams();
         if (initialParams?.movieId) q.set('movieId', initialParams.movieId);
+        if (selectedDate) q.set('date', selectedDate);
         const res = await fetch(`/api/screenings${q.toString() ? `?${q}` : ''}`, {
           cache: 'no-store',
         });
         if (!res.ok) throw new Error('Failed to load screenings');
         const data = (await res.json()) as { screenings?: ReserveShowOption[] };
         const apiOptions = data.screenings ?? [];
-        if (ignore || apiOptions.length === 0) return;
+        if (ignore) return;
+        if (apiOptions.length === 0) {
+          setShowOptions([]);
+          return;
+        }
 
         setShowOptions(apiOptions);
         setTicketTypes(apiOptions[0].ticketTypes ?? TICKET_TYPES);
 
-        if (initialParams?.movieId && initialParams?.theater && initialParams?.screen && initialParams?.time) {
+        // 上映回の選択状態はURLから一度だけ復元する。決済完了後などにinitialParamsの
+        // 参照が変わっても、進行中のstep/selectionを巻き戻さないようにするため。
+        if (
+          isInitialLoad &&
+          initialParams?.movieId &&
+          initialParams?.theater &&
+          initialParams?.screen &&
+          initialParams?.time
+        ) {
           const matched = apiOptions.find(
             (option) =>
               option.movieId === initialParams.movieId &&
@@ -142,7 +173,10 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
         }
       } catch {
         if (!ignore) {
-          setShowOptions(fallbackShowOptions);
+          // 静的フォールバックはisApiBackedを持たずDBに保存されないプロトタイプ用の
+          // データなので、初回ロード失敗時のみ表示する。日付タブ切り替え後の失敗では
+          // 空のまま（誤予約防止）にする。
+          setShowOptions(isInitialLoad ? fallbackShowOptions : []);
           setTicketTypes(TICKET_TYPES);
         }
       } finally {
@@ -154,7 +188,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     return () => {
       ignore = true;
     };
-  }, [fallbackShowOptions, initialParams]);
+  }, [fallbackShowOptions, initialParams, selectedDate]);
 
   const layout = selection ? SEAT_LAYOUTS[selection.theaterId] : null;
   const screeningKey = selection ? buildScreeningKey(selection) : '';
@@ -444,8 +478,20 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <p className={s.panelLead}>
               {isLoadingOptions
                 ? '予約可能な上映回を読み込んでいます。'
-                : '予約可能な上映回からお選びください。'}
+                : '日付と上映回をお選びください。'}
             </p>
+          </div>
+          <div className={s.dateTabs}>
+            {reservableDates.map((option) => (
+              <button
+                key={option.date}
+                type="button"
+                className={`${s.dateTab}${selectedDate === option.date ? ` ${s.dateTabActive}` : ''}`}
+                onClick={() => setSelectedDate(option.date)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
           <div className={s.showList}>
             {showOptions.map((option) => (
