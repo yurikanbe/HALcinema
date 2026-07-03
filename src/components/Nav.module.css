@@ -138,14 +138,8 @@
   color: var(--gold-500);
 }
 
-.authUserName {
-  font-size: 12px;
-  color: var(--ink-600, #5a6b8c);
-}
-
 @media (max-width: 640px) {
   .navLinks { display: none; }
   .searchBtnLabel { display: none; }
   .searchKbd { display: none; }
-  .authUserName { display: none; }
 }

@@ -1,0 +1,150 @@
+.card {
+  border-radius: 24px;
+  background: linear-gradient(155deg, #0a1e45, #132f6e 48%, #1e4a96);
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(8, 20, 48, 0.45);
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 84% 14%, rgba(200, 164, 91, 0.18), transparent 44%),
+    radial-gradient(circle at 12% 78%, rgba(30, 80, 180, 0.14), transparent 38%);
+  pointer-events: none;
+}
+
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  padding: 24px 24px 0;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 8px;
+}
+
+.movie {
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.theater {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.perforation {
+  margin: 20px 0;
+  position: relative;
+  height: 1px;
+}
+
+.perforation::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.notchLeft,
+.notchRight {
+  position: absolute;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f2f6fb;
+}
+
+.notchLeft {
+  left: -12px;
+}
+
+.notchRight {
+  right: -12px;
+}
+
+.details {
+  padding: 0 24px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.detailLabel {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 3px;
+}
+
+.detailValue {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+}
+
+.qrArea {
+  background: white;
+  margin: 0 16px 20px;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.qrLabel {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--ink-500);
+  text-transform: uppercase;
+}
+
+.ref {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--ink-700);
+}
+
+.qrSvg {
+  width: 150px;
+  height: 150px;
+  display: block;
+}
+
+.actions {
+  max-width: 400px;
+  margin: 24px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media print {
+  .actions {
+    display: none;
+  }
+}

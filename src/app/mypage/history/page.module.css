@@ -1,0 +1,13 @@
+.section {
+  padding-top: 16px;
+  padding-bottom: 100px;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-500);
+  text-decoration: none;
+}

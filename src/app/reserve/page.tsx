@@ -26,9 +26,6 @@ export default async function ReservePage({
       <section className={shared.pageHero}>
         <div className={shared.sectionHint}>Online Reservation</div>
         <h1 className={shared.pageHeroTitle}>オンライン予約</h1>
-        <p className={shared.pageHeroLead}>
-          上映回と座席を選び、券種を指定して予約まで進められます。本画面は座席予約機能のプロトタイプです。
-        </p>
       </section>
 
       <section className={`${shared.section} ${s.section}`}>

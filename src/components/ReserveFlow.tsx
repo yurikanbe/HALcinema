@@ -13,9 +13,7 @@ import {
   buildScreeningKey,
   buildSeatGrid,
   getOccupiedSeatIds,
-  listAvailableShows,
   listReservableDates,
-  findShowFromParams,
   calcSeatPrice,
   formatYen,
   buildReserveUrl,
@@ -24,20 +22,7 @@ import {
   type SeatCell,
 } from '@/lib/reserveData';
 import type { TheaterId } from '@/lib/theaterConfig';
-import {
-  SEAT_MOVE_CASHBACK,
-  SEAT_MOVE_FEE,
-  findOccupantBySeat,
-  getOtherOccupants,
-} from '@/lib/seatMoveData';
-import {
-  createBookingId,
-  createBookingSeatId,
-  createSeatMoveRequestId,
-  saveBooking,
-  saveSeatMoveRequest,
-  type StoredBooking,
-} from '@/lib/seatMoveStorage';
+import { createBookingSeatId, saveBooking, type StoredBooking } from '@/lib/seatMoveStorage';
 import s from './ReserveFlow.module.css';
 
 type Step = 'show' | 'seats' | 'tickets' | 'confirm' | 'complete';
@@ -56,12 +41,6 @@ interface ReserveFlowProps {
 interface SelectedSeat {
   seat: SeatCell;
   ticketTypeId: string;
-}
-
-interface PendingSeatMove {
-  id: string;
-  targetSeatId: string;
-  requesterSeatId?: string;
 }
 
 interface BookingApiResponse {
@@ -88,31 +67,19 @@ const THEATER_THEME: Record<TheaterId, string> = {
 export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
-  const initialShow = useMemo(() => findShowFromParams(initialParams ?? {}), [initialParams]);
-  const fallbackShowOptions = useMemo(() => {
-    const options = listAvailableShows();
-    if (initialParams?.movieId) {
-      return options.filter((option) => option.movieId === initialParams.movieId);
-    }
-    return options;
-  }, [initialParams?.movieId]);
 
   const reservableDates = useMemo(() => listReservableDates(), []);
   const [selectedDate, setSelectedDate] = useState(
     initialParams?.date ?? reservableDates[0]?.date ?? '',
   );
-  const [showOptions, setShowOptions] = useState(fallbackShowOptions);
+  const [showOptions, setShowOptions] = useState<ReserveShowOption[]>([]);
   const [ticketTypes, setTicketTypes] = useState(TICKET_TYPES);
   const [isLoadingOptions, setIsLoadingOptions] = useState(true);
-  const [step, setStep] = useState<Step>(initialShow ? 'seats' : 'show');
-  const [selection, setSelection] = useState<ScreeningSelection | null>(initialShow);
+  const [step, setStep] = useState<Step>('show');
+  const [selection, setSelection] = useState<ScreeningSelection | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeat[]>([]);
   const [bookingNumber, setBookingNumber] = useState('');
-  const [savedBookingId, setSavedBookingId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pendingMoves, setPendingMoves] = useState<PendingSeatMove[]>([]);
-  const [moveTargetSeatId, setMoveTargetSeatId] = useState<string | null>(null);
-  const [offerSeatId, setOfferSeatId] = useState<string>('');
   const [seatMessage, setSeatMessage] = useState<string | null>(null);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
@@ -125,14 +92,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     const isInitialLoad = !hasRestoredFromParams.current;
     hasRestoredFromParams.current = true;
 
-    // API由来ではない（isApiBackedを持たない）選択肢をユーザーが誤ってクリックできない
-    // ように、fetch中は一覧を空にしてローディング表示にする。初回ロード時のみ、API応答前の
-    // 表示が空白にならないよう静的フォールバックを暫定表示する。
-    if (isInitialLoad) {
-      setShowOptions(fallbackShowOptions);
-    } else {
-      setShowOptions([]);
-    }
+    // fetch中は一覧を空にしてローディング表示にする。DBに保存されない静的データを
+    // 誤って選べてしまわないよう、API応答が届くまでは常に空のままにする。
+    setShowOptions([]);
 
     async function loadApiOptions() {
       setIsLoadingOptions(true);
@@ -178,10 +140,8 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
         }
       } catch {
         if (!ignore) {
-          // 静的フォールバックはisApiBackedを持たずDBに保存されないプロトタイプ用の
-          // データなので、初回ロード失敗時のみ表示する。日付タブ切り替え後の失敗では
-          // 空のまま（誤予約防止）にする。
-          setShowOptions(isInitialLoad ? fallbackShowOptions : []);
+          // 取得に失敗した場合は空のままにする（誤予約防止のため静的データは表示しない）。
+          setShowOptions([]);
           setTicketTypes(TICKET_TYPES);
         }
       } finally {
@@ -193,7 +153,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     return () => {
       ignore = true;
     };
-  }, [fallbackShowOptions, initialParams, selectedDate]);
+  }, [initialParams, selectedDate]);
 
   const layout = selection ? SEAT_LAYOUTS[selection.theaterId] : null;
   const screeningKey = selection ? buildScreeningKey(selection) : '';
@@ -211,45 +171,22 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     [layout, screeningKey, selection],
   );
   const seatGrid = selection?.seats ?? (layout ? buildSeatGrid(layout) : []);
-  const ownSeatIds = selectedSeats.map((item) => item.seat.id);
-  const requestableTakenSeatIds = useMemo(() => {
-    const ids = new Set<string>();
-    if (selection?.isApiBacked) return ids;
-    for (const takenId of occupied) {
-      if (ownSeatIds.includes(takenId)) continue;
-      if (pendingMoves.some((move) => move.targetSeatId === takenId)) continue;
-      ids.add(takenId);
-    }
-    return ids;
-  }, [occupied, ownSeatIds, pendingMoves, selection?.isApiBacked]);
-
-  const moveTargetSeat = moveTargetSeatId
-    ? seatGrid.find((seat) => seat.id === moveTargetSeatId) ?? null
-    : null;
-
-  const exchangeFees = pendingMoves.length * SEAT_MOVE_FEE;
   const seatFees = selectedSeats.reduce(
     (sum, item) => sum + calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium),
     0,
   );
-  const totalAmount = seatFees + exchangeFees;
-  const canProceed = selectedSeats.length > 0 || pendingMoves.length > 0;
+  const totalAmount = seatFees;
+  const canProceed = selectedSeats.length > 0;
 
   const toggleSeat = (seat: SeatCell) => {
     if (occupied.has(seat.id)) {
-      if (requestableTakenSeatIds.has(seat.id)) {
-        handleTakenSeatClick(seat);
-      } else {
-        setSeatMessage('この席はすでに確保されています。別の席をお選びください。');
-      }
+      setSeatMessage('この席はすでに確保されています。別の席をお選びください。');
       return;
     }
 
     const exists = selectedSeats.find((item) => item.seat.id === seat.id);
     if (exists) {
       setSelectedSeats((prev) => prev.filter((item) => item.seat.id !== seat.id));
-      setPendingMoves((prev) => prev.filter((move) => move.requesterSeatId !== seat.id));
-      setMoveTargetSeatId(null);
       setSeatMessage(null);
       return;
     }
@@ -257,42 +194,6 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     if (selectedSeats.length >= MAX_SEATS_PER_BOOKING) return;
 
     setSelectedSeats((prev) => [...prev, { seat, ticketTypeId: ticketTypes[0]?.id ?? 'general' }]);
-    setSeatMessage(null);
-  };
-
-  const handleTakenSeatClick = (seat: SeatCell) => {
-    if (!occupied.has(seat.id)) return;
-
-    if (pendingMoves.some((move) => move.targetSeatId === seat.id)) {
-      setSeatMessage('この席にはすでにリクエストを追加済みです。');
-      return;
-    }
-
-    setMoveTargetSeatId(seat.id);
-    setOfferSeatId('');
-    setSeatMessage(null);
-  };
-
-  const confirmSeatMoveRequest = () => {
-    if (!moveTargetSeat) return;
-
-    setPendingMoves((prev) => [
-      ...prev,
-      {
-        id: createSeatMoveRequestId(),
-        targetSeatId: moveTargetSeat.id,
-        requesterSeatId: offerSeatId || undefined,
-      },
-    ]);
-    setMoveTargetSeatId(null);
-    setOfferSeatId('');
-    setSeatMessage(
-      `${moveTargetSeat.id} 席への席交換リクエストを追加しました（${formatYen(SEAT_MOVE_FEE)}）。`,
-    );
-  };
-
-  const removePendingMove = (id: string) => {
-    setPendingMoves((prev) => prev.filter((move) => move.id !== id));
     setSeatMessage(null);
   };
 
@@ -308,64 +209,12 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     return ticket.basePrice + (isPremium ? 500 : 0);
   }
 
-  const savePrototypeBooking = () => {
-    if (!selection) return;
-
-    const num = `HAL-${Date.now().toString(36).toUpperCase().slice(-8)}`;
-    const bookingId = createBookingId();
-    const booking: StoredBooking = {
-      id: bookingId,
-      bookingNumber: num,
-      screeningKey: buildScreeningKey(selection),
-      selection,
-      seats: selectedSeats.map((item) => ({
-        id: createBookingSeatId(),
-        seatId: item.seat.id,
-        ticketTypeId: item.ticketTypeId,
-        unitPrice: calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium),
-      })),
-      totalAmount,
-      createdAt: new Date().toISOString(),
-    };
-
-    saveBooking(booking);
-
-    for (const move of pendingMoves) {
-      const requesterSeat = move.requesterSeatId
-        ? booking.seats.find((item) => item.seatId === move.requesterSeatId)
-        : undefined;
-      const occupant = findOccupantBySeat(
-        getOtherOccupants(booking.screeningKey, SEAT_LAYOUTS[selection.theaterId], ownSeatIds),
-        move.targetSeatId,
-      );
-      if (!occupant) continue;
-
-      saveSeatMoveRequest({
-        id: move.id,
-        requesterBookingId: bookingId,
-        requesterBookingSeatId: requesterSeat?.id ?? null,
-        targetBookingSeatId: occupant.bookingSeatId,
-        targetBookingId: occupant.bookingId,
-        screeningKey: booking.screeningKey,
-        requesterSeatId: move.requesterSeatId ?? null,
-        targetSeatId: move.targetSeatId,
-        fee: SEAT_MOVE_FEE,
-        cashbackAmount: SEAT_MOVE_CASHBACK,
-        status: 'pending',
-        requestedAt: new Date().toISOString(),
-      });
-    }
-
-    setBookingNumber(num);
-    setSavedBookingId(bookingId);
-    setStep('complete');
-  };
-
   const handleComplete = async () => {
     if (!selection || isSubmitting) return;
 
-    if (!selection.isApiBacked || !selection.screeningId) {
-      savePrototypeBooking();
+    if (!selection.screeningId) {
+      setSeatMessage('座席情報を取得できませんでした。上映回を選び直してください。');
+      setStep('show');
       return;
     }
 
@@ -422,7 +271,6 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
       const bookingId = paymentData.booking.id;
       const num = paymentData.booking.bookingNumber;
       setBookingNumber(num);
-      setSavedBookingId(bookingId);
 
       const storedBooking: StoredBooking = {
         id: bookingId,
@@ -458,31 +306,35 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
 
   return (
     <div className={s.flow}>
-      <div className={s.backRow}>
-        <BackButton className={s.backBtn} />
-      </div>
+      {step !== 'complete' && (
+        <div className={s.backRow}>
+          <BackButton className={s.backBtn} />
+        </div>
+      )}
 
-      <div className={s.stepper}>
-        {STEPS.map((item, index) => {
-          const stepIndex = STEPS.findIndex((st) => st.id === step);
-          const currentIndex = STEPS.findIndex((st) => st.id === item.id);
-          const isActive = step === item.id || (step === 'complete' && item.id === 'confirm');
-          const isDone = step === 'complete' || currentIndex < stepIndex;
+      {step !== 'complete' && (
+        <div className={s.stepper}>
+          {STEPS.map((item, index) => {
+            const stepIndex = STEPS.findIndex((st) => st.id === step);
+            const currentIndex = STEPS.findIndex((st) => st.id === item.id);
+            const isActive = step === item.id;
+            const isDone = currentIndex < stepIndex;
 
-          return (
-            <div key={item.id} className={s.stepperItem}>
-              <div
-                className={`${s.stepperDot}${isActive ? ` ${s.stepperDotActive}` : ''}${isDone ? ` ${s.stepperDotDone}` : ''}`}
-              >
-                {index + 1}
+            return (
+              <div key={item.id} className={s.stepperItem}>
+                <div
+                  className={`${s.stepperDot}${isActive ? ` ${s.stepperDotActive}` : ''}${isDone ? ` ${s.stepperDotDone}` : ''}`}
+                >
+                  {index + 1}
+                </div>
+                <span className={`${s.stepperLabel}${isActive ? ` ${s.stepperLabelActive}` : ''}`}>
+                  {item.label}
+                </span>
               </div>
-              <span className={`${s.stepperLabel}${isActive ? ` ${s.stepperLabelActive}` : ''}`}>
-                {item.label}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {step === 'show' && (
         <div className={s.panel}>
@@ -507,36 +359,43 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
               </button>
             ))}
           </div>
-          <div className={s.showList}>
-            {showOptions.map((option) => (
-              <button
-                key={option.screeningKey}
-                type="button"
-                className={`${s.showCard} ${THEATER_THEME[option.theaterId]}`}
-                onClick={() => {
-                  setSelection(option);
-                  setTicketTypes(option.ticketTypes ?? TICKET_TYPES);
-                  setSelectedSeats([]);
-                  setPendingMoves([]);
-                  setMoveTargetSeatId(null);
-                  setSeatMessage(null);
-                  router.replace(buildReserveUrl(option));
-                  setStep('seats');
-                }}
-              >
-                <div className={s.showCardTop}>
-                  <span className={s.showCardTime}>{option.time}</span>
-                  <span className={s.showCardFormat}>{option.format}</span>
-                </div>
-                <div className={s.showCardTitle}>{option.movieTitle}</div>
-                <div className={s.showCardMeta}>
-                  <span>{option.conceptName}</span>
-                  <span>{option.screen}</span>
-                  <span>残席 {option.remainingSeats ?? '—'}</span>
-                </div>
-              </button>
-            ))}
-          </div>
+          {isLoadingOptions ? (
+            <div className={s.loadingBlock}>
+              <span className={s.spinner} aria-hidden="true" />
+              <span>上映回を読み込んでいます…</span>
+            </div>
+          ) : showOptions.length === 0 ? (
+            <div className={s.emptyBlock}>選択可能な上映回がありません。日付を変更してお試しください。</div>
+          ) : (
+            <div className={s.showList}>
+              {showOptions.map((option) => (
+                <button
+                  key={option.screeningKey}
+                  type="button"
+                  className={`${s.showCard} ${THEATER_THEME[option.theaterId]}`}
+                  onClick={() => {
+                    setSelection(option);
+                    setTicketTypes(option.ticketTypes ?? TICKET_TYPES);
+                    setSelectedSeats([]);
+                    setSeatMessage(null);
+                    router.replace(buildReserveUrl(option));
+                    setStep('seats');
+                  }}
+                >
+                  <div className={s.showCardTop}>
+                    <span className={s.showCardTime}>{option.time}</span>
+                    <span className={s.showCardFormat}>{option.format}</span>
+                  </div>
+                  <div className={s.showCardTitle}>{option.movieTitle}</div>
+                  <div className={s.showCardMeta}>
+                    <span>{option.conceptName}</span>
+                    <span>{option.screen}</span>
+                    <span>残席 {option.remainingSeats ?? '—'}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -559,9 +418,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <div className={shared.sectionHint}>Step 2</div>
             <h2 className={s.panelTitle}>座席を選択</h2>
             <p className={s.panelLead}>
-              {selection.isApiBacked
-                ? '空席を選ぶと予約確定時に座席を確保します。確定処理中に他のお客様が先に確保した場合は、別の席を選び直してください。'
-                : `空席を選ぶか、売り切れの席に ${formatYen(SEAT_MOVE_FEE)} で席交換リクエストを送れます。席がなくてもリクエストのみで進められます。`}
+              空席を選ぶと予約確定時に座席を確保します。確定処理中に他のお客様が先に確保した場合は、別の席を選び直してください。
             </p>
           </div>
 
@@ -569,7 +426,6 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <span className={`${s.legendItem} ${s.legendAvailable}`}>選択可</span>
             <span className={`${s.legendItem} ${s.legendSelected}`}>選択中</span>
             <span className={`${s.legendItem} ${s.legendTaken}`}>売り切れ</span>
-            <span className={`${s.legendItem} ${s.legendMove}`}>席交換可</span>
             <span className={`${s.legendItem} ${s.legendPremium}`}>プレミアム</span>
             <span className={`${s.legendItem} ${s.legendAccessible}`}>車椅子</span>
           </div>
@@ -591,15 +447,9 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                       .map((seat) => {
                         const isTaken = occupied.has(seat.id);
                         const isSelected = selectedSeats.some((item) => item.seat.id === seat.id);
-                        const isRequestable = isTaken && requestableTakenSeatIds.has(seat.id);
-                        const isMoveTarget = moveTargetSeatId === seat.id;
-                        const hasPendingMove = pendingMoves.some((move) => move.targetSeatId === seat.id);
                         const classes = [
                           s.seat,
                           isTaken ? s.seatTaken : '',
-                          isRequestable ? s.seatMoveable : '',
-                          isMoveTarget ? s.seatMoveTarget : '',
-                          hasPendingMove ? s.seatMovePending : '',
                           isSelected ? s.seatSelected : '',
                           seat.isPremium ? s.seatPremium : '',
                           seat.isAccessible ? s.seatAccessible : '',
@@ -612,16 +462,10 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                             key={seat.id}
                             type="button"
                             className={classes}
-                            disabled={isTaken && !isRequestable && !hasPendingMove}
+                            disabled={isTaken}
                             onClick={() => toggleSeat(seat)}
-                            aria-label={`${seat.row}列 ${seat.number}番${
-                              isTaken
-                                ? isRequestable
-                                  ? ' 売り切れ・席交換リクエスト可'
-                                  : ' 売り切れ'
-                                : ''
-                            }${seat.isPremium ? ' プレミアム席' : ''}`}
-                            aria-pressed={isSelected || isMoveTarget}
+                            aria-label={`${seat.row}列 ${seat.number}番${isTaken ? ' 売り切れ' : ''}${seat.isPremium ? ' プレミアム席' : ''}`}
+                            aria-pressed={isSelected}
                           >
                             {seat.number}
                           </button>
@@ -633,75 +477,8 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </div>
           </div>
 
-          {moveTargetSeat && !selection.isApiBacked && (
-            <div className={s.seatMovePanel}>
-              <div className={s.seatMovePanelTitle}>席交換リクエスト</div>
-              <p className={s.seatMovePanelText}>
-                <strong>{moveTargetSeat.id}</strong> 席の先約者に、席の交換をリクエストします。承諾された場合、
-                {moveTargetSeat.id} 席でご鑑賞いただけます。
-              </p>
-              {selectedSeats.length > 0 && (
-                <label className={s.offerSeatField}>
-                  <span>提供する席（任意）</span>
-                  <select
-                    className={s.offerSeatSelect}
-                    value={offerSeatId}
-                    onChange={(e) => setOfferSeatId(e.target.value)}
-                  >
-                    <option value="">提供しない（希望席のみ）</option>
-                    {selectedSeats.map((item) => (
-                      <option key={item.seat.id} value={item.seat.id}>
-                        {item.seat.id}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              )}
-              <div className={s.seatMovePanelFees}>
-                <span>リクエスト料金: {formatYen(SEAT_MOVE_FEE)}</span>
-                <span>相手へのキャッシュバック: {formatYen(SEAT_MOVE_CASHBACK)}</span>
-              </div>
-              <div className={s.seatMovePanelActions}>
-                <button type="button" className={shared.btn} onClick={() => setMoveTargetSeatId(null)}>
-                  キャンセル
-                </button>
-                <button
-                  type="button"
-                  className={`${shared.btn} ${shared.btnSolid}`}
-                  onClick={confirmSeatMoveRequest}
-                >
-                  リクエストを追加
-                </button>
-              </div>
-            </div>
-          )}
-
-          {pendingMoves.length > 0 && !selection.isApiBacked && (
-            <div className={s.pendingMoveList}>
-              <div className={s.pendingMoveTitle}>送信予定の席交換リクエスト</div>
-              {pendingMoves.map((move) => (
-                <div key={move.id} className={s.pendingMoveRow}>
-                  <span>
-                    {move.requesterSeatId
-                      ? `${move.requesterSeatId} ↔ ${move.targetSeatId}`
-                      : `${move.targetSeatId} 席を希望`}
-                    （{formatYen(SEAT_MOVE_FEE)}）
-                  </span>
-                  <button type="button" className={s.pendingMoveRemove} onClick={() => removePendingMove(move.id)}>
-                    取消
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
           <div className={s.selectionInfo}>
             選択中: <strong>{selectedSeats.length}</strong> / {MAX_SEATS_PER_BOOKING} 席
-            {pendingMoves.length > 0 && (
-              <span className={s.selectionSeats}>
-                席交換リクエスト: {pendingMoves.length} 件
-              </span>
-            )}
             {selectedSeats.length > 0 && (
               <span className={s.selectionSeats}>
                 {selectedSeats.map((item) => item.seat.id).join(' · ')}
@@ -730,18 +507,11 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           <div className={s.panelHead}>
             <div className={shared.sectionHint}>Step 3</div>
             <h2 className={s.panelTitle}>券種を選択</h2>
-            <p className={s.panelLead}>
-              {selectedSeats.length > 0
-                ? '座席ごとに券種をお選びください。'
-                : selection.isApiBacked
-                  ? '座席を選んでから券種を指定してください。'
-                  : '席交換リクエストのみの予約です。承認後に席が確定します。'}
-            </p>
+            <p className={s.panelLead}>座席ごとに券種をお選びください。</p>
           </div>
 
-          {selectedSeats.length > 0 ? (
-            <div className={s.ticketList}>
-              {selectedSeats.map((item) => (
+          <div className={s.ticketList}>
+            {selectedSeats.map((item) => (
               <div key={item.seat.id} className={s.ticketRow}>
                 <div className={s.ticketRowSeat}>
                   <span className={s.ticketRowLabel}>座席</span>
@@ -763,18 +533,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                 </select>
               </div>
             ))}
-            </div>
-          ) : (
-            <div className={s.exchangeOnlyNote}>
-              送信予定の席交換リクエスト: {pendingMoves.length} 件（{formatYen(exchangeFees)}）
-            </div>
-          )}
-
-          {pendingMoves.length > 0 && selectedSeats.length > 0 && (
-            <div className={s.exchangeOnlyNote}>
-              席交換リクエスト料金: {formatYen(exchangeFees)}
-            </div>
-          )}
+          </div>
 
           <div className={s.totalBar}>
             <span>合計（税込）</span>
@@ -801,11 +560,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           <div className={s.panelHead}>
             <div className={shared.sectionHint}>Step 4</div>
             <h2 className={s.panelTitle}>予約内容の確認</h2>
-            <p className={s.panelLead}>
-              {selection.isApiBacked
-                ? '予約内容を確認し、mock決済で座席を確定します。'
-                : 'プロトタイプのため、決済は行われません。'}
-            </p>
+            <p className={s.panelLead}>予約内容を確認し、mock決済で座席を確定します。</p>
           </div>
 
           <div className={s.confirmCard}>
@@ -831,7 +586,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </div>
           </div>
 
-          {selection.isApiBacked && sessionStatus !== 'authenticated' && (
+          {sessionStatus !== 'authenticated' && (
             <div className={s.confirmCard}>
               <div className={s.panelHead}>
                 <h3 className={s.panelTitle} style={{ fontSize: 16 }}>ご予約者様情報</h3>
@@ -861,13 +616,6 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           )}
 
           <div className={s.confirmSeats}>
-            {selectedSeats.length === 0 && pendingMoves.length > 0 && (
-              <div className={s.confirmSeatRow}>
-                <span>席</span>
-                <span>席交換リクエスト承認待ち</span>
-                <strong>{formatYen(exchangeFees)}</strong>
-              </div>
-            )}
             {selectedSeats.map((item) => {
               const ticket = ticketTypes.find((t) => t.id === item.ticketTypeId) ?? TICKET_TYPES[0];
               const price = calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium);
@@ -882,17 +630,6 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                 </div>
               );
             })}
-            {pendingMoves.map((move) => (
-              <div key={move.id} className={s.confirmSeatRow}>
-                <span>席交換</span>
-                <span>
-                  {move.requesterSeatId
-                    ? `${move.requesterSeatId} ↔ ${move.targetSeatId}`
-                    : `${move.targetSeatId} 席を希望`}
-                </span>
-                <strong>{formatYen(SEAT_MOVE_FEE)}</strong>
-              </div>
-            ))}
           </div>
 
           <div className={s.totalBar}>
@@ -901,9 +638,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
           </div>
 
           <div className={s.prototypeNote}>
-            {selection.isApiBacked
-              ? '現在の決済はモックです。予約確定時にDBへ予約・座席ロック・決済レコードを保存します。'
-              : '本画面は座席予約機能のプロトタイプです。予約確定後も実際のチケット発行・決済は行われません。'}
+            現在の決済はモックです。予約確定時にDBへ予約・座席ロック・決済レコードを保存します。
           </div>
 
           <div className={s.actions}>
@@ -912,91 +647,79 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </button>
             <button
               type="button"
-              className={`${shared.btn} ${shared.btnSolid}`}
+              className={`${shared.btn} ${shared.btnSolid} ${s.submitBtn}`}
               disabled={isSubmitting}
               onClick={handleComplete}
             >
-              {isSubmitting ? '予約処理中' : selection.isApiBacked ? '予約を確定する' : '予約を確定する（デモ）'}
+              {isSubmitting && <span className={s.spinner} aria-hidden="true" />}
+              {isSubmitting ? '予約処理中' : '予約を確定する'}
             </button>
           </div>
         </div>
       )}
 
       {step === 'complete' && selection && (
-        <div className={`${s.completePanel} ${themeClass}`}>
-          <div className={s.completeGlow} />
-          <div className={s.completeBody}>
-            <div className={s.completeLabel}>Reservation Complete</div>
-            <h2 className={s.completeTitle}>予約が完了しました</h2>
-            <p className={s.completeDesc}>
-              {selection.isApiBacked
-                ? '予約情報をDBに保存し、mock決済で座席を確定しました。'
-                : 'プロトタイプのデモ予約です。予約番号は画面表示のみで、実際の発券は行われません。'}
-            </p>
-            <div className={s.bookingNumber}>{bookingNumber}</div>
-            <div className={s.completeSummary}>
-              <div>{selection.movieTitle}</div>
+        <div className={s.completeWrap}>
+          <div className={s.completeStatusHeader}>
+            <div className={s.completeStatusIcon}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0a1633" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <div className={s.completeStatusLabel}>予約が完了しました</div>
+          </div>
+
+          <div className={s.completeTicket}>
+            <div className={s.completeTicketHeader}>
+              <div className={s.completeTicketEyebrow}>HAL CINEMA</div>
+              <div className={s.completeTicketMovie}>{selection.movieTitle}</div>
+              <div className={s.completeTicketTheater}>
+                {selection.theaterName} / {selection.conceptName}
+              </div>
+            </div>
+
+            <div className={s.completeTicketPerforation}>
+              <div className={s.completeTicketNotchLeft} />
+              <div className={s.completeTicketNotchRight} />
+            </div>
+
+            <div className={s.completeTicketDetails}>
               <div>
-                {selection.dateLabel} {selection.time} / {selection.conceptName} {selection.screen}
+                <div className={s.completeTicketLabel}>日付</div>
+                <div className={s.completeTicketValue}>{selection.dateLabel}</div>
               </div>
               <div>
-                {selectedSeats.length > 0
-                  ? selectedSeats.map((item) => item.seat.id).join(' · ')
-                  : '席交換リクエスト承認待ち'}
+                <div className={s.completeTicketLabel}>時間</div>
+                <div className={s.completeTicketValue}>{selection.time}</div>
               </div>
-              {pendingMoves.length > 0 && (
-                <div className={s.completePendingMoves}>
-                  席交換リクエスト:{' '}
-                  {pendingMoves
-                    .map((move) =>
-                      move.requesterSeatId
-                        ? `${move.requesterSeatId}↔${move.targetSeatId}`
-                        : `${move.targetSeatId}希望`,
-                    )
-                    .join(' · ')}
+              <div>
+                <div className={s.completeTicketLabel}>座席</div>
+                <div className={s.completeTicketValue}>
+                  {selectedSeats.map((item) => item.seat.id).join(' ')}
                 </div>
-              )}
-              <div className={s.completeTotal}>{formatYen(totalAmount)}</div>
+              </div>
+              <div>
+                <div className={s.completeTicketLabel}>スクリーン</div>
+                <div className={s.completeTicketValue}>{selection.screen}</div>
+              </div>
             </div>
 
-            {pendingMoves.length > 0 && (
-              <div className={s.seatMovePromo}>
-                <div className={s.seatMovePromoLabel}>Seat Exchange</div>
-                <p className={s.seatMovePromoText}>
-                  {pendingMoves.length} 件の席交換リクエストを送信しました。1件でも拒否されると他のリクエストは自動キャンセルされます。
-                </p>
-                <Link
-                  href={`/reserve/seat-move?bookingId=${savedBookingId}`}
-                  className={`${shared.btn} ${shared.btnSolid}`}
-                >
-                  リクエスト状況を確認
-                </Link>
-              </div>
-            )}
-
-            {pendingMoves.length === 0 && !selection.isApiBacked && (
-              <div className={s.seatMovePromo}>
-                <div className={s.seatMovePromoLabel}>Seat Exchange</div>
-                <p className={s.seatMovePromoText}>
-                  売り切れの席を希望する場合は、席交換リクエスト（+{formatYen(100)}）をご利用ください。
-                </p>
-                <Link
-                  href={`/reserve/seat-move?bookingId=${savedBookingId}`}
-                  className={`${shared.btn} ${shared.btnSolid}`}
-                >
-                  席交換リクエストへ
-                </Link>
-              </div>
-            )}
-
-            <div className={s.actionsCenter}>
-              <Link href="/schedule" className={shared.btn}>
-                上映スケジュールへ
-              </Link>
-              <Link href="/movies" className={shared.btn}>
-                作品一覧へ
-              </Link>
+            <div className={s.completeStatusArea}>
+              <div className={s.completeRef}>{bookingNumber}</div>
+              <div className={s.completeRefLabel}>予約番号</div>
             </div>
+          </div>
+
+          <p className={s.completeNote}>
+            電子チケットはマイページの予約履歴からいつでもご確認いただけます。
+          </p>
+
+          <div className={s.completeActions}>
+            {sessionStatus === 'authenticated' && (
+              <Link href="/mypage/history" className={`${shared.btn} ${shared.btnSolid} ${s.btnWide}`}>
+                予約履歴を見る
+              </Link>
+            )}
           </div>
         </div>
       )}

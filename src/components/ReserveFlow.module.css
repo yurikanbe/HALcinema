@@ -145,6 +145,48 @@
   gap: 12px;
 }
 
+.loadingBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 0;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-600);
+}
+
+.emptyBlock {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink-500);
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(200, 164, 91, 0.3);
+  border-top-color: var(--gold-500, #c8a45b);
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .showCard {
   text-align: left;
   border: 1px solid rgba(200, 164, 91, 0.22);
@@ -722,109 +764,188 @@
   flex-wrap: wrap;
 }
 
-.actionsCenter {
+.completeWrap {
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.completeStatusHeader {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-}
-
-.completePanel {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  padding: 48px 32px;
-  background: linear-gradient(155deg, #060e22, #0b2249 48%, #1a4080);
-  border: 1px solid rgba(200, 164, 91, 0.28);
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   text-align: center;
-  color: #fff;
+  margin-bottom: 24px;
 }
 
-.completeGlow {
+.completeTicket {
+  border-radius: 24px;
+  background: linear-gradient(155deg, #0a1e45, #132f6e 48%, #1e4a96);
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(8, 20, 48, 0.45);
+  position: relative;
+}
+
+.completeTicket::before {
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 90% 10%, rgba(200, 164, 91, 0.14), transparent 55%);
+  background:
+    radial-gradient(circle at 84% 14%, rgba(200, 164, 91, 0.18), transparent 44%),
+    radial-gradient(circle at 12% 78%, rgba(30, 80, 180, 0.14), transparent 38%);
   pointer-events: none;
 }
 
-.completeBody {
+.completeTicket > * {
   position: relative;
   z-index: 1;
 }
 
-.completeLabel {
-  font-size: 11px;
+.completeTicketHeader {
+  padding: 24px 24px 0;
+}
+
+.completeTicketEyebrow {
+  font-size: 10px;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: rgba(200, 164, 91, 0.8);
-  margin-bottom: 16px;
-}
-
-.completeTitle {
-  font-size: 28px;
-  letter-spacing: 0.1em;
-  margin: 0 0 12px;
-}
-
-.completeDesc {
-  font-size: 14px;
-  line-height: 1.9;
-  color: rgba(255, 255, 255, 0.65);
-  letter-spacing: 0.06em;
-  margin-bottom: 20px;
-}
-
-.bookingNumber {
-  display: inline-block;
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: 1px dashed rgba(200, 164, 91, 0.55);
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 28px;
-  letter-spacing: 0.18em;
-  color: rgba(200, 164, 91, 0.95);
-  margin-bottom: 20px;
-}
-
-.completeSummary {
-  font-size: 13px;
-  line-height: 1.9;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.72);
+  opacity: 0.55;
   margin-bottom: 8px;
 }
 
-.completeTotal {
-  margin-top: 8px;
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 22px;
-  color: #fff;
+.completeTicketMovie {
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  margin-bottom: 4px;
 }
 
-.seatMovePromo {
-  margin: 1.5rem auto 0;
-  max-width: 420px;
-  padding: 18px 20px;
-  border-radius: 12px;
-  border: 1px solid rgba(200, 164, 91, 0.35);
-  background: rgba(255, 255, 255, 0.06);
+.completeTicketTheater {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.65;
 }
 
-.seatMovePromoLabel {
-  font-size: 10px;
+.completeTicketPerforation {
+  margin: 20px 0;
+  position: relative;
+  height: 1px;
+}
+
+.completeTicketPerforation::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.completeTicketNotchLeft,
+.completeTicketNotchRight {
+  position: absolute;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f2f6fb;
+}
+
+.completeTicketNotchLeft {
+  left: -12px;
+}
+
+.completeTicketNotchRight {
+  right: -12px;
+}
+
+.completeTicketDetails {
+  padding: 0 24px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.completeTicketLabel {
+  font-size: 9px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(200, 164, 91, 0.85);
-  margin-bottom: 8px;
+  opacity: 0.5;
+  margin-bottom: 3px;
 }
 
-.seatMovePromoText {
-  margin: 0 0 14px;
+.completeTicketValue {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+}
+
+.completeStatusIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(200, 164, 91, 0.35), rgba(200, 164, 91, 0.15));
+  border: 1px solid rgba(200, 164, 91, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completeStatusLabel {
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--ink-900);
+}
+
+.completeStatusArea {
+  background: white;
+  margin: 0 16px 20px;
+  border-radius: 16px;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.completeRef {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.16em;
+  color: var(--ink-700);
+}
+
+.completeRefLabel {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+}
+
+.completeNote {
+  margin: 20px 4px 0;
   font-size: 13px;
-  line-height: 1.8;
-  letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--ink-600);
+  line-height: 1.7;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.completeActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.btnWide {
+  width: 100%;
+  padding: 13px 24px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 @media (max-width: 640px) {

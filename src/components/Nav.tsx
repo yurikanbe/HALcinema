@@ -65,6 +65,11 @@ export default function Nav() {
                 {label}
               </Link>
             ))}
+            {status === 'authenticated' && session?.user && (
+              <Link href="/mypage" className={pathname === '/mypage' ? styles.navLinkActive : undefined}>
+                マイページ
+              </Link>
+            )}
           </nav>
           <div className={styles.navCta}>
             <button
@@ -85,10 +90,6 @@ export default function Nav() {
             </button>
             {status === 'authenticated' && session?.user ? (
               <div className={styles.authArea}>
-                <Link href="/mypage" className={styles.authLink}>
-                  マイページ
-                </Link>
-                <span className={styles.authUserName}>{session.user.name}</span>
                 <button
                   type="button"
                   className={styles.authLink}
