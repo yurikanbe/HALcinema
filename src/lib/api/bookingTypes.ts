@@ -9,6 +9,7 @@ export interface BookingView {
   status: string;
   createdAt: string;
   screening: {
+    id?: string;
     startTime: string;
     format: string;
     movie: { titleJa: string; posterImageUrl: string | null };
@@ -25,4 +26,19 @@ export interface BookingView {
     ticketType: { nameJa: string };
   }[];
   payments: { status: string; method: string; amount: number }[];
+  requestedSeatMoves?: SeatMoveRequestView[];
+  targetedSeatMoves?: SeatMoveRequestView[];
+}
+
+export interface SeatMoveRequestView {
+  id: string;
+  status: 'PENDING' | 'APPROVED' | 'DECLINED' | 'EXPIRED' | 'CANCELLED';
+  fee: number;
+  cashbackAmount: number;
+  requestedAt: string;
+  respondedAt: string | null;
+  requesterBookingId: string;
+  targetBookingId: string;
+  targetBookingSeat: { seat: { rowLabel: string; seatNumber: number } };
+  requesterBookingSeat: { seat: { rowLabel: string; seatNumber: number } } | null;
 }

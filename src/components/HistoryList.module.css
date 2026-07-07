@@ -31,22 +31,42 @@
 }
 
 .item {
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #f4f7fb);
+  border: 1px solid rgba(200, 164, 91, 0.14);
+  box-shadow: var(--soft-shadow);
+  overflow: hidden;
+}
+
+.itemLink {
   display: grid;
   grid-template-columns: 72px 1fr auto;
   gap: 14px;
   align-items: center;
   padding: 16px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #f4f7fb);
-  border: 1px solid rgba(200, 164, 91, 0.14);
-  box-shadow: var(--soft-shadow);
-  transition: transform 0.2s ease;
   text-decoration: none;
   color: inherit;
+  transition: transform 0.2s ease;
 }
 
-.item:hover {
+.itemLink:hover {
   transform: translateY(-2px);
+}
+
+.seatMoveLink {
+  display: block;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-700);
+  background: rgba(200, 164, 91, 0.08);
+  border-top: 1px solid rgba(200, 164, 91, 0.14);
+  text-decoration: none;
+}
+
+.seatMoveLink:hover {
+  background: rgba(200, 164, 91, 0.16);
 }
 
 .poster {
@@ -127,7 +147,7 @@
 }
 
 @media (max-width: 560px) {
-  .item {
+  .itemLink {
     grid-template-columns: 60px 1fr;
   }
 

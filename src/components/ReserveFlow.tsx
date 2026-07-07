@@ -22,7 +22,6 @@ import {
   type SeatCell,
 } from '@/lib/reserveData';
 import type { TheaterId } from '@/lib/theaterConfig';
-import { createBookingSeatId, saveBooking, type StoredBooking } from '@/lib/seatMoveStorage';
 import s from './ReserveFlow.module.css';
 
 type Step = 'show' | 'seats' | 'tickets' | 'confirm' | 'complete';
@@ -268,25 +267,8 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
         throw new Error(paymentData.error ?? '決済確定に失敗しました。');
       }
 
-      const bookingId = paymentData.booking.id;
       const num = paymentData.booking.bookingNumber;
       setBookingNumber(num);
-
-      const storedBooking: StoredBooking = {
-        id: bookingId,
-        bookingNumber: num,
-        screeningKey: selection.screeningId,
-        selection,
-        seats: selectedSeats.map((item) => ({
-          id: item.seat.dbId ?? createBookingSeatId(),
-          seatId: item.seat.id,
-          ticketTypeId: item.ticketTypeId,
-          unitPrice: calcSeatPriceFromList(item.ticketTypeId, item.seat.isPremium),
-        })),
-        totalAmount,
-        createdAt: new Date().toISOString(),
-      };
-      saveBooking(storedBooking);
       setStep('complete');
     } catch (error) {
       setSeatMessage(error instanceof Error ? error.message : '予約処理に失敗しました。');

@@ -69,6 +69,18 @@ export default async function MyPage() {
               <div className={s.mpMenuCardTitle}>予約履歴</div>
               <div className={s.mpMenuCardDesc}>過去の予約・電子チケット確認</div>
             </Link>
+            <Link href="/mypage/seat-move" className={s.mpMenuCard}>
+              <div className={s.mpMenuCardIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 1l4 4-4 4" />
+                  <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                  <path d="M7 23l-4-4 4-4" />
+                  <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                </svg>
+              </div>
+              <div className={s.mpMenuCardTitle}>席交換リクエスト</div>
+              <div className={s.mpMenuCardDesc}>先約席への交換をリクエスト</div>
+            </Link>
             <Link href="/mypage/notifications" className={s.mpMenuCard}>
               <div className={s.mpMenuCardIcon}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

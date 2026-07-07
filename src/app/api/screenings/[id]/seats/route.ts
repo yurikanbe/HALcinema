@@ -29,6 +29,10 @@ export async function GET(_request: Request, context: RouteContext) {
         },
       },
       screeningSeatLocks: true,
+      bookingSeats: {
+        where: { booking: { status: { not: 'CANCELLED' } } },
+        select: { id: true, seatId: true, bookingId: true },
+      },
     },
   });
 
@@ -39,13 +43,19 @@ export async function GET(_request: Request, context: RouteContext) {
   const lockBySeatId = new Map(
     screening.screeningSeatLocks.map((lock) => [lock.seatId.toString(), lock]),
   );
+  const bookingSeatBySeatId = new Map(
+    screening.bookingSeats.map((bookingSeat) => [bookingSeat.seatId.toString(), bookingSeat]),
+  );
 
   const seats = screening.screen.seats.map((seat) => {
     const lock = lockBySeatId.get(seat.id.toString());
+    const bookingSeat = bookingSeatBySeatId.get(seat.id.toString());
     return {
       ...seat,
       status: lock?.status ?? 'AVAILABLE',
       holdExpiresAt: lock?.expiresAt ?? null,
+      bookingSeatId: bookingSeat?.id ?? null,
+      bookingId: bookingSeat?.bookingId ?? null,
     };
   });
 

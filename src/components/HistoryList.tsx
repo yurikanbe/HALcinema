@@ -82,32 +82,39 @@ export default function HistoryList({ bookings }: { bookings: BookingView[] }) {
       ) : (
         <div className={s.list}>
           {filtered.map(({ booking, isUpcoming }) => (
-            <Link key={booking.id} href={`/mypage/history/${booking.id}/ticket`} className={s.item}>
-              <div
-                className={s.poster}
-                style={
-                  booking.screening.movie.posterImageUrl
-                    ? { backgroundImage: `url('${booking.screening.movie.posterImageUrl}')` }
-                    : undefined
-                }
-              />
-              <div>
-                <div className={s.movie}>{booking.screening.movie.titleJa}</div>
-                <div className={s.meta}>
-                  {formatDateLabel(booking.screening.startTime)} {formatTime(booking.screening.startTime)}
+            <div key={booking.id} className={s.item}>
+              <Link href={`/mypage/history/${booking.id}/ticket`} className={s.itemLink}>
+                <div
+                  className={s.poster}
+                  style={
+                    booking.screening.movie.posterImageUrl
+                      ? { backgroundImage: `url('${booking.screening.movie.posterImageUrl}')` }
+                      : undefined
+                  }
+                />
+                <div>
+                  <div className={s.movie}>{booking.screening.movie.titleJa}</div>
+                  <div className={s.meta}>
+                    {formatDateLabel(booking.screening.startTime)} {formatTime(booking.screening.startTime)}
+                  </div>
+                  <div className={s.meta}>
+                    {booking.screening.screen.theater?.name} {booking.screening.screen.conceptName}（Screen{' '}
+                    {booking.screening.screen.screenNumber}）
+                  </div>
+                  <div className={s.seats}>
+                    座席: {booking.bookingSeats.map((seat) => `${seat.seat.rowLabel}${seat.seat.seatNumber}`).join(', ')}
+                  </div>
                 </div>
-                <div className={s.meta}>
-                  {booking.screening.screen.theater?.name} {booking.screening.screen.conceptName}（Screen{' '}
-                  {booking.screening.screen.screenNumber}）
-                </div>
-                <div className={s.seats}>
-                  座席: {booking.bookingSeats.map((seat) => `${seat.seat.rowLabel}${seat.seat.seatNumber}`).join(', ')}
-                </div>
-              </div>
-              <span className={`${s.badge} ${isUpcoming ? s.badgeUpcoming : s.badgeUsed}`}>
-                {isUpcoming ? '予約済み' : '使用済み'}
-              </span>
-            </Link>
+                <span className={`${s.badge} ${isUpcoming ? s.badgeUpcoming : s.badgeUsed}`}>
+                  {isUpcoming ? '予約済み' : '使用済み'}
+                </span>
+              </Link>
+              {isUpcoming && booking.status === 'CONFIRMED' && (
+                <Link href={`/mypage/seat-move?bookingId=${booking.id}`} className={s.seatMoveLink}>
+                  席交換リクエスト
+                </Link>
+              )}
+            </div>
           ))}
         </div>
       )}

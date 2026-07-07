@@ -30,8 +30,20 @@ export async function GET(_request: Request, context: RouteContext) {
       payments: {
         orderBy: { createdAt: 'desc' },
       },
-      requestedSeatMoves: true,
-      targetedSeatMoves: true,
+      requestedSeatMoves: {
+        include: {
+          targetBookingSeat: { include: { seat: true } },
+          requesterBookingSeat: { include: { seat: true } },
+        },
+        orderBy: { requestedAt: 'desc' },
+      },
+      targetedSeatMoves: {
+        include: {
+          targetBookingSeat: { include: { seat: true } },
+          requesterBookingSeat: { include: { seat: true } },
+        },
+        orderBy: { requestedAt: 'desc' },
+      },
     },
   });
 
