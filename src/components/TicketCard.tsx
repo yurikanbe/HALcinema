@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import type { BookingView } from '@/lib/api/bookingTypes';
 import shared from '@/styles/shared.module.css';
@@ -45,11 +46,11 @@ const QR_PATTERN = [
   [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0],
 ];
 
-function TicketQr() {
+function TicketQr({ className }: { className?: string }) {
   const size = QR_PATTERN.length;
   return (
     <svg
-      className={s.qrSvg}
+      className={className}
       viewBox={`-1 -1 ${size + 2} ${size + 2}`}
       shapeRendering="crispEdges"
       role="img"
@@ -66,6 +67,8 @@ function TicketQr() {
 }
 
 export default function TicketCard({ booking }: { booking: BookingView }) {
+  const [isQrExpanded, setIsQrExpanded] = useState(false);
+
   return (
     <>
       <div className={s.card}>
@@ -103,21 +106,57 @@ export default function TicketCard({ booking }: { booking: BookingView }) {
           </div>
         </div>
 
-        <div className={s.qrArea}>
+        <button
+          type="button"
+          className={s.qrArea}
+          onClick={() => setIsQrExpanded(true)}
+          aria-label="QRコードを拡大表示"
+        >
           <div className={s.qrLabel}>入場用 QRコード</div>
-          <TicketQr />
+          <TicketQr className={s.qrSvg} />
           <div className={s.ref}>{booking.bookingNumber}</div>
-        </div>
+          <div className={s.qrHint}>タップして拡大</div>
+        </button>
       </div>
 
       <div className={s.actions}>
-        <button type="button" className={`${shared.btn} ${shared.btnSolid}`} onClick={() => window.print()}>
-          チケットを保存・印刷
+        <button type="button" className={`${shared.btn} ${shared.btnSolid}`} onClick={() => setIsQrExpanded(true)}>
+          チケットを拡大
         </button>
         <Link href="/mypage/history" className={shared.btn}>
           予約履歴を見る
         </Link>
       </div>
+
+      {isQrExpanded && (
+        <div
+          className={s.overlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label="拡大したチケット"
+          onClick={() => setIsQrExpanded(false)}
+        >
+          <div className={s.overlayCard} onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className={s.overlayClose}
+              onClick={() => setIsQrExpanded(false)}
+              aria-label="閉じる"
+            >
+              ×
+            </button>
+            <div className={s.overlayMovie}>{booking.screening.movie.titleJa}</div>
+            <div className={s.overlayDetail}>
+              {formatDateLabel(booking.screening.startTime)} {formatTime(booking.screening.startTime)}
+            </div>
+            <div className={s.overlayDetail}>
+              {booking.bookingSeats.map((seat) => `${seat.seat.rowLabel}${seat.seat.seatNumber}`).join(' ')}
+            </div>
+            <TicketQr className={s.overlayQrSvg} />
+            <div className={s.ref}>{booking.bookingNumber}</div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

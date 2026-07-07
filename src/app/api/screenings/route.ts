@@ -1,6 +1,7 @@
 import { ScreeningFormat } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { jsonOk } from '@/lib/api/response';
+import { ensureUpcomingScreenings } from '@/lib/screeningAutoFill';
 
 const THEATER_ID_BY_NAME: Record<string, 'starry' | 'abyss' | 'cyber'> = {
   'Starry Theater': 'starry',
@@ -60,6 +61,8 @@ export async function GET(request: Request) {
   const movieId = searchParams.get('movieId');
   const date = searchParams.get('date');
   const dateRange = date ? jstDateRange(date) : null;
+
+  await ensureUpcomingScreenings();
 
   await prisma.screeningSeatLock.deleteMany({
     where: {
