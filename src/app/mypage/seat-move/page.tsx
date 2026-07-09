@@ -65,7 +65,8 @@ export default async function SeatMovePage({
         <h1 className={shared.pageHeroTitle}>席交換リクエスト</h1>
         <p className={shared.pageHeroLead}>
           先約のある席を希望する場合、{'100'}円で席の交換をリクエストできます。承諾された方には
-          {'100'}円のキャッシュバックがあります。上映開始後はご利用いただけません。同じ上映回に複数リクエストした場合、拒否または承諾のいずれか1件で残りの承認待ちは自動キャンセルされます。
+          {'100'}円のキャッシュバックがあります。同じ上映回に複数リクエストした場合、1件が拒否または承諾されると残りは
+          <strong>連鎖キャンセル</strong>されます。
         </p>
       </section>
 

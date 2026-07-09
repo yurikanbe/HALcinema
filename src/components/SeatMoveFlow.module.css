@@ -81,6 +81,58 @@
   color: #2b3d5f;
 }
 
+.noticeTextSub {
+  margin: 0.65rem 0 0;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #5a4a2a;
+}
+
+.cascadeAlert {
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(180, 90, 40, 0.35);
+  background: rgba(245, 166, 35, 0.12);
+  border-radius: 10px;
+}
+
+.cascadeAlertTitle {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: #9a6412;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.cascadeAlertText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #2b3d5f;
+}
+
+.messageSuccess,
+.messageError {
+  margin-bottom: 1rem;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+
+.messageSuccess {
+  background: rgba(18, 104, 130, 0.1);
+  border: 1px solid rgba(18, 104, 130, 0.25);
+  color: var(--ink-800);
+}
+
+.messageError {
+  background: rgba(180, 60, 40, 0.08);
+  border: 1px solid rgba(180, 60, 40, 0.22);
+  color: #7a2e1f;
+}
+
 .requestConfirmNotice {
   margin: 0.75rem 0 0;
   font-size: 13px;
@@ -409,16 +461,35 @@
   color: var(--ink-800);
 }
 
+.requestListGuide {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #5a4a2a;
+}
+
 .requestCard {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid rgba(200, 164, 91, 0.18);
   background: rgba(255, 255, 255, 0.8);
   font-size: 13px;
+}
+
+.requestCardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.statusDetail {
+  margin: 0.45rem 0 0;
+  font-size: 12px;
+  line-height: 1.75;
+  color: #5a4a2a;
 }
 
 .requestCardMeta {

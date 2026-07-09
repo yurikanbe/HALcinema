@@ -12,7 +12,18 @@ const SEAT_MOVE_FEE = 100;
 const SEAT_MOVE_CASHBACK = 100;
 
 const CASCADE_NOTICE =
-  '同じ上映回に複数の席へリクエストを送った場合、いずれか1件でも拒否されると、その上映回への承認待ちリクエストはすべて自動キャンセルされます。1件でも承諾されると、残りの承認待ちリクエストも自動キャンセルされます。';
+  '同じ上映回に複数の席へリクエストを送った場合、いずれか1件が拒否または承諾されると、残りの承認待ちリクエストは連鎖的に自動キャンセルされます。';
+
+const CASCADE_CANCELLED_NOTICE =
+  '表示が「連鎖キャンセル」となっているリクエストは、同じ上映回の別リクエストが拒否または承諾された結果、自動的にキャンセルされたものです。';
+
+const STATUS_DETAIL: Partial<Record<SeatMoveRequestView['status'], string>> = {
+  DECLINED: '相手がこのリクエストを拒否しました。同じ上映回の他の承認待ちリクエストも連鎖的にキャンセルされています。',
+  CANCELLED: '同じ上映回の別リクエストが拒否または承諾されたため、このリクエストは連鎖的に自動キャンセルされました。',
+  APPROVED: '席交換が成立しました。同じ上映回の他の承認待ちリクエストは連鎖的にキャンセルされています。',
+};
+
+const SEAT_MOVE_FLASH_KEY = 'seatMoveFlashMessage';
 
 type Tab = 'send' | 'receive';
 type ApproveStep = 'choose' | 'pick-seat' | 'confirm-cancel';
@@ -22,7 +33,7 @@ const STATUS_LABEL: Record<SeatMoveRequestView['status'], string> = {
   APPROVED: '承認済み',
   DECLINED: '拒否',
   EXPIRED: '期限切れ',
-  CANCELLED: 'キャンセル',
+  CANCELLED: '連鎖キャンセル',
 };
 
 interface ScreeningSeat {
@@ -106,6 +117,13 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
     loadSeats(activeBooking.screening.id);
   }, [activeBooking?.screening.id, loadSeats]);
 
+  useEffect(() => {
+    const flash = sessionStorage.getItem(SEAT_MOVE_FLASH_KEY);
+    if (!flash) return;
+    sessionStorage.removeItem(SEAT_MOVE_FLASH_KEY);
+    setMessage(flash);
+  }, []);
+
   // 同一上映回に自分の予約が複数ある場合、他の自分の予約の座席も「自分の席」として除外する
   // （API側は予約単位ではなくユーザー単位で所有権を判定するため、表示もそれに合わせる）
   const ownSeatIds = useMemo(() => {
@@ -125,6 +143,15 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
       .filter((booking) => booking.screening.id === screeningId)
       .flatMap((booking) => booking.requestedSeatMoves ?? [])
       .filter((item) => item.status === 'PENDING').length;
+  }, [bookings, activeBooking]);
+
+  const cascadeCancelledForScreening = useMemo(() => {
+    if (!activeBooking) return [];
+    const screeningId = activeBooking.screening.id;
+    return bookings
+      .filter((booking) => booking.screening.id === screeningId)
+      .flatMap((booking) => booking.requestedSeatMoves ?? [])
+      .filter((item) => item.status === 'CANCELLED');
   }, [bookings, activeBooking]);
 
   const pendingTargetSeatIds = useMemo(
@@ -210,6 +237,17 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? '処理に失敗しました。');
       resetApproveFlow();
+      if (action === 'decline') {
+        sessionStorage.setItem(
+          SEAT_MOVE_FLASH_KEY,
+          'リクエストを拒否しました。依頼者が同じ上映回に送っている他の承認待ちリクエストも、連鎖的に自動キャンセルされます。',
+        );
+      } else {
+        sessionStorage.setItem(
+          SEAT_MOVE_FLASH_KEY,
+          '席交換を承諾しました。依頼者の同じ上映回への他の承認待ちリクエストは、連鎖的に自動キャンセルされています。',
+        );
+      }
       refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : '処理に失敗しました。');
@@ -253,8 +291,9 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
           {formatYen(SEAT_MOVE_CASHBACK)} のキャッシュバックがあります。上映開始後は送信・承諾・拒否のいずれもできません。
         </p>
         <div className={s.noticeBox} role="note">
-          <div className={s.noticeTitle}>複数席へリクエストする場合</div>
+          <div className={s.noticeTitle}>連鎖キャンセルについて</div>
           <p className={s.noticeText}>{CASCADE_NOTICE}</p>
+          <p className={s.noticeTextSub}>{CASCADE_CANCELLED_NOTICE}</p>
         </div>
       </div>
 
@@ -324,8 +363,18 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
         </button>
       </div>
 
-      {message && <div className={s.message}>{message}</div>}
-      {error && <div className={s.message}>{error}</div>}
+      {message && <div className={s.messageSuccess}>{message}</div>}
+      {error && <div className={s.messageError}>{error}</div>}
+
+      {cascadeCancelledForScreening.length > 0 && tab === 'send' && (
+        <div className={s.cascadeAlert} role="status">
+          <div className={s.cascadeAlertTitle}>連鎖キャンセルが発生しています</div>
+          <p className={s.cascadeAlertText}>
+            この上映回で {cascadeCancelledForScreening.length} 件のリクエストが連鎖キャンセルされました。
+            {CASCADE_CANCELLED_NOTICE}
+          </p>
+        </div>
+      )}
 
       {tab === 'send' && activeBooking && (
         <div className={s.panel}>
@@ -459,13 +508,19 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
               {outgoing.length > 0 && (
                 <div className={s.requestList}>
                   <h4 className={s.requestListTitle}>送信済みリクエスト</h4>
+                  <p className={s.requestListGuide}>{CASCADE_CANCELLED_NOTICE}</p>
                   {outgoing.map((request) => (
                     <div key={request.id} className={s.requestCard}>
-                      <div>
-                        {request.requesterBookingSeat
-                          ? `${seatLabel(request.requesterBookingSeat.seat.rowLabel, request.requesterBookingSeat.seat.seatNumber)} ↔ `
-                          : ''}
-                        {seatLabel(request.targetBookingSeat.seat.rowLabel, request.targetBookingSeat.seat.seatNumber)}
+                      <div className={s.requestCardBody}>
+                        <div>
+                          {request.requesterBookingSeat
+                            ? `${seatLabel(request.requesterBookingSeat.seat.rowLabel, request.requesterBookingSeat.seat.seatNumber)} ↔ `
+                            : ''}
+                          {seatLabel(request.targetBookingSeat.seat.rowLabel, request.targetBookingSeat.seat.seatNumber)}
+                        </div>
+                        {STATUS_DETAIL[request.status] && (
+                          <p className={s.statusDetail}>{STATUS_DETAIL[request.status]}</p>
+                        )}
                       </div>
                       <div className={s.requestCardMeta}>
                         <span className={`${s.status} ${s[`status_${request.status.toLowerCase()}`]}`}>
@@ -616,7 +671,8 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
                     ) : decliningRequestId === request.id ? (
                       <div className={s.approvePanel}>
                         <p className={s.approveLead}>
-                          このリクエストを拒否します。依頼者が同じ上映回に送っている他の承認待ちリクエストも、すべて自動キャンセルされます。
+                          このリクエストを拒否します。依頼者が同じ上映回に送っている他の承認待ちリクエストは、
+                          <strong>連鎖的に自動キャンセル（連鎖キャンセル）</strong>されます。
                         </p>
                         <div className={s.incomingActions}>
                           <button
