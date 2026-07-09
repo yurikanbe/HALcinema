@@ -1,76 +1,197 @@
-# 席交換リクエスト機能（DB連携版）
+# 座席譲渡リクエスト（席の買い取り）機能 — 仕様書
 
-`seat_move_requests` テーブルを使い、確定済み予約同士で座席の交換をリクエスト・承認・拒否できる機能。旧実装はブラウザの `localStorage` に依存したプロトタイプだったため、実際の予約DB（Booking / BookingSeat / ScreeningSeatLock）と連動する形に作り直した。
+> **用語:** 本機能は「席交換」ではなく、**先約済みの座席を買い取る（譲渡してもらう）** リクエストである。  
+> 依頼者は自分の確定席を提供する必要はない。
+
+## 概要
+
+ログインユーザーが **予約フロー（`/reserve`）の座席選択中** に、他のお客様が確保済みの席へ「譲渡リクエスト」を送れる。  
+先約者（席の現所有者）は `/mypage/seat-move` 等で承諾・拒否する。
+
+**予約確定後に譲渡リクエストを送ることはできない**（確定前のみ）。
+
+---
+
+## 確定事項（2026-07 時点）
+
+| # | 項目 | 決定内容 |
+|---|---|---|
+| 1 | 送信タイミング | **予約確定前のみ**。確定後は不可 |
+| 2 | 性質 | 席交換ではなく **座席の買い取り（譲渡依頼）** |
+| 3 | 承認後の席 | **依頼者の仮予約に紐づけ**、決済完了で `CONFIRMED` |
+| 4 | 決済期限 | 上映開始後は **決済操作を受け付けない**（API で強制）。発表用に **タイムリミット UI を見せる** が、実際のカウントダウン実装は不要 |
+| 5 | リクエスト有効期限 | **上映 30 分前まで**（以降は新規送信・承認不可） |
+| 6 | 1 時間前の注意 | 上映まで **1 時間を切った** 場合、UI で「承認されない可能性が高い」と明示 |
+| 7 | 拒否時の連鎖 | **依頼者側:** 1 件でも拒否されると、**同じ上映回の他 PENDING も連鎖キャンセル**（現行仕様を維持） |
+| 8 | 承諾時の連鎖 | **依頼者側:** 1 件承諾されると、**同じ上映回の他 PENDING は連鎖キャンセル** |
+| 9 | 説明ページ | 券種選択の次・**料金確認（決済）の前** に、連鎖キャンセル等を説明するステップを表示 |
+| 10 | `/mypage/seat-move` | **受信・応答専用に限定しない**（送信は予約フロー、応答はマイページでも可） |
+
+---
+
+## 未確定・変更可能性あり（指導者確認用）
+
+### 同一席への複数依頼者（早い者勝ち vs 複数 PENDING）
+
+**現状の想定: 早い者勝ち（First Come First Served）**
+
+- 1 席に対し、**最初に PENDING になった依頼者** が優先される想定で設計する
+- 2 人目以降の依頼は `409` 等で弾く、または UI 上「リクエスト済み」と表示
+
+**変更の可能性:**
+
+- 指導者のフィードバックにより、**同一席に複数依頼者の PENDING を許可**し、先に承諾された依頼者が取得する方式に変更する可能性がある
+- 変更時は `seat_move_requests` の UNIQUE 制約と API の重複チェック、UI の座席表示を見直す
+
+> 実装時は本節を参照し、FCFS か複数 PENDING かを確定してから DB 制約を固定すること。
+
+---
+
+## ユーザーフロー
+
+### 依頼者（予約フロー内・ログイン必須）
+
+```
+上映回選択 → 座席選択（先約席をクリック → 譲渡リクエスト送信）
+          → 空席も任意で選択
+          → 券種選択
+          → 【譲渡リクエスト説明】※ PENDING が 1 件以上ある場合のみ
+          → 予約内容確認・決済
+          → 完了
+```
+
+- **ゲスト予約** は譲渡リクエスト不可（ログイン必須）
+- 譲渡リクエスト中の席は、承認されるまで **仮押さえ（HELD）** として依頼者に紐づく（実装予定）
+- 決済時に、承認済み譲渡席 + 通常選択席をまとめて確定
+
+### 先約者（席の現所有者）
+
+```
+/mypage/seat-move または /mypage/history から
+  → 届いた PENDING リクエストを確認
+  → 承諾（別席へ移動 / 予約キャンセル）または拒否
+```
+
+---
+
+## 時間まわりのルール
+
+| 条件 | 挙動 |
+|---|---|
+| 上映開始後 | 譲渡リクエストの送信・承認・拒否・**決済** すべて不可 |
+| 上映 30 分前を過ぎた | 新規リクエスト不可、承認も不可（`EXPIRED` 扱い） |
+| 上映まで 1 時間未満 | UI で「承認されない可能性が高い」と警告（**演出・注意喚起**。承認自体は 30 分前まで可能） |
+| 発表デモ用タイマー | 画面上に「残り時間」のような表示をしてよいが、**実際の期限切れ処理は上映 30 分前 / 上映開始で判定** |
+
+---
+
+## 連鎖キャンセル（依頼者側）
+
+同一上映回に複数席へ PENDING がある場合:
+
+| 結果 | 依頼者側の他 PENDING |
+|---|---|
+| **いずれか 1 件が拒否（DECLINED）** | 残りすべて **連鎖キャンセル（CANCELLED）** |
+| **いずれか 1 件が承諾（APPROVED）** | 残りすべて **連鎖キャンセル（CANCELLED）** |
+
+UI 上はステータス **「連鎖キャンセル」** と表示し、理由文を添える。
+
+**料金確認の前** に専用説明ステップ（`ReserveFlow` の `buyoutNotice`）で上記を必ず表示する。
+
+---
+
+## 料金
+
+| 項目 | 金額 | 備考 |
+|---|---|---|
+| 譲渡リクエスト料 | ¥100 / 件 | 送信時（決済時にまとめて請求する想定） |
+| 承諾者キャッシュバック | ¥100 | 承諾時（DB 記録のみ。実決済未実装） |
+
+---
 
 ## 画面
 
-| パス | 概要 |
+| パス / コンポーネント | 役割 |
 |---|---|
-| `/mypage/seat-move` | 席交換リクエストのメイン画面。ログイン必須。クエリ `?bookingId=` で対象予約を初期選択できる |
-| `/mypage` | メニューに「席交換リクエスト」カードを追加 |
-| `/mypage/history` | 各予約カードに「席交換リクエスト」リンクを追加（`CONFIRMED` かつ今後の予約のみ表示） |
+| `/reserve`（`ReserveFlow`） | **送信** — 座席選択中に譲渡リクエスト。説明ステップ `buyoutNotice` |
+| `/mypage/seat-move` | **応答** — 届いたリクエストの承諾・拒否。送信タブは **予約確定前仕様に合わせて将来削除または縮小** |
+| `/mypage/history` | 予約履歴から `/mypage/seat-move` への導線（確定後送信は不可のため、**応答・状態確認用途**） |
 
-対象は **ログインユーザーの `CONFIRMED` かつ上映開始前の予約のみ**（`/mypage/seat-move/page.tsx` でサーバー側フィルタ）。ゲスト予約は対象外。
+---
 
-## コンポーネント
+## データモデル（実装予定の変更点）
 
-- [`src/components/SeatMoveFlow.tsx`](../src/components/SeatMoveFlow.tsx)
-  - `bookings`（ログインユーザーの対象予約一覧）と `initialBookingId` を props で受け取るクライアントコンポーネント
-  - 「リクエストを送る」タブ: 対象予約の上映回の座席マップを `/api/screenings/[id]/seats` から取得し、他人の確定済み座席をクリックしてリクエスト送信
-  - 「届いたリクエスト」タブ: 自分の座席に届いた `PENDING` リクエストを承諾（別席へ移動 / 予約キャンセル）または拒否
-  - 座席の所有権表示は「同一上映回にあるログインユーザーの全予約の座席」を自分の席として扱う（1ユーザーが同一上映回に複数予約を持つケースに対応。API側もユーザー単位で所有権を判定するため表示と揃えている）
+現行 `seat_move_requests` は `requesterBookingId` 必須・確定予約前提。新仕様では:
 
-## API
+| カラム | 変更 |
+|---|---|
+| `requester_booking_id` | **NULL 可** — 予約確定前は未設定 |
+| `requester_user_id` | **追加** — ログインユーザー ID |
+| `screening_id` | **追加** — 上映回（仮予約・連鎖キャンセル範囲の特定） |
+| `status` | 既存 + `EXPIRED`（30 分前切れ） |
 
-### `POST /api/seat-moves`
-リクエスト送信。[`src/app/api/seat-moves/route.ts`](../src/app/api/seat-moves/route.ts)
+承認時: 依頼者の **PENDING 予約**（または HELD ロック）に `BookingSeat` を追加し、決済完了で確定。
 
-- 認証必須（`getSessionUser`）
-- body: `{ requesterBookingId, requesterBookingSeatId?, targetBookingSeatId }`
-- `requesterBookingId` はログインユーザー自身の予約であること
-- 依頼者・対象の予約は `CONFIRMED` であること
-- 上映回の `startTime` が未来であること（上映開始後は `400`）
-- `targetBookingSeatId` は同じ `screeningId` の座席で、所有者（`booking.userId`）が自分以外であること
-- 同一 `(requesterBookingId, targetBookingSeatId)` に対する `PENDING` の重複リクエストは `409`
-- 成功時は `SeatMoveRequest` を `status: 'PENDING'` で作成（`fee: 100`, `cashbackAmount: 100` で固定）
+---
+
+## API（実装予定）
+
+### `POST /api/seat-moves`（予約フローから）
+
+- 認証必須
+- body（案）: `{ screeningId, targetBookingSeatId }`
+- `requesterBookingId` **不要**（未確定予約）
+- 上映 30 分前以降は `400`
+- 同一 `(targetBookingSeatId, PENDING)` は FCFS — 2 件目は `409`（※複数 PENDING 方式に変更する場合は見直し）
 
 ### `POST /api/seat-moves/[id]/respond`
-承認・拒否。[`src/app/api/seat-moves/[id]/respond/route.ts`](../src/app/api/seat-moves/[id]/respond/route.ts)
 
-- 認証必須。リクエストの `targetBooking.userId` が呼び出しユーザーと一致すること
-- 依頼者・対象の予約は `CONFIRMED` であること
-- 上映回の `startTime` が未来であること（上映開始後は `400`）
-- body: `{ action: 'decline' | 'approve_reseat' | 'approve_cancel', newSeatId? }`
-- `decline`: このリクエストを `DECLINED` にし、**同じリクエスター・同じ上映回の他の `PENDING` リクエストも自動で `CANCELLED`** にする（意図的な仕様。UIでも説明を表示）
-- `approve_reseat`: リクエスター側に希望座席を付与し（提供席があれば `BookingSeat.seatId` を差し替え、なければ新規 `BookingSeat` を追加）、承諾側は `newSeatId` の空席に `BookingSeat.seatId` を変更。指定席が既に `CONFIRMED` ロック済みなら `Selected seat is already taken`（`409`）
-- `approve_cancel`: リクエスター側に希望座席を付与した上で、承諾側の予約自体を `CANCELLED`（`ScreeningSeatLock` も削除）
-- 承認処理は全体を `$transaction` で実行し、座席の付け替えと `ScreeningSeatLock` の更新を一致させる
+- 先約者のみ。上映 30 分前以降・上映開始後は不可
+- `decline` → 依頼者の同上映回 PENDING を連鎖 `CANCELLED`
+- `approve_reseat` / `approve_cancel` → 依頼者仮予約に席付与 + 連鎖 `CANCELLED`
 
-### `GET /api/screenings/[id]/seats`（既存APIを拡張）
-[`src/app/api/screenings/[id]/seats/route.ts`](../src/app/api/screenings/[id]/seats/route.ts)
+### `POST /api/bookings`（決済）
 
-- 各座席に `bookingSeatId` / `bookingId` を追加（キャンセルされていない予約に紐づく場合のみ）。フロントが「この座席をリクエストできるか」を判定するために使用
+- 上映開始後は不可（**実装済み**）
+- 譲渡承認済み席を含めて確定
 
-### `GET /api/bookings/[id]`（既存APIを拡張）
-[`src/app/api/bookings/[id]/route.ts`](../src/app/api/bookings/[id]/route.ts)
+---
 
-- `requestedSeatMoves`（自分が送ったリクエスト）・`targetedSeatMoves`（自分宛のリクエスト）に、相手・自分の座席情報（`rowLabel`, `seatNumber`）を含めるよう `include` を拡張
+## 実装ステータス
 
-## 型定義
+| 項目 | 状態 |
+|---|---|
+| 仕様書（本ファイル） | ✅ |
+| 予約フロー説明ステップ `buyoutNotice` | ✅ |
+| 座席選択からの譲渡リクエスト送信 | ✅ |
+| API・DB の未確定予約対応 | ✅ |
+| 確定後の `/mypage/seat-move` からの送信 | ✅ 廃止（応答のみ） |
+| 上映開始後の決済拒否 | ✅ |
+| 上映30分前の送信・承認拒否 | ✅ |
+| 決済・キャッシュバック実処理 | 🔲 未実装（モック決済） |
+| 通知（メール/プッシュ） | 🔲 未実装 |
 
-[`src/lib/api/bookingTypes.ts`](../src/lib/api/bookingTypes.ts) に `SeatMoveRequestView` を追加し、`BookingView` に `requestedSeatMoves?` / `targetedSeatMoves?` を追加。
+### 決済の前提（実装済み）
 
-## 削除したもの
+- **確認画面で一括決済** — 空席料金 + 承認待ち譲渡席のチケット代（前払い）+ 譲渡リクエスト料（¥100/件）をまとめて支払う
+- **返金（拒否）** — リクエストが **拒否** された場合、決済済みの **予約全体を全額返金** し予約をキャンセル
+- **返金（その他）** — ご自身での取り消し・承諾時の連鎖キャンセルは、該当リクエストのチケット前払い分＋リクエスト料のみ返金
+- **承認されたリクエスト** — 前払いチケット代は席付与に充当され、リクエスト料は返金されない
 
-旧 `localStorage` ベースの実装を撤去。
+---
 
-- `src/app/reserve/seat-move/page.tsx`
-- `src/lib/seatMoveData.ts`
-- `src/lib/seatMoveStorage.ts`
-- `src/components/ReserveFlow.tsx` 内の `saveBooking` 呼び出し（予約完了時に `localStorage` へ保存していた処理。新実装は予約データを直接DBから読むため不要）
+## 旧仕様からの移行
 
-## 既知の制約・今後の検討事項
+旧実装（確定済み予約同士の席交換・`/mypage/seat-move` から送信）は **本仕様で置き換え** する。
 
-- 決済・キャッシュバックは実処理を行わない（`fee` / `cashbackAmount` はDBに記録されるのみ）
-- 同時に複数人が同じ空席へ承認しようとした場合はDB側の一意制約・再チェックで後勝ちがエラーになる（楽観的ロック的挙動。UIの座席一覧は取得時点のスナップショットなので、エラー時は再読み込みが必要）
-- 通知機能（リクエスト受信のメール/プッシュ通知）は未実装
+- 旧 `localStorage` ベース: 既に撤去済み
+- 現行 DB 連携版の「確定後送信」: 本仕様実装時に削除
+
+---
+
+## 関連ファイル
+
+- [`src/components/ReserveFlow.tsx`](../src/components/ReserveFlow.tsx) — 座席選択・`buyoutNotice` ステップ
+- [`src/components/SeatMoveFlow.tsx`](../src/components/SeatMoveFlow.tsx) — 応答 UI（送信タブは将来縮小）
+- [`src/app/api/seat-moves/`](../src/app/api/seat-moves/) — API
+- [`prisma/schema.prisma`](../prisma/schema.prisma) — `SeatMoveRequest` モデル

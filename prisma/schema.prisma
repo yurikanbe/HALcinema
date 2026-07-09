@@ -128,6 +128,7 @@ model User {
   notificationSetting NotificationSetting?
   screeningSeatLocks  ScreeningSeatLock[]
   userFavorites       UserFavorite[]
+  seatMoveRequests    SeatMoveRequest[]    @relation("RequesterUser")
 
   @@map("users")
 }
@@ -276,6 +277,7 @@ model Screening {
   bookings           Booking[]
   bookingSeats       BookingSeat[]
   screeningSeatLocks ScreeningSeatLock[]
+  seatMoveRequests   SeatMoveRequest[]
 
   @@index([movieId, startTime])
   @@index([screenId, startTime, endTime])
@@ -288,7 +290,8 @@ model TicketType {
   basePrice Int     @map("base_price")
   isActive  Boolean @default(true) @map("is_active")
 
-  bookingSeats BookingSeat[]
+  bookingSeats     BookingSeat[]
+  prepaidSeatMoves SeatMoveRequest[]
 
   @@map("ticket_types")
 }
@@ -394,23 +397,32 @@ model Payment {
 
 model SeatMoveRequest {
   id                     BigInt         @id @default(autoincrement())
+  requesterUserId        String?        @map("requester_user_id")
+  screeningId            BigInt         @map("screening_id")
   requesterBookingSeatId BigInt?        @map("requester_booking_seat_id")
   targetBookingSeatId    BigInt         @map("target_booking_seat_id")
-  requesterBookingId     BigInt         @map("requester_booking_id")
+  requesterBookingId     BigInt?        @map("requester_booking_id")
   targetBookingId        BigInt         @map("target_booking_id")
   fee                    Int            @default(100)
   cashbackAmount         Int            @map("cashback_amount")
+  prepaidTicketTypeId    BigInt?        @map("prepaid_ticket_type_id")
+  prepaidUnitPrice       Int?           @map("prepaid_unit_price")
   status                 SeatMoveStatus @default(PENDING)
   requestedAt            DateTime       @default(now()) @map("requested_at")
   respondedAt            DateTime?      @map("responded_at")
 
+  requesterUser        User?        @relation("RequesterUser", fields: [requesterUserId], references: [id], onDelete: SetNull)
+  screening            Screening    @relation(fields: [screeningId], references: [id], onDelete: Restrict)
   requesterBookingSeat BookingSeat? @relation("RequesterBookingSeat", fields: [requesterBookingSeatId], references: [id], onDelete: SetNull)
   targetBookingSeat    BookingSeat  @relation("TargetBookingSeat", fields: [targetBookingSeatId], references: [id], onDelete: Cascade)
-  requesterBooking     Booking      @relation("RequesterBooking", fields: [requesterBookingId], references: [id], onDelete: Cascade)
+  requesterBooking     Booking?     @relation("RequesterBooking", fields: [requesterBookingId], references: [id], onDelete: Cascade)
   targetBooking        Booking      @relation("TargetBooking", fields: [targetBookingId], references: [id], onDelete: Cascade)
+  prepaidTicketType    TicketType?  @relation(fields: [prepaidTicketTypeId], references: [id], onDelete: SetNull)
 
+  @@index([requesterUserId, screeningId, status])
   @@index([requesterBookingId, status])
   @@index([targetBookingId, status])
+  @@index([targetBookingSeatId, status])
   @@map("seat_move_requests")
 }
 

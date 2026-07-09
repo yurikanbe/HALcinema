@@ -335,10 +335,16 @@
   background: rgba(160, 170, 185, 0.45);
 }
 
-.legendMove::before {
+.legendMove::before,
+.legendMoveable::before {
   background: linear-gradient(135deg, rgba(107, 74, 20, 0.5), rgba(200, 164, 91, 0.65));
   border-color: rgba(200, 164, 91, 0.85);
   box-shadow: 0 0 0 1px rgba(200, 164, 91, 0.35);
+}
+
+.legendMovePending::before {
+  background: linear-gradient(135deg, rgba(11, 42, 87, 0.55), rgba(19, 63, 127, 0.65));
+  border-color: rgba(200, 164, 91, 0.7);
 }
 
 .legendPremium::before {
@@ -615,6 +621,77 @@
   color: var(--ink-900);
 }
 
+.buyoutNoticeBox {
+  margin-bottom: 1rem;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: rgba(11, 42, 87, 0.05);
+  border: 1px solid rgba(200, 164, 91, 0.28);
+}
+
+.buyoutNoticeLead {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+  color: var(--ink-800);
+}
+
+.buyoutNoticeList {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 13px;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+  color: var(--ink-700);
+}
+
+.buyoutNoticeList li + li {
+  margin-top: 10px;
+}
+
+.buyoutUrgencyWarn {
+  margin-bottom: 1rem;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(180, 60, 40, 0.08);
+  border: 1px solid rgba(180, 60, 40, 0.35);
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: var(--ink-800);
+}
+
+.buyoutDemoTimer {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 1rem;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(11, 42, 87, 0.06), rgba(200, 164, 91, 0.1));
+  border: 1px dashed rgba(200, 164, 91, 0.45);
+  text-align: center;
+}
+
+.buyoutDemoTimerLabel {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+}
+
+.buyoutDemoTimerValue {
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  color: var(--ink-900);
+}
+
+.buyoutDemoTimerNote {
+  font-size: 11px;
+  color: var(--ink-600);
+  letter-spacing: 0.04em;
+}
+
 .completePendingMoves {
   margin-top: 6px;
   font-size: 12px;
@@ -631,11 +708,60 @@
 }
 
 .selectionInfo {
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: var(--ink-700);
   margin-bottom: 1.25rem;
-  line-height: 1.8;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(11, 42, 87, 0.04);
+  border: 1px solid rgba(200, 164, 91, 0.2);
+}
+
+.selectionSummaryTitle {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+  margin-bottom: 10px;
+}
+
+.selectionSummaryGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.selectionSummaryItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 2px;
+  align-items: baseline;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.selectionSummaryLabel {
+  color: var(--ink-600);
+  white-space: nowrap;
+}
+
+.selectionSummaryValue {
+  justify-self: end;
+  color: var(--ink-900);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+
+.selectionSummaryLimit {
+  font-size: 12px;
+  font-weight: normal;
+  color: var(--ink-500, var(--ink-600));
+}
+
+.selectionSummaryDetail {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--gold-600);
+  letter-spacing: 0.04em;
 }
 
 .selectionSeats {

@@ -4,41 +4,18 @@
 .pnp.js
 .yarn/install-state.gz
 
-<<<<<<< HEAD
-# Testing
-/coverage
-
-=======
->>>>>>> 77c7db21ad3054d9b598444b1bd13eb7beef3851
 # Next.js
 /.next/
 /out/
 
-<<<<<<< HEAD
-# Production
-/build
-
-# Misc
-.DS_Store
-*.pem
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env*.local
-.env
-
-# Vercel
-.vercel
-=======
 # Production build
 /build
 /dist
 
-# Environment variables (secrets)
+# ---------------------------------------------------------------------------
+# Environment variables（秘密情報 — コミット禁止）
+# .env.example はテンプレートなのでコミット OK
+# ---------------------------------------------------------------------------
 .env
 .env*.local
 .env.development.local
@@ -53,28 +30,49 @@ pnpm-debug.log*
 
 # Testing
 /coverage
->>>>>>> 77c7db21ad3054d9b598444b1bd13eb7beef3851
 
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
 
-<<<<<<< HEAD
-# Prisma
-prisma/dev.db
-=======
 # Vercel
 .vercel
 
-# Prisma (generated client lives under node_modules)
-# Migrations and schema.prisma should be committed.
+# ---------------------------------------------------------------------------
+# Database / SQL
+#
+# ✅ コミットしてよいもの:
+#   - prisma/schema.prisma
+#   - prisma/migrations/**/migration.sql  （Prisma マイグレーション）
+#   - prisma/migrations/migration_lock.toml
+#   - prisma/seed.js                      （シードスクリプト・秘密情報を入れないこと）
+#   - .env.example                        （接続文字列の例のみ）
+#
+# ❌ コミットしないもの:
+#   - .env（本番/開発の DATABASE_URL 等）
+#   - ローカル DB ファイル
+#   - 手動ダンプ・バックアップ SQL
+# ---------------------------------------------------------------------------
+prisma/dev.db
+*.db
+*.sqlite
+*.sqlite3
+
+# 手動エクスポート・バックアップ（prisma/migrations は対象外）
+/dumps/
+*.dump.sql
+*.sql.gz
+*_backup.sql
+*.sql.backup
+
+# Prisma の generate 出力は node_modules 配下（/node_modules で除外済み）
 
 # OS
 .DS_Store
 Thumbs.db
 Desktop.ini
 
-# IDE / editor
+# IDE / editor（個人設定。共有したいものだけ例外）
 .idea/
 *.swp
 *.swo
@@ -86,4 +84,3 @@ Desktop.ini
 # Misc
 *.pem
 .turbo
->>>>>>> 77c7db21ad3054d9b598444b1bd13eb7beef3851

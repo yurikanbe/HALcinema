@@ -8,7 +8,6 @@ import { formatYen } from '@/lib/reserveData';
 import type { BookingView, SeatMoveRequestView } from '@/lib/api/bookingTypes';
 import s from './SeatMoveFlow.module.css';
 
-const SEAT_MOVE_FEE = 100;
 const SEAT_MOVE_CASHBACK = 100;
 
 const CASCADE_NOTICE =
@@ -20,12 +19,11 @@ const CASCADE_CANCELLED_NOTICE =
 const STATUS_DETAIL: Partial<Record<SeatMoveRequestView['status'], string>> = {
   DECLINED: '相手がこのリクエストを拒否しました。同じ上映回の他の承認待ちリクエストも連鎖的にキャンセルされています。',
   CANCELLED: '同じ上映回の別リクエストが拒否または承諾されたため、このリクエストは連鎖的に自動キャンセルされました。',
-  APPROVED: '席交換が成立しました。同じ上映回の他の承認待ちリクエストは連鎖的にキャンセルされています。',
+  APPROVED: '座席譲渡が成立しました。同じ上映回の他の承認待ちリクエストは連鎖的にキャンセルされています。',
 };
 
 const SEAT_MOVE_FLASH_KEY = 'seatMoveFlashMessage';
 
-type Tab = 'send' | 'receive';
 type ApproveStep = 'choose' | 'pick-seat' | 'confirm-cancel';
 
 const STATUS_LABEL: Record<SeatMoveRequestView['status'], string> = {
@@ -72,12 +70,9 @@ interface SeatMoveFlowProps {
 }
 
 export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlowProps) {
-  const [tab, setTab] = useState<Tab>('send');
   const [activeBookingId, setActiveBookingId] = useState<string | null>(initialBookingId ?? bookings[0]?.id ?? null);
   const [seats, setSeats] = useState<ScreeningSeat[]>([]);
   const [loadingSeats, setLoadingSeats] = useState(false);
-  const [selectedTargetSeatId, setSelectedTargetSeatId] = useState<string | null>(null);
-  const [offerSeatId, setOfferSeatId] = useState<string>('');
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -134,16 +129,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
     return new Set(seatIds);
   }, [bookings, activeBooking]);
 
-  const outgoing = activeBooking?.requestedSeatMoves ?? [];
   const incoming = activeBooking?.targetedSeatMoves?.filter((item) => item.status === 'PENDING') ?? [];
-  const pendingOutgoingForScreening = useMemo(() => {
-    if (!activeBooking) return 0;
-    const screeningId = activeBooking.screening.id;
-    return bookings
-      .filter((booking) => booking.screening.id === screeningId)
-      .flatMap((booking) => booking.requestedSeatMoves ?? [])
-      .filter((item) => item.status === 'PENDING').length;
-  }, [bookings, activeBooking]);
 
   const cascadeCancelledForScreening = useMemo(() => {
     if (!activeBooking) return [];
@@ -153,16 +139,6 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
       .flatMap((booking) => booking.requestedSeatMoves ?? [])
       .filter((item) => item.status === 'CANCELLED');
   }, [bookings, activeBooking]);
-
-  const pendingTargetSeatIds = useMemo(
-    () =>
-      new Set(
-        outgoing
-          .filter((item) => item.status === 'PENDING')
-          .map((item) => seatLabel(item.targetBookingSeat.seat.rowLabel, item.targetBookingSeat.seat.seatNumber)),
-      ),
-    [outgoing],
-  );
 
   const respondingRequest = respondingRequestId
     ? incoming.find((item) => item.id === respondingRequestId) ?? null
@@ -184,41 +160,6 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
 
   const refresh = () => {
     window.location.reload();
-  };
-
-  const handleSendRequest = async () => {
-    if (!activeBooking || !selectedTargetSeatId) return;
-    const targetSeat = seats.find((seat) => seatLabel(seat.rowLabel, seat.seatNumber) === selectedTargetSeatId);
-    if (!targetSeat?.bookingSeatId) return;
-
-    const offeredSeat = activeBooking.bookingSeats.find(
-      (seat) => seatLabel(seat.seat.rowLabel, seat.seat.seatNumber) === offerSeatId,
-    );
-
-    setSubmitting(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/seat-moves', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          requesterBookingId: activeBooking.id,
-          requesterBookingSeatId: offeredSeat?.id ?? null,
-          targetBookingSeatId: targetSeat.bookingSeatId,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'リクエストの送信に失敗しました。');
-
-      setMessage(`${selectedTargetSeatId} 席のお客様へ席交換リクエストを送信しました（${formatYen(SEAT_MOVE_FEE)}）。`);
-      setSelectedTargetSeatId(null);
-      setOfferSeatId('');
-      refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'リクエストの送信に失敗しました。');
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   const respond = async (
@@ -245,7 +186,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
       } else {
         sessionStorage.setItem(
           SEAT_MOVE_FLASH_KEY,
-          '席交換を承諾しました。依頼者の同じ上映回への他の承認待ちリクエストは、連鎖的に自動キャンセルされています。',
+          '座席譲渡を承諾しました。依頼者の同じ上映回への他の承認待ちリクエストは、連鎖的に自動キャンセルされています。',
         );
       }
       refresh();
@@ -262,10 +203,10 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
           <BackButton className={s.backBtn} />
         </div>
         <div className={s.emptyPanel}>
-          <div className={shared.sectionHint}>Seat Exchange</div>
+          <div className={shared.sectionHint}>Seat Transfer</div>
           <h2 className={s.emptyTitle}>対象の予約が見つかりません</h2>
           <p className={s.emptyLead}>
-            席交換リクエストは、決済完了済みで上映開始前の予約に対してのみご利用いただけます。
+            譲渡リクエストへの応答は、決済完了済みで上映開始前の予約が対象です。送信は予約フローから行えます。
           </p>
           <Link href="/reserve" className={`${shared.btn} ${shared.btnSolid}`}>
             オンライン予約へ
@@ -284,11 +225,14 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
       </div>
 
       <div className={s.introPanel}>
-        <div className={shared.sectionHint}>Seat Exchange</div>
-        <h2 className={s.introTitle}>席交換リクエスト</h2>
+        <div className={shared.sectionHint}>Seat Transfer</div>
+        <h2 className={s.introTitle}>届いた譲渡リクエスト</h2>
         <p className={s.introLead}>
-          先約のある席を希望する場合、{formatYen(SEAT_MOVE_FEE)} で席の交換をリクエストできます。承諾された方には
-          {formatYen(SEAT_MOVE_CASHBACK)} のキャッシュバックがあります。上映開始後は送信・承諾・拒否のいずれもできません。
+          先約者として、依頼者から届いた座席譲渡リクエストに応答できます。承諾時のキャッシュバックは
+          {formatYen(SEAT_MOVE_CASHBACK)} です（DB記録のみ）。上映開始後は応答できません。
+        </p>
+        <p className={s.introLead}>
+          譲渡リクエストの<strong>送信</strong>は <Link href="/reserve">オンライン予約</Link> の座席選択画面から行います。
         </p>
         <div className={s.noticeBox} role="note">
           <div className={s.noticeTitle}>連鎖キャンセルについて</div>
@@ -307,8 +251,6 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
           value={activeBooking?.id ?? ''}
           onChange={(e) => {
             setActiveBookingId(e.target.value);
-            setSelectedTargetSeatId(null);
-            setOfferSeatId('');
             setMessage(null);
             setError(null);
             resetApproveFlow();
@@ -339,34 +281,10 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
         </div>
       )}
 
-      <div className={s.tabs}>
-        <button
-          type="button"
-          className={`${s.tabBtn}${tab === 'send' ? ` ${s.tabBtnActive}` : ''}`}
-          onClick={() => {
-            setTab('send');
-            resetApproveFlow();
-          }}
-        >
-          リクエストを送る
-        </button>
-        <button
-          type="button"
-          className={`${s.tabBtn}${tab === 'receive' ? ` ${s.tabBtnActive}` : ''}`}
-          onClick={() => {
-            setTab('receive');
-            setSelectedTargetSeatId(null);
-          }}
-        >
-          届いたリクエスト
-          {incoming.length > 0 && <span className={s.tabBadge}>{incoming.length}</span>}
-        </button>
-      </div>
-
       {message && <div className={s.messageSuccess}>{message}</div>}
       {error && <div className={s.messageError}>{error}</div>}
 
-      {cascadeCancelledForScreening.length > 0 && tab === 'send' && (
+      {cascadeCancelledForScreening.length > 0 && (
         <div className={s.cascadeAlert} role="status">
           <div className={s.cascadeAlertTitle}>連鎖キャンセルが発生しています</div>
           <p className={s.cascadeAlertText}>
@@ -376,168 +294,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
         </div>
       )}
 
-      {tab === 'send' && activeBooking && (
-        <div className={s.panel}>
-          <div className={s.panelHead}>
-            <h3 className={s.panelTitle}>希望する席を選ぶ</h3>
-            <p className={s.panelLead}>
-              売り切れの席をクリックして席交換をリクエストできます。ご自身の席はなくても送信可能です。
-            </p>
-            {pendingOutgoingForScreening > 0 && (
-              <div className={s.noticeBoxInline} role="note">
-                <p className={s.noticeText}>
-                  この上映回には承認待ちのリクエストが {pendingOutgoingForScreening} 件あります。{CASCADE_NOTICE}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {loadingSeats ? (
-            <div className={s.receiveEmpty}>座席情報を読み込み中です…</div>
-          ) : (
-            <>
-              <div className={s.legend}>
-                <span className={`${s.legendItem} ${s.legendOwn}`}>あなたの席</span>
-                <span className={`${s.legendItem} ${s.legendOther}`}>先約あり</span>
-                <span className={`${s.legendItem} ${s.legendTarget}`}>リクエスト先</span>
-              </div>
-
-              <div className={s.screenStage}>
-                <div className={s.screenLabel}>SCREEN</div>
-              </div>
-
-              <div className={s.seatMapWrap}>
-                <div className={s.seatMap}>
-                  {Array.from(new Set(seats.map((seat) => seat.rowLabel))).map((row) => (
-                    <div key={row} className={s.seatRow}>
-                      <span className={s.rowLabel}>{row}</span>
-                      <div className={s.seatRowSeats}>
-                        {seats
-                          .filter((seat) => seat.rowLabel === row)
-                          .map((seat) => {
-                            const label = seatLabel(seat.rowLabel, seat.seatNumber);
-                            const isOwn = ownSeatIds.has(label);
-                            const isOtherOccupied =
-                              seat.status !== 'AVAILABLE' && !isOwn && seat.bookingId !== null;
-                            const isRequestable = isOtherOccupied && !pendingTargetSeatIds.has(label);
-                            const isSelectedTarget = selectedTargetSeatId === label;
-
-                            const classes = [
-                              s.seat,
-                              isOwn ? s.seatOwn : '',
-                              isOtherOccupied ? s.seatOther : '',
-                              isRequestable ? s.seatMoveable : '',
-                              isSelectedTarget ? s.seatSelectedTarget : '',
-                              seat.status !== 'AVAILABLE' && !isOwn && !isRequestable ? s.seatTaken : '',
-                            ]
-                              .filter(Boolean)
-                              .join(' ');
-
-                            return (
-                              <button
-                                key={seat.id}
-                                type="button"
-                                className={classes}
-                                disabled={!isOwn && !isRequestable}
-                                onClick={() => {
-                                  if (isRequestable) {
-                                    setSelectedTargetSeatId(label);
-                                    setMessage(null);
-                                    setError(null);
-                                  }
-                                }}
-                                aria-label={`${seat.rowLabel}列 ${seat.seatNumber}番`}
-                              >
-                                {seat.seatNumber}
-                              </button>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {selectedTargetSeatId && (
-                <div className={s.requestConfirm}>
-                  <div className={s.requestConfirmTitle}>席交換リクエスト</div>
-                  <p>
-                    <strong>{selectedTargetSeatId}</strong> 席の先約者に、席の交換をリクエストします。
-                  </p>
-                  <p className={s.requestConfirmNotice}>{CASCADE_NOTICE}</p>
-                  {activeBooking.bookingSeats.length > 0 && (
-                    <label className={s.offerSeatField}>
-                      <span>提供する席（任意・1席のみ）</span>
-                      <select
-                        className={s.offerSeatSelect}
-                        value={offerSeatId}
-                        onChange={(e) => setOfferSeatId(e.target.value)}
-                      >
-                        <option value="">提供しない（希望席のみ）</option>
-                        {activeBooking.bookingSeats.map((seat) => {
-                          const label = seatLabel(seat.seat.rowLabel, seat.seat.seatNumber);
-                          return (
-                            <option key={seat.id} value={label}>
-                              {label}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </label>
-                  )}
-                  <div className={s.requestConfirmFees}>
-                    <span>リクエスト料金: {formatYen(SEAT_MOVE_FEE)}</span>
-                    <span>相手へのキャッシュバック: {formatYen(SEAT_MOVE_CASHBACK)}</span>
-                  </div>
-                  <div className={s.requestConfirmActions}>
-                    <button type="button" className={shared.btn} onClick={() => setSelectedTargetSeatId(null)}>
-                      キャンセル
-                    </button>
-                    <button
-                      type="button"
-                      className={`${shared.btn} ${shared.btnSolid}`}
-                      disabled={submitting}
-                      onClick={handleSendRequest}
-                    >
-                      リクエストを送信
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {outgoing.length > 0 && (
-                <div className={s.requestList}>
-                  <h4 className={s.requestListTitle}>送信済みリクエスト</h4>
-                  <p className={s.requestListGuide}>{CASCADE_CANCELLED_NOTICE}</p>
-                  {outgoing.map((request) => (
-                    <div key={request.id} className={s.requestCard}>
-                      <div className={s.requestCardBody}>
-                        <div>
-                          {request.requesterBookingSeat
-                            ? `${seatLabel(request.requesterBookingSeat.seat.rowLabel, request.requesterBookingSeat.seat.seatNumber)} ↔ `
-                            : ''}
-                          {seatLabel(request.targetBookingSeat.seat.rowLabel, request.targetBookingSeat.seat.seatNumber)}
-                        </div>
-                        {STATUS_DETAIL[request.status] && (
-                          <p className={s.statusDetail}>{STATUS_DETAIL[request.status]}</p>
-                        )}
-                      </div>
-                      <div className={s.requestCardMeta}>
-                        <span className={`${s.status} ${s[`status_${request.status.toLowerCase()}`]}`}>
-                          {STATUS_LABEL[request.status]}
-                        </span>
-                        <span>{formatYen(request.fee)}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {tab === 'receive' && activeBooking && (
+      {activeBooking && (
         <div className={s.panel}>
           <div className={s.panelHead}>
             <h3 className={s.panelTitle}>届いたリクエスト</h3>
@@ -555,19 +312,15 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
                   request.targetBookingSeat.seat.rowLabel,
                   request.targetBookingSeat.seat.seatNumber,
                 );
-                const offeredSeatLabel = request.requesterBookingSeat
-                  ? seatLabel(request.requesterBookingSeat.seat.rowLabel, request.requesterBookingSeat.seat.seatNumber)
-                  : null;
 
                 return (
                   <div key={request.id} className={s.incomingCard}>
                     <div className={s.incomingCardHead}>
-                      <span className={s.incomingBadge}>Seat Exchange</span>
+                      <span className={s.incomingBadge}>Seat Transfer</span>
                       <span className={`${s.status} ${s.status_pending}`}>承認待ち</span>
                     </div>
                     <p className={s.incomingText}>
-                      お客様があなたの <strong>{targetSeatLabel}</strong> 席を希望しています。
-                      {offeredSeatLabel ? `（提供席: ${offeredSeatLabel}）` : '（提供席なし）'}
+                      お客様があなたの <strong>{targetSeatLabel}</strong> 席の譲渡（買い取り）を希望しています。
                     </p>
                     <div className={s.incomingReward}>
                       承諾時キャッシュバック: {formatYen(request.cashbackAmount)}

@@ -37,7 +37,7 @@ export interface SeatMoveRequestView {
   cashbackAmount: number;
   requestedAt: string;
   respondedAt: string | null;
-  requesterBookingId: string;
+  requesterBookingId: string | null;
   targetBookingId: string;
   targetBookingSeat: { seat: { rowLabel: string; seatNumber: number } };
   requesterBookingSeat: { seat: { rowLabel: string; seatNumber: number } } | null;

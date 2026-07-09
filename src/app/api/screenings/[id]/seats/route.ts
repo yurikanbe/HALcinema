@@ -50,12 +50,14 @@ export async function GET(_request: Request, context: RouteContext) {
   const seats = screening.screen.seats.map((seat) => {
     const lock = lockBySeatId.get(seat.id.toString());
     const bookingSeat = bookingSeatBySeatId.get(seat.id.toString());
+    const status = lock?.status ?? (bookingSeat ? 'CONFIRMED' : 'AVAILABLE');
     return {
       ...seat,
-      status: lock?.status ?? 'AVAILABLE',
+      id: seat.id.toString(),
+      status,
       holdExpiresAt: lock?.expiresAt ?? null,
-      bookingSeatId: bookingSeat?.id ?? null,
-      bookingId: bookingSeat?.bookingId ?? null,
+      bookingSeatId: bookingSeat?.id.toString() ?? null,
+      bookingId: bookingSeat?.bookingId.toString() ?? null,
     };
   });
 

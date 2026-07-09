@@ -61,12 +61,12 @@ export default async function SeatMovePage({
   return (
     <>
       <section className={shared.pageHero}>
-        <div className={shared.sectionHint}>Seat Exchange</div>
-        <h1 className={shared.pageHeroTitle}>席交換リクエスト</h1>
+        <div className={shared.sectionHint}>Seat Transfer</div>
+        <h1 className={shared.pageHeroTitle}>座席譲渡リクエスト</h1>
         <p className={shared.pageHeroLead}>
-          先約のある席を希望する場合、{'100'}円で席の交換をリクエストできます。承諾された方には
-          {'100'}円のキャッシュバックがあります。同じ上映回に複数リクエストした場合、1件が拒否または承諾されると残りは
-          <strong>連鎖キャンセル</strong>されます。
+          先約者として届いた譲渡リクエストに応答できます。承諾すると依頼者の仮予約に席が紐づきます。
+          拒否または承諾時、依頼者の同じ上映回への他の承認待ちリクエストは
+          <strong>連鎖キャンセル</strong>されます。送信は予約フロー（/reserve）から行います。
         </p>
       </section>
 

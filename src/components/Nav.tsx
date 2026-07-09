@@ -68,6 +68,11 @@ export default function Nav() {
             <Link href="/mypage" className={pathname === '/mypage' ? styles.navLinkActive : undefined}>
               マイページ
             </Link>
+            {process.env.NODE_ENV === 'development' && (
+              <Link href="/dev" className={pathname === '/dev' ? styles.navLinkActive : undefined}>
+                Dev
+              </Link>
+            )}
           </nav>
           <div className={styles.navCta}>
             <button

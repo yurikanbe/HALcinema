@@ -64,10 +64,12 @@ export async function GET(request: Request) {
 
   await ensureUpcomingScreenings();
 
+  const now = new Date();
+
   await prisma.screeningSeatLock.deleteMany({
     where: {
       status: 'HELD',
-      expiresAt: { lt: new Date() },
+      expiresAt: { lt: now },
     },
   });
 
@@ -80,7 +82,9 @@ export async function GET(request: Request) {
     where: {
       status: 'SCHEDULED',
       movie: movieId ? { slug: movieId } : undefined,
-      startTime: dateRange ?? undefined,
+      startTime: dateRange
+        ? { gte: dateRange.gte, lt: dateRange.lt, gt: now }
+        : { gt: now },
     },
     orderBy: { startTime: 'asc' },
     include: {

@@ -234,12 +234,42 @@ async function seedScreenings(movieIdBySlug, screenIdByKey) {
   await prisma.screening.createMany({ data: screenings });
 }
 
+async function seedDemoUsers() {
+  const bcrypt = require('bcryptjs');
+  const passwordHash = await bcrypt.hash('demo1234', 10);
+  const accounts = [
+    { email: 'demo-a@halcinema.test', name: 'デモユーザーA', role: 'MEMBER' },
+    { email: 'demo-b@halcinema.test', name: 'デモユーザーB', role: 'MEMBER' },
+    { email: 'demo-admin@halcinema.test', name: 'デモ管理者', role: 'ADMIN' },
+  ];
+
+  for (const account of accounts) {
+    const memberId = `M${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 6).toUpperCase()}`.slice(0, 20);
+    await prisma.user.upsert({
+      where: { email: account.email },
+      create: {
+        memberId,
+        email: account.email,
+        passwordHash,
+        name: account.name,
+        role: account.role,
+      },
+      update: {
+        name: account.name,
+        role: account.role,
+        passwordHash,
+      },
+    });
+  }
+}
+
 async function main() {
   await clearReservationData();
   await seedTicketTypes();
   const movieIdBySlug = await seedMovies();
   const screenIdByKey = await seedTheatersScreensAndSeats();
   await seedScreenings(movieIdBySlug, screenIdByKey);
+  await seedDemoUsers();
 
   const counts = {
     movies: await prisma.movie.count(),
@@ -248,6 +278,9 @@ async function main() {
     seats: await prisma.seat.count(),
     screenings: await prisma.screening.count(),
     ticketTypes: await prisma.ticketType.count(),
+    demoUsers: await prisma.user.count({
+      where: { email: { endsWith: '@halcinema.test' } },
+    }),
   };
 
   console.log('Seed completed:', counts);

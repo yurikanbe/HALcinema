@@ -3,6 +3,11 @@ export interface CreateBookingSeatInput {
   ticketTypeId: string | number;
 }
 
+export interface BuyoutTicketInput {
+  requestId: string | number;
+  ticketTypeId: string | number;
+}
+
 export interface CreateBookingPayload {
   screeningId?: string | number;
   guestName?: string;
@@ -10,6 +15,8 @@ export interface CreateBookingPayload {
   guestPhone?: string;
   paymentMethod?: 'CREDIT_CARD' | 'QR';
   seats?: CreateBookingSeatInput[];
+  seatMoveRequestIds?: Array<string | number>;
+  buyoutTickets?: BuyoutTicketInput[];
 }
 
 export function asBigIntId(value: unknown, fieldName: string): bigint {
@@ -35,15 +42,18 @@ export function assertCreateBookingPayload(value: unknown): CreateBookingPayload
     throw new Error('screeningId is required');
   }
 
-  if (!Array.isArray(payload.seats) || payload.seats.length === 0) {
-    throw new Error('At least one seat is required');
+  const seats = Array.isArray(payload.seats) ? payload.seats : [];
+  const seatMoveRequestIds = Array.isArray(payload.seatMoveRequestIds) ? payload.seatMoveRequestIds : [];
+
+  if (seats.length === 0 && seatMoveRequestIds.length === 0) {
+    throw new Error('At least one seat or seat move request is required');
   }
 
-  if (payload.seats.length > 6) {
+  if (seats.length > 6) {
     throw new Error('A booking can contain at most 6 seats');
   }
 
-  for (const seat of payload.seats) {
+  for (const seat of seats) {
     if (!seat || typeof seat !== 'object') {
       throw new Error('Each seat must be an object');
     }
@@ -51,7 +61,20 @@ export function assertCreateBookingPayload(value: unknown): CreateBookingPayload
     asBigIntId(seat.ticketTypeId, 'ticketTypeId');
   }
 
-  return payload;
+  for (const requestId of seatMoveRequestIds) {
+    asBigIntId(requestId, 'seatMoveRequestId');
+  }
+
+  const buyoutTickets = Array.isArray(payload.buyoutTickets) ? payload.buyoutTickets : [];
+  for (const item of buyoutTickets) {
+    if (!item || typeof item !== 'object') {
+      throw new Error('Each buyout ticket must be an object');
+    }
+    asBigIntId(item.requestId, 'requestId');
+    asBigIntId(item.ticketTypeId, 'ticketTypeId');
+  }
+
+  return { ...payload, seats, seatMoveRequestIds, buyoutTickets };
 }
 
 export function createBookingNumber(): string {

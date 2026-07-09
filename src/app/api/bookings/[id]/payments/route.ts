@@ -22,12 +22,18 @@ export async function POST(request: Request, context: RouteContext) {
     const booking = await prisma.$transaction(async (tx) => {
       const existing = await tx.booking.findUnique({
         where: { id: bookingId },
-        include: { bookingSeats: true },
+        include: {
+          bookingSeats: true,
+          screening: { select: { startTime: true } },
+        },
       });
 
       if (!existing) throw new Error('Booking not found');
       if (existing.status === 'CANCELLED' || existing.status === 'EXPIRED') {
         throw new Error('Booking is not payable');
+      }
+      if (existing.screening.startTime <= new Date()) {
+        throw new Error('上映開始後は決済できません。');
       }
       if (existing.expiresAt && existing.expiresAt < new Date()) {
         await tx.booking.update({
