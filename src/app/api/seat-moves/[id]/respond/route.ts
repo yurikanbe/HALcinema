@@ -3,6 +3,11 @@ import { prisma } from '@/lib/prisma';
 import { asBigIntId, optionalBigIntId } from '@/lib/api/bookingPayload';
 import { jsonError, jsonOk } from '@/lib/api/response';
 import { getSessionUser } from '@/lib/api/session';
+import {
+  ensureBookingAllowsSeatMove,
+  ensureScreeningAllowsSeatMove,
+  SeatMoveGuardError,
+} from '@/lib/api/seatMoveGuards';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -41,7 +46,7 @@ export async function POST(request: Request, context: RouteContext) {
       const seatMoveRequest = await tx.seatMoveRequest.findUnique({
         where: { id: requestId },
         include: {
-          targetBooking: true,
+          targetBooking: { include: { screening: { select: { startTime: true } } } },
           requesterBooking: true,
           targetBookingSeat: true,
           requesterBookingSeat: true,
@@ -53,6 +58,12 @@ export async function POST(request: Request, context: RouteContext) {
       }
       if (seatMoveRequest.status !== 'PENDING') {
         throw new Error('This request has already been responded to');
+      }
+
+      ensureBookingAllowsSeatMove(seatMoveRequest.requesterBooking.status);
+      ensureBookingAllowsSeatMove(seatMoveRequest.targetBooking.status);
+      if (seatMoveRequest.targetBooking.screening.startTime <= new Date()) {
+        throw new SeatMoveGuardError('席交換は上映開始前のみ利用できます', 400);
       }
 
       if (payload.action === 'decline') {
@@ -143,6 +154,9 @@ export async function POST(request: Request, context: RouteContext) {
 
     return jsonOk(result);
   } catch (error) {
+    if (error instanceof SeatMoveGuardError) {
+      return jsonError(error.message, error.status);
+    }
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return jsonError('Selected seat is already taken', 409);
     }

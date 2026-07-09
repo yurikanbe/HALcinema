@@ -2,6 +2,11 @@ import { prisma } from '@/lib/prisma';
 import { asBigIntId, optionalBigIntId } from '@/lib/api/bookingPayload';
 import { jsonError, jsonOk } from '@/lib/api/response';
 import { getSessionUser } from '@/lib/api/session';
+import {
+  ensureBookingAllowsSeatMove,
+  ensureScreeningAllowsSeatMove,
+  SeatMoveGuardError,
+} from '@/lib/api/seatMoveGuards';
 
 const FEE = 100;
 const CASHBACK = 100;
@@ -38,13 +43,20 @@ export async function POST(request: Request) {
 
   const requesterBooking = await prisma.booking.findUnique({
     where: { id: requesterBookingId },
-    include: { bookingSeats: true },
+    include: { bookingSeats: true, screening: { select: { startTime: true } } },
   });
   if (!requesterBooking || requesterBooking.userId !== sessionUser.id) {
     return jsonError('Booking not found', 404);
   }
-  if (requesterBooking.status === 'CANCELLED') {
-    return jsonError('This booking is cancelled', 400);
+
+  try {
+    ensureBookingAllowsSeatMove(requesterBooking.status);
+    await ensureScreeningAllowsSeatMove(requesterBooking.screeningId);
+  } catch (error) {
+    if (error instanceof SeatMoveGuardError) {
+      return jsonError(error.message, error.status);
+    }
+    throw error;
   }
 
   if (requesterBookingSeatId) {
@@ -59,6 +71,17 @@ export async function POST(request: Request) {
   if (!targetBookingSeat || targetBookingSeat.booking.status === 'CANCELLED') {
     return jsonError('Target seat not found', 404);
   }
+
+  try {
+    ensureBookingAllowsSeatMove(targetBookingSeat.booking.status);
+    await ensureScreeningAllowsSeatMove(targetBookingSeat.screeningId);
+  } catch (error) {
+    if (error instanceof SeatMoveGuardError) {
+      return jsonError(error.message, error.status);
+    }
+    throw error;
+  }
+
   if (targetBookingSeat.screeningId !== requesterBooking.screeningId) {
     return jsonError('Target seat must belong to the same screening', 400);
   }

@@ -11,6 +11,9 @@ import s from './SeatMoveFlow.module.css';
 const SEAT_MOVE_FEE = 100;
 const SEAT_MOVE_CASHBACK = 100;
 
+const CASCADE_NOTICE =
+  '同じ上映回に複数の席へリクエストを送った場合、いずれか1件でも拒否されると、その上映回への承認待ちリクエストはすべて自動キャンセルされます。1件でも承諾されると、残りの承認待ちリクエストも自動キャンセルされます。';
+
 type Tab = 'send' | 'receive';
 type ApproveStep = 'choose' | 'pick-seat' | 'confirm-cancel';
 
@@ -68,6 +71,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [respondingRequestId, setRespondingRequestId] = useState<string | null>(null);
+  const [decliningRequestId, setDecliningRequestId] = useState<string | null>(null);
   const [approveStep, setApproveStep] = useState<ApproveStep | null>(null);
   const [pickedSeatId, setPickedSeatId] = useState<string | null>(null);
 
@@ -78,6 +82,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
 
   const resetApproveFlow = () => {
     setRespondingRequestId(null);
+    setDecliningRequestId(null);
     setApproveStep(null);
     setPickedSeatId(null);
   };
@@ -113,6 +118,15 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
 
   const outgoing = activeBooking?.requestedSeatMoves ?? [];
   const incoming = activeBooking?.targetedSeatMoves?.filter((item) => item.status === 'PENDING') ?? [];
+  const pendingOutgoingForScreening = useMemo(() => {
+    if (!activeBooking) return 0;
+    const screeningId = activeBooking.screening.id;
+    return bookings
+      .filter((booking) => booking.screening.id === screeningId)
+      .flatMap((booking) => booking.requestedSeatMoves ?? [])
+      .filter((item) => item.status === 'PENDING').length;
+  }, [bookings, activeBooking]);
+
   const pendingTargetSeatIds = useMemo(
     () =>
       new Set(
@@ -236,8 +250,12 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
         <h2 className={s.introTitle}>席交換リクエスト</h2>
         <p className={s.introLead}>
           先約のある席を希望する場合、{formatYen(SEAT_MOVE_FEE)} で席の交換をリクエストできます。承諾された方には
-          {formatYen(SEAT_MOVE_CASHBACK)} のキャッシュバックがあります。拒否が1件でもあると、同じ上映回への他のリクエストはすべて自動キャンセルされます。
+          {formatYen(SEAT_MOVE_CASHBACK)} のキャッシュバックがあります。上映開始後は送信・承諾・拒否のいずれもできません。
         </p>
+        <div className={s.noticeBox} role="note">
+          <div className={s.noticeTitle}>複数席へリクエストする場合</div>
+          <p className={s.noticeText}>{CASCADE_NOTICE}</p>
+        </div>
       </div>
 
       <div className={s.bookingPicker}>
@@ -316,6 +334,13 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
             <p className={s.panelLead}>
               売り切れの席をクリックして席交換をリクエストできます。ご自身の席はなくても送信可能です。
             </p>
+            {pendingOutgoingForScreening > 0 && (
+              <div className={s.noticeBoxInline} role="note">
+                <p className={s.noticeText}>
+                  この上映回には承認待ちのリクエストが {pendingOutgoingForScreening} 件あります。{CASCADE_NOTICE}
+                </p>
+              </div>
+            )}
           </div>
 
           {loadingSeats ? (
@@ -390,6 +415,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
                   <p>
                     <strong>{selectedTargetSeatId}</strong> 席の先約者に、席の交換をリクエストします。
                   </p>
+                  <p className={s.requestConfirmNotice}>{CASCADE_NOTICE}</p>
                   {activeBooking.bookingSeats.length > 0 && (
                     <label className={s.offerSeatField}>
                       <span>提供する席（任意・1席のみ）</span>
@@ -461,7 +487,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
           <div className={s.panelHead}>
             <h3 className={s.panelTitle}>届いたリクエスト</h3>
             <p className={s.panelLead}>
-              承諾する場合は、別の席を選んで予約を続けるか、この予約をキャンセルできます。
+              承諾する場合は、別の席を選んで予約を続けるか、この予約をキャンセルできます。拒否すると、依頼者の同じ上映回への他の承認待ちリクエストもすべてキャンセルされます。
             </p>
           </div>
 
@@ -587,6 +613,25 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
                           </>
                         )}
                       </div>
+                    ) : decliningRequestId === request.id ? (
+                      <div className={s.approvePanel}>
+                        <p className={s.approveLead}>
+                          このリクエストを拒否します。依頼者が同じ上映回に送っている他の承認待ちリクエストも、すべて自動キャンセルされます。
+                        </p>
+                        <div className={s.incomingActions}>
+                          <button
+                            type="button"
+                            className={`${shared.btn} ${shared.btnSolid}`}
+                            disabled={submitting}
+                            onClick={() => respond(request.id, 'decline')}
+                          >
+                            拒否を確定
+                          </button>
+                          <button type="button" className={shared.btn} onClick={resetApproveFlow}>
+                            戻る
+                          </button>
+                        </div>
+                      </div>
                     ) : (
                       <div className={s.incomingActions}>
                         <button
@@ -594,6 +639,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
                           className={`${shared.btn} ${shared.btnSolid}`}
                           onClick={() => {
                             setRespondingRequestId(request.id);
+                            setDecliningRequestId(null);
                             setApproveStep('choose');
                             setPickedSeatId(null);
                           }}
@@ -603,8 +649,12 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
                         <button
                           type="button"
                           className={shared.btn}
-                          disabled={submitting}
-                          onClick={() => respond(request.id, 'decline')}
+                          onClick={() => {
+                            setDecliningRequestId(request.id);
+                            setRespondingRequestId(null);
+                            setApproveStep(null);
+                            setPickedSeatId(null);
+                          }}
                         >
                           拒否する
                         </button>

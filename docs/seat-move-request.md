@@ -28,6 +28,8 @@
 - 認証必須（`getSessionUser`）
 - body: `{ requesterBookingId, requesterBookingSeatId?, targetBookingSeatId }`
 - `requesterBookingId` はログインユーザー自身の予約であること
+- 依頼者・対象の予約は `CONFIRMED` であること
+- 上映回の `startTime` が未来であること（上映開始後は `400`）
 - `targetBookingSeatId` は同じ `screeningId` の座席で、所有者（`booking.userId`）が自分以外であること
 - 同一 `(requesterBookingId, targetBookingSeatId)` に対する `PENDING` の重複リクエストは `409`
 - 成功時は `SeatMoveRequest` を `status: 'PENDING'` で作成（`fee: 100`, `cashbackAmount: 100` で固定）
@@ -36,8 +38,10 @@
 承認・拒否。[`src/app/api/seat-moves/[id]/respond/route.ts`](../src/app/api/seat-moves/[id]/respond/route.ts)
 
 - 認証必須。リクエストの `targetBooking.userId` が呼び出しユーザーと一致すること
+- 依頼者・対象の予約は `CONFIRMED` であること
+- 上映回の `startTime` が未来であること（上映開始後は `400`）
 - body: `{ action: 'decline' | 'approve_reseat' | 'approve_cancel', newSeatId? }`
-- `decline`: このリクエストを `DECLINED` にし、**同じリクエスター・同じ上映回の他の `PENDING` リクエストも自動で `CANCELLED`** にする
+- `decline`: このリクエストを `DECLINED` にし、**同じリクエスター・同じ上映回の他の `PENDING` リクエストも自動で `CANCELLED`** にする（意図的な仕様。UIでも説明を表示）
 - `approve_reseat`: リクエスター側に希望座席を付与し（提供席があれば `BookingSeat.seatId` を差し替え、なければ新規 `BookingSeat` を追加）、承諾側は `newSeatId` の空席に `BookingSeat.seatId` を変更。指定席が既に `CONFIRMED` ロック済みなら `Selected seat is already taken`（`409`）
 - `approve_cancel`: リクエスター側に希望座席を付与した上で、承諾側の予約自体を `CANCELLED`（`ScreeningSeatLock` も削除）
 - 承認処理は全体を `$transaction` で実行し、座席の付け替えと `ScreeningSeatLock` の更新を一致させる

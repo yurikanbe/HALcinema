@@ -50,6 +50,44 @@
   letter-spacing: 0.04em;
 }
 
+.noticeBox {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(184, 134, 11, 0.35);
+  background: rgba(184, 134, 11, 0.08);
+  border-radius: 8px;
+}
+
+.noticeBoxInline {
+  margin-top: 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(184, 134, 11, 0.28);
+  background: rgba(184, 134, 11, 0.06);
+  border-radius: 8px;
+}
+
+.noticeTitle {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+  margin-bottom: 0.35rem;
+}
+
+.noticeText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #2b3d5f;
+}
+
+.requestConfirmNotice {
+  margin: 0.75rem 0 0;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #5a4a2a;
+}
+
 .bookingPicker {
   margin-bottom: 1.25rem;
 }
