@@ -110,6 +110,15 @@ enum NewsCategory {
   @@map("news_category")
 }
 
+enum ConcessionOrderStatus {
+  PENDING
+  READY
+  PICKED_UP
+  CANCELLED
+
+  @@map("concession_order_status")
+}
+
 model User {
   id            String    @id @default(cuid())
   memberId      String    @unique @map("member_id") @db.VarChar(20)
@@ -129,6 +138,8 @@ model User {
   screeningSeatLocks  ScreeningSeatLock[]
   userFavorites       UserFavorite[]
   seatMoveRequests    SeatMoveRequest[]    @relation("RequesterUser")
+  concessionOrders    ConcessionOrder[]
+  notifications       UserNotification[]
 
   @@map("users")
 }
@@ -183,8 +194,10 @@ model Movie {
   description     String?
   posterImageUrl  String?   @map("poster_image_url") @db.VarChar(500)
   isActive        Boolean   @default(true) @map("is_active")
-  releaseDate     DateTime? @map("release_date") @db.Date
-  createdAt       DateTime  @default(now()) @map("created_at")
+  releaseDate       DateTime? @map("release_date") @db.Date
+  normalPrice       Int       @default(1800) @map("normal_price")
+  secondMoviePrice  Int       @default(1200) @map("second_movie_price")
+  createdAt         DateTime  @default(now()) @map("created_at")
 
   creators   MovieCreator[]
   screenings Screening[]
@@ -239,9 +252,12 @@ model Screen {
   imageUrl     String? @map("image_url") @db.VarChar(500)
   seatCount    Int     @map("seat_count")
 
-  theater    Theater?    @relation(fields: [theaterId], references: [id], onDelete: SetNull)
-  seats      Seat[]
-  screenings Screening[]
+  theater              Theater?              @relation(fields: [theaterId], references: [id], onDelete: SetNull)
+  seats                Seat[]
+  screenings           Screening[]
+  pickupCounters       PickupCounter[]
+  walkTimesFrom        ScreenTransferTime[]  @relation("WalkFromScreen")
+  walkTimesTo          ScreenTransferTime[]  @relation("WalkToScreen")
 
   @@map("screens")
 }
@@ -315,18 +331,28 @@ model Booking {
   expiresAt                 DateTime?      @map("expires_at")
   cancelledAt               DateTime?      @map("cancelled_at")
   checkedInAt               DateTime?      @map("checked_in_at")
+  isSecondMovie             Boolean        @default(false) @map("is_second_movie")
+  parentBookingId           BigInt?        @map("parent_booking_id")
+  afterMovieNotifiedAt      DateTime?      @map("after_movie_notified_at")
+  afterSurveyCompletedAt    DateTime?      @map("after_survey_completed_at")
+  afterSurveyAnswers        Json?          @map("after_survey_answers")
   createdAt                 DateTime       @default(now()) @map("created_at")
   updatedAt                 DateTime       @updatedAt @map("updated_at")
 
   user               User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
   screening          Screening           @relation(fields: [screeningId], references: [id], onDelete: Restrict)
+  parentBooking      Booking?            @relation("SecondMovieChain", fields: [parentBookingId], references: [id], onDelete: SetNull)
+  secondMovieBookings Booking[]          @relation("SecondMovieChain")
   bookingSeats       BookingSeat[]
   payments           Payment[]
   screeningSeatLocks ScreeningSeatLock[]
   requestedSeatMoves SeatMoveRequest[]   @relation("RequesterBooking")
   targetedSeatMoves  SeatMoveRequest[]   @relation("TargetBooking")
+  concessionOrders   ConcessionOrder[]
+  relatedNotifications UserNotification[]
 
   @@index([userId, createdAt])
+  @@index([parentBookingId])
   @@index([guestEmail])
   @@index([screeningId, status])
   @@map("bookings")
@@ -466,4 +492,108 @@ model News {
   createdAt    DateTime     @default(now()) @map("created_at")
 
   @@map("news")
+}
+
+model ScreenTransferTime {
+  id           BigInt @id @default(autoincrement())
+  fromScreenId BigInt @map("from_screen_id")
+  toScreenId   BigInt @map("to_screen_id")
+  walkMinutes  Int    @map("walk_minutes")
+
+  fromScreen Screen @relation("WalkFromScreen", fields: [fromScreenId], references: [id], onDelete: Cascade)
+  toScreen   Screen @relation("WalkToScreen", fields: [toScreenId], references: [id], onDelete: Cascade)
+
+  @@unique([fromScreenId, toScreenId])
+  @@map("screen_transfer_times")
+}
+
+model ConcessionProduct {
+  id        BigInt   @id @default(autoincrement())
+  slug      String   @unique @db.VarChar(50)
+  nameJa    String   @map("name_ja") @db.VarChar(100)
+  category  String   @db.VarChar(30)
+  price     Int
+  imageUrl  String?  @map("image_url") @db.VarChar(500)
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  orderItems ConcessionOrderItem[]
+
+  @@map("concession_products")
+}
+
+model PickupCounter {
+  id            BigInt  @id @default(autoincrement())
+  screenId      BigInt  @map("screen_id")
+  name          String  @db.VarChar(80)
+  locationLabel String  @map("location_label") @db.VarChar(120)
+  sortOrder     Int     @default(0) @map("sort_order")
+  isActive      Boolean @default(true) @map("is_active")
+
+  screen Screen            @relation(fields: [screenId], references: [id], onDelete: Cascade)
+  orders ConcessionOrder[]
+
+  @@map("pickup_counters")
+}
+
+model ConcessionOrder {
+  id              BigInt                @id @default(autoincrement())
+  userId          String                @map("user_id")
+  bookingId       BigInt?               @map("booking_id")
+  pickupCounterId BigInt                @map("pickup_counter_id")
+  pickupCode      String                @unique @map("pickup_code") @db.VarChar(12)
+  status          ConcessionOrderStatus @default(PENDING)
+  totalAmount     Int                   @map("total_amount")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  readyAt         DateTime?             @map("ready_at")
+  pickedUpAt      DateTime?             @map("picked_up_at")
+
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  booking       Booking?              @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  pickupCounter PickupCounter         @relation(fields: [pickupCounterId], references: [id], onDelete: Restrict)
+  items         ConcessionOrderItem[]
+
+  @@index([userId, createdAt])
+  @@map("concession_orders")
+}
+
+model ConcessionOrderItem {
+  id        BigInt @id @default(autoincrement())
+  orderId   BigInt @map("order_id")
+  productId BigInt @map("product_id")
+  quantity  Int
+  unitPrice Int    @map("unit_price")
+
+  order   ConcessionOrder   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product ConcessionProduct @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@map("concession_order_items")
+}
+
+enum UserNotificationKind {
+  AFTER_MOVIE
+  SECOND_MOVIE
+  GENERAL
+
+  @@map("user_notification_kind")
+}
+
+model UserNotification {
+  id        BigInt               @id @default(autoincrement())
+  userId    String               @map("user_id")
+  bookingId BigInt?              @map("booking_id")
+  kind      UserNotificationKind @default(GENERAL)
+  title     String               @db.VarChar(200)
+  body      String
+  href      String?              @db.VarChar(500)
+  readAt    DateTime?            @map("read_at")
+  createdAt DateTime             @default(now()) @map("created_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+  @@map("user_notifications")
 }

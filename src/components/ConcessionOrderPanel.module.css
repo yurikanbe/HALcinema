@@ -1,0 +1,110 @@
+.panel {
+  padding: 24px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.title {
+  margin: 8px 0;
+  font-size: 1.4rem;
+}
+
+.lead {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+.counterSelect {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.counterSelect select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+}
+
+.productGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.productCard {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.productCategory {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.productName {
+  font-weight: 600;
+}
+
+.productPrice {
+  margin-top: 4px;
+}
+
+.qtyControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qtyControls button {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.error {
+  color: #ff9d9d;
+}
+
+.resultBox {
+  padding: 20px;
+  border-radius: 14px;
+  background: rgba(110, 203, 255, 0.08);
+  text-align: center;
+}
+
+.resultTitle {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.pickupCode {
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.resultText {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.75);
+}

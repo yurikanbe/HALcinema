@@ -1,0 +1,261 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.loading,
+.empty {
+  padding: 32px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  text-align: center;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.lead {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.7;
+}
+
+.demoBadge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 196, 86, 0.15);
+  color: #ffd27a;
+  font-size: 13px;
+}
+
+.foodPrompt {
+  position: relative;
+  padding: 20px 20px 20px 24px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(88, 46, 255, 0.18), rgba(20, 120, 255, 0.12));
+}
+
+.foodPromptClose {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.foodPromptTitle {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.foodPromptText {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+}
+
+.list {
+  display: grid;
+  gap: 18px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.poster {
+  border-radius: 12px;
+  min-height: 170px;
+  background: rgba(255, 255, 255, 0.08) center / cover no-repeat;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.movieTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metaLabel {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.moveNote {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.normalPrice {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+}
+
+.secondPrice {
+  font-size: 1.2rem;
+  color: #8fd3ff;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.modal {
+  width: min(520px, 100%);
+  padding: 22px;
+  border-radius: 18px;
+  background: #101828;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.modalTitle {
+  margin: 0 0 8px;
+}
+
+.modalLead {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.seatGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.seatBtn {
+  min-width: 52px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  cursor: pointer;
+}
+
+.seatBtnActive {
+  border-color: #6ecbff;
+  background: rgba(110, 203, 255, 0.18);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.error {
+  color: #ff9d9d;
+  margin: 0 0 12px;
+}
+
+.surveyPanel {
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.surveyTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.surveyLead {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+.surveyField {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.surveyField legend {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.surveyOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.surveyOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.unlockBanner {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(110, 203, 255, 0.12);
+  border: 1px solid rgba(110, 203, 255, 0.28);
+  color: #bfe9ff;
+}
+
+@media (max-width: 640px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}

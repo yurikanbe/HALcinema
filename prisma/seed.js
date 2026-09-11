@@ -77,6 +77,12 @@ function seatCountForTheater(theaterId) {
 
 async function clearReservationData() {
   await prisma.$transaction([
+    prisma.userNotification.deleteMany(),
+    prisma.concessionOrderItem.deleteMany(),
+    prisma.concessionOrder.deleteMany(),
+    prisma.pickupCounter.deleteMany(),
+    prisma.concessionProduct.deleteMany(),
+    prisma.screenTransferTime.deleteMany(),
     prisma.seatMoveRequest.deleteMany(),
     prisma.payment.deleteMany(),
     prisma.screeningSeatLock.deleteMany(),
@@ -119,6 +125,8 @@ async function seedMovies() {
         posterImageUrl: movie.poster,
         isActive: movie.status === 'now_showing',
         releaseDate: toReleaseDate(movie.year),
+        normalPrice: 2000,
+        secondMoviePrice: 1200,
       },
     });
 
@@ -234,6 +242,59 @@ async function seedScreenings(movieIdBySlug, screenIdByKey) {
   await prisma.screening.createMany({ data: screenings });
 }
 
+async function seedSecondMovieAndConcession(screenIdByKey) {
+  const screens = await prisma.screen.findMany({ orderBy: { screenNumber: 'asc' } });
+  const walkPairs = [];
+  for (const from of screens) {
+    for (const to of screens) {
+      if (from.id === to.id) continue;
+      const matrix = {
+        Starry: { Starry: 0, Abyss: 2, Cyber: 3 },
+        Abyss: { Starry: 2, Abyss: 0, Cyber: 2 },
+        Cyber: { Starry: 3, Abyss: 2, Cyber: 0 },
+      };
+      walkPairs.push({
+        fromScreenId: from.id,
+        toScreenId: to.id,
+        walkMinutes: matrix[from.conceptName]?.[to.conceptName] ?? 3,
+      });
+    }
+  }
+  await prisma.screenTransferTime.createMany({ data: walkPairs });
+
+  for (const screen of screens) {
+    await prisma.pickupCounter.createMany({
+      data: [
+        {
+          screenId: screen.id,
+          name: `${screen.conceptName} 受取A`,
+          locationLabel: `${screen.conceptName} スクリーン入口左`,
+          sortOrder: 1,
+        },
+        {
+          screenId: screen.id,
+          name: `${screen.conceptName} 受取B`,
+          locationLabel: `${screen.conceptName} スクリーン入口右`,
+          sortOrder: 2,
+        },
+      ],
+    });
+  }
+
+  await prisma.concessionProduct.createMany({
+    data: [
+      { slug: 'cola-m', nameJa: 'コーラ M', category: 'ドリンク', price: 450, sortOrder: 1 },
+      { slug: 'lemon-s', nameJa: 'レモンスカッシュ', category: 'ドリンク', price: 480, sortOrder: 2 },
+      { slug: 'coffee-hot', nameJa: 'ホットコーヒー', category: 'ドリンク', price: 420, sortOrder: 3 },
+      { slug: 'popcorn-s', nameJa: 'ポップコーン S', category: 'スナック', price: 520, sortOrder: 4 },
+      { slug: 'popcorn-l', nameJa: 'ポップコーン L', category: 'スナック', price: 680, sortOrder: 5 },
+      { slug: 'nachos', nameJa: 'ナチョス', category: 'フード', price: 780, sortOrder: 6 },
+      { slug: 'hotdog', nameJa: 'ホットドッグ', category: 'フード', price: 650, sortOrder: 7 },
+      { slug: 'churro', nameJa: 'チュロス', category: 'スイーツ', price: 480, sortOrder: 8 },
+    ],
+  });
+}
+
 async function seedDemoUsers() {
   const bcrypt = require('bcryptjs');
   const passwordHash = await bcrypt.hash('demo1234', 10);
@@ -269,6 +330,7 @@ async function main() {
   const movieIdBySlug = await seedMovies();
   const screenIdByKey = await seedTheatersScreensAndSeats();
   await seedScreenings(movieIdBySlug, screenIdByKey);
+  await seedSecondMovieAndConcession(screenIdByKey);
   await seedDemoUsers();
 
   const counts = {
@@ -278,6 +340,8 @@ async function main() {
     seats: await prisma.seat.count(),
     screenings: await prisma.screening.count(),
     ticketTypes: await prisma.ticketType.count(),
+    pickupCounters: await prisma.pickupCounter.count(),
+    concessionProducts: await prisma.concessionProduct.count(),
     demoUsers: await prisma.user.count({
       where: { email: { endsWith: '@halcinema.test' } },
     }),

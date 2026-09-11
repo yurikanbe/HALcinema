@@ -130,6 +130,6 @@ export async function POST() {
     return jsonError('Not found', 404);
   }
 
-  await ensureDemoUsers();
+  await ensureDemoUsers(prisma, { resetPassword: true });
   return jsonOk({ ok: true });
 }

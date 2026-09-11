@@ -7,10 +7,12 @@ export interface BookingView {
   totalAmount: number;
   paymentStatus: string;
   status: string;
+  isSecondMovie?: boolean;
   createdAt: string;
   screening: {
     id?: string;
     startTime: string;
+    endTime?: string;
     format: string;
     movie: { titleJa: string; posterImageUrl: string | null };
     screen: {

@@ -88,8 +88,8 @@ export default async function MyPage() {
                   <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
               </div>
-              <div className={s.mpMenuCardTitle}>通知設定</div>
-              <div className={s.mpMenuCardDesc}>上映リマインド・キャンペーン通知の設定</div>
+              <div className={s.mpMenuCardTitle}>通知</div>
+              <div className={s.mpMenuCardDesc}>上映終了・アンケート・2本目割引の案内</div>
             </Link>
             <Link href="/mypage/account" className={s.mpMenuCard}>
               <div className={s.mpMenuCardIcon}>

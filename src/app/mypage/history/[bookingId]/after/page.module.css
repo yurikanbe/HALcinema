@@ -1,0 +1,14 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.back {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: #fff;
+}

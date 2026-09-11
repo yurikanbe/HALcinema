@@ -114,6 +114,11 @@ export default function HistoryList({ bookings }: { bookings: BookingView[] }) {
                   席交換リクエスト
                 </Link>
               )}
+              {booking.status === 'CONFIRMED' && !booking.isSecondMovie && (
+                <Link href={`/mypage/history/${booking.id}/after?simulateEnd=1`} className={s.seatMoveLink}>
+                  上映終了デモ（通知＋アンケート）
+                </Link>
+              )}
             </div>
           ))}
         </div>

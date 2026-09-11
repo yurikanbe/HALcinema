@@ -77,16 +77,17 @@ export default function DevLabPanel() {
     setMessage(null);
     setError(null);
     try {
-      if (session?.user) {
-        await signOut({ redirect: false });
-      }
+      // 先に signOut すると CSRF / cookie レースで失敗しやすいので、上書きログインする
       const result = await signIn('credentials', {
         email,
         password: DEV_DEMO_PASSWORD,
         redirect: false,
       });
-      if (result?.error) {
-        throw new Error('ログインに失敗しました。デモユーザーを再作成してください。');
+      if (!result || result.error || result.ok === false) {
+        throw new Error(
+          `ログインに失敗しました（${result?.error ?? 'unknown'}）。` +
+            ' http://localhost:3000/dev で開き直すか、下の「デモユーザーを再作成」を試してください。',
+        );
       }
       setMessage(`${email} としてログインしました`);
       router.refresh();

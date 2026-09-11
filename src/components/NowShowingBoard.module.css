@@ -1,0 +1,48 @@
+.loading,
+.empty {
+  padding: 32px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.poster {
+  aspect-ratio: 2 / 3;
+  background: rgba(255, 255, 255, 0.08) center / cover no-repeat;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.meta,
+.seats,
+.note {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+.note {
+  font-size: 12px;
+}
