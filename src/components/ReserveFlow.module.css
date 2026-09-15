@@ -476,6 +476,13 @@
   color: var(--ink-800);
 }
 
+.seatMessageLink {
+  color: var(--ink-900);
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
 .seatMovePanel {
   margin-bottom: 1rem;
   padding: 18px 20px;

@@ -81,6 +81,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const [bookingNumber, setBookingNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [seatMessage, setSeatMessage] = useState<string | null>(null);
+  const [isSeatTakenMessage, setIsSeatTakenMessage] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [guestFormError, setGuestFormError] = useState<string | null>(null);
@@ -180,7 +181,8 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
 
   const toggleSeat = (seat: SeatCell) => {
     if (occupied.has(seat.id)) {
-      setSeatMessage('この席はすでに確保されています。別の席をお選びください。');
+      setSeatMessage('この席は売り切れです。この席をご希望の場合は、予約完了後にマイページの「席交換リクエスト」からリクエストできます。');
+      setIsSeatTakenMessage(true);
       return;
     }
 
@@ -188,6 +190,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
     if (exists) {
       setSelectedSeats((prev) => prev.filter((item) => item.seat.id !== seat.id));
       setSeatMessage(null);
+      setIsSeatTakenMessage(false);
       return;
     }
 
@@ -195,6 +198,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
 
     setSelectedSeats((prev) => [...prev, { seat, ticketTypeId: ticketTypes[0]?.id ?? 'general' }]);
     setSeatMessage(null);
+    setIsSeatTakenMessage(false);
   };
 
   const updateTicketType = (seatId: string, ticketTypeId: string) => {
@@ -413,7 +417,19 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             <span className={`${s.legendItem} ${s.legendAccessible}`}>車椅子</span>
           </div>
 
-          {seatMessage && <div className={s.seatMessage}>{seatMessage}</div>}
+          {seatMessage && (
+            <div className={s.seatMessage}>
+              {seatMessage}
+              {isSeatTakenMessage && (
+                <>
+                  {' '}
+                  <Link href="/mypage/seat-move" className={s.seatMessageLink}>
+                    席交換リクエストへ
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
 
           <div className={s.screenStage}>
             <div className={s.screenLabel}>SCREEN</div>
@@ -445,7 +461,6 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
                             key={seat.id}
                             type="button"
                             className={classes}
-                            disabled={isTaken}
                             onClick={() => toggleSeat(seat)}
                             aria-label={`${seat.row}列 ${seat.number}番${isTaken ? ' 売り切れ' : ''}${seat.isPremium ? ' プレミアム席' : ''}`}
                             aria-pressed={isSelected}
