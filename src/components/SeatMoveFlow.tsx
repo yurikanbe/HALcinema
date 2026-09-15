@@ -119,16 +119,17 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
     return new Set(seatIds);
   }, [bookings, activeBooking]);
 
-  const outgoing = (activeBooking?.requestedSeatMoves ?? []).filter((item) => item.status !== 'APPROVED');
+  const allOutgoing = activeBooking?.requestedSeatMoves ?? [];
+  const outgoing = allOutgoing.filter((item) => item.status !== 'APPROVED');
   const incoming = activeBooking?.targetedSeatMoves?.filter((item) => item.status === 'PENDING') ?? [];
   const pendingTargetSeatIds = useMemo(
     () =>
       new Set(
-        outgoing
-          .filter((item) => item.status === 'PENDING')
+        allOutgoing
+          .filter((item) => item.status === 'PENDING' || item.status === 'APPROVED')
           .map((item) => seatLabel(item.targetBookingSeat.seat.rowLabel, item.targetBookingSeat.seat.seatNumber)),
       ),
-    [outgoing],
+    [allOutgoing],
   );
 
   const respondingRequest = respondingRequestId
