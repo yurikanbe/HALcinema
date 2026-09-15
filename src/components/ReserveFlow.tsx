@@ -131,6 +131,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
   const [selection, setSelection] = useState<ScreeningSelection | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeat[]>([]);
   const [bookingNumber, setBookingNumber] = useState('');
+  const [bookingNumberCopied, setBookingNumberCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [seatMessage, setSeatMessage] = useState<string | null>(null);
   const [guestName, setGuestName] = useState('');
@@ -1330,8 +1331,21 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </div>
 
             <div className={s.completeStatusArea}>
-              <div className={s.completeRef}>{bookingNumber}</div>
-              <div className={s.completeRefLabel}>予約番号</div>
+              <button
+                type="button"
+                className={s.completeRef}
+                onClick={() => {
+                  navigator.clipboard.writeText(bookingNumber).then(() => {
+                    setBookingNumberCopied(true);
+                    setTimeout(() => setBookingNumberCopied(false), 2000);
+                  });
+                }}
+              >
+                {bookingNumber}
+              </button>
+              <div className={s.completeRefLabel}>
+                {bookingNumberCopied ? 'コピーしました' : '予約番号（タップでコピー）'}
+              </div>
             </div>
           </div>
 

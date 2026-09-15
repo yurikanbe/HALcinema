@@ -1042,6 +1042,21 @@
   font-size: 20px;
   letter-spacing: 0.16em;
   color: var(--ink-700);
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.completeRef:hover,
+.completeRef:focus-visible {
+  background-color: var(--ink-100, rgba(0, 0, 0, 0.05));
+}
+
+.completeRef:active {
+  background-color: var(--ink-200, rgba(0, 0, 0, 0.1));
 }
 
 .completeRefLabel {
