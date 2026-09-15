@@ -76,11 +76,16 @@ export async function GET(request: Request) {
     orderBy: { id: 'asc' },
   });
 
+  const now = new Date();
+  const startTimeFilter = dateRange
+    ? { gte: dateRange.gte > now ? dateRange.gte : now, lt: dateRange.lt }
+    : { gt: now };
+
   const screenings = await prisma.screening.findMany({
     where: {
       status: 'SCHEDULED',
       movie: movieId ? { slug: movieId } : undefined,
-      startTime: dateRange ?? undefined,
+      startTime: startTimeFilter,
     },
     orderBy: { startTime: 'asc' },
     include: {
