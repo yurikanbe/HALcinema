@@ -20,18 +20,19 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   const { id } = await context.params;
-  const requestId = asBigIntId(id, 'id');
 
+  let requestId: bigint;
   let payload: RespondPayload;
+  let newSeatId: bigint | null;
   try {
+    requestId = asBigIntId(id, 'id');
     payload = await request.json();
-  } catch {
-    return jsonError('Request body must be JSON', 400);
+    newSeatId = payload.action === 'approve_reseat'
+      ? optionalBigIntId(payload.newSeatId, 'newSeatId')
+      : null;
+  } catch (error) {
+    return jsonError(error instanceof Error ? error.message : 'Invalid request', 400);
   }
-
-  const newSeatId = payload.action === 'approve_reseat'
-    ? optionalBigIntId(payload.newSeatId, 'newSeatId')
-    : null;
   if (payload.action === 'approve_reseat' && !newSeatId) {
     return jsonError('newSeatId is required to reseat', 400);
   }

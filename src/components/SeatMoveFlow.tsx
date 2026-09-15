@@ -37,6 +37,14 @@ function seatLabel(row: string, number: number): string {
   return `${row}${number}`;
 }
 
+async function parseJsonSafely(res: Response): Promise<{ error?: string }> {
+  try {
+    return await res.json();
+  } catch {
+    return {};
+  }
+}
+
 function formatDateLabel(iso: string): string {
   const days = ['日', '月', '火', '水', '木', '金', '土'];
   const date = new Date(iso);
@@ -166,8 +174,10 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
           targetBookingSeatId: targetSeat.bookingSeatId,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'リクエストの送信に失敗しました。');
+      if (!res.ok) {
+        const data = await parseJsonSafely(res);
+        throw new Error(data.error ?? 'リクエストの送信に失敗しました。');
+      }
 
       setMessage(`${selectedTargetSeatId} 席のお客様へ席交換リクエストを送信しました（${formatYen(SEAT_MOVE_FEE)}）。`);
       setSelectedTargetSeatId(null);
@@ -193,8 +203,10 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, newSeatId }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? '処理に失敗しました。');
+      if (!res.ok) {
+        const data = await parseJsonSafely(res);
+        throw new Error(data.error ?? '処理に失敗しました。');
+      }
       resetApproveFlow();
       refresh();
     } catch (err) {

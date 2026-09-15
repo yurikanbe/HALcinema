@@ -36,58 +36,62 @@ export async function POST(request: Request) {
     return jsonError(error instanceof Error ? error.message : 'Invalid request body', 400);
   }
 
-  const requesterBooking = await prisma.booking.findUnique({
-    where: { id: requesterBookingId },
-    include: { bookingSeats: true },
-  });
-  if (!requesterBooking || requesterBooking.userId !== sessionUser.id) {
-    return jsonError('Booking not found', 404);
-  }
-  if (requesterBooking.status === 'CANCELLED') {
-    return jsonError('This booking is cancelled', 400);
-  }
+  try {
+    const requesterBooking = await prisma.booking.findUnique({
+      where: { id: requesterBookingId },
+      include: { bookingSeats: true },
+    });
+    if (!requesterBooking || requesterBooking.userId !== sessionUser.id) {
+      return jsonError('Booking not found', 404);
+    }
+    if (requesterBooking.status === 'CANCELLED') {
+      return jsonError('This booking is cancelled', 400);
+    }
 
-  if (requesterBookingSeatId) {
-    const ownsSeat = requesterBooking.bookingSeats.some((seat) => seat.id === requesterBookingSeatId);
-    if (!ownsSeat) return jsonError('requesterBookingSeatId does not belong to this booking', 400);
-  }
+    if (requesterBookingSeatId) {
+      const ownsSeat = requesterBooking.bookingSeats.some((seat) => seat.id === requesterBookingSeatId);
+      if (!ownsSeat) return jsonError('requesterBookingSeatId does not belong to this booking', 400);
+    }
 
-  const targetBookingSeat = await prisma.bookingSeat.findUnique({
-    where: { id: targetBookingSeatId },
-    include: { booking: true },
-  });
-  if (!targetBookingSeat || targetBookingSeat.booking.status === 'CANCELLED') {
-    return jsonError('Target seat not found', 404);
-  }
-  if (targetBookingSeat.screeningId !== requesterBooking.screeningId) {
-    return jsonError('Target seat must belong to the same screening', 400);
-  }
-  if (targetBookingSeat.booking.userId === sessionUser.id) {
-    return jsonError('Cannot request your own seat', 400);
-  }
+    const targetBookingSeat = await prisma.bookingSeat.findUnique({
+      where: { id: targetBookingSeatId },
+      include: { booking: true },
+    });
+    if (!targetBookingSeat || targetBookingSeat.booking.status === 'CANCELLED') {
+      return jsonError('Target seat not found', 404);
+    }
+    if (targetBookingSeat.screeningId !== requesterBooking.screeningId) {
+      return jsonError('Target seat must belong to the same screening', 400);
+    }
+    if (targetBookingSeat.booking.userId === sessionUser.id) {
+      return jsonError('Cannot request your own seat', 400);
+    }
 
-  const duplicate = await prisma.seatMoveRequest.findFirst({
-    where: {
-      requesterBookingId,
-      targetBookingSeatId,
-      status: 'PENDING',
-    },
-  });
-  if (duplicate) {
-    return jsonError('A pending request for this seat already exists', 409);
+    const duplicate = await prisma.seatMoveRequest.findFirst({
+      where: {
+        requesterBookingId,
+        targetBookingSeatId,
+        status: 'PENDING',
+      },
+    });
+    if (duplicate) {
+      return jsonError('A pending request for this seat already exists', 409);
+    }
+
+    const seatMoveRequest = await prisma.seatMoveRequest.create({
+      data: {
+        requesterBookingSeatId,
+        targetBookingSeatId,
+        requesterBookingId,
+        targetBookingId: targetBookingSeat.bookingId,
+        fee: FEE,
+        cashbackAmount: CASHBACK,
+        status: 'PENDING',
+      },
+    });
+
+    return jsonOk({ seatMoveRequest }, { status: 201 });
+  } catch (error) {
+    return jsonError(error instanceof Error ? error.message : 'Failed to create seat exchange request', 500);
   }
-
-  const seatMoveRequest = await prisma.seatMoveRequest.create({
-    data: {
-      requesterBookingSeatId,
-      targetBookingSeatId,
-      requesterBookingId,
-      targetBookingId: targetBookingSeat.bookingId,
-      fee: FEE,
-      cashbackAmount: CASHBACK,
-      status: 'PENDING',
-    },
-  });
-
-  return jsonOk({ seatMoveRequest }, { status: 201 });
 }
