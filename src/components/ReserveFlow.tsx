@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/components/BackButton';
+import CopyBookingNumber from '@/components/CopyBookingNumber';
 import shared from '@/styles/shared.module.css';
 import {
   TICKET_TYPES,
@@ -687,7 +688,7 @@ export default function ReserveFlow({ initialParams }: ReserveFlowProps) {
             </div>
 
             <div className={s.completeStatusArea}>
-              <div className={s.completeRef}>{bookingNumber}</div>
+              <CopyBookingNumber value={bookingNumber} className={s.completeRef} />
               <div className={s.completeRefLabel}>予約番号</div>
             </div>
           </div>

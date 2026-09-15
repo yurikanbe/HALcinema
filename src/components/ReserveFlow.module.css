@@ -916,6 +916,7 @@
   font-size: 20px;
   letter-spacing: 0.16em;
   color: var(--ink-700);
+  justify-content: center;
 }
 
 .completeRefLabel {

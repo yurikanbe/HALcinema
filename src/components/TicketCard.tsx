@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { BookingView } from '@/lib/api/bookingTypes';
+import CopyBookingNumber from './CopyBookingNumber';
 import shared from '@/styles/shared.module.css';
 import s from './TicketCard.module.css';
 
@@ -106,17 +107,19 @@ export default function TicketCard({ booking }: { booking: BookingView }) {
           </div>
         </div>
 
-        <button
-          type="button"
-          className={s.qrArea}
-          onClick={() => setIsQrExpanded(true)}
-          aria-label="QRコードを拡大表示"
-        >
-          <div className={s.qrLabel}>入場用 QRコード</div>
-          <TicketQr className={s.qrSvg} />
-          <div className={s.ref}>{booking.bookingNumber}</div>
-          <div className={s.qrHint}>タップして拡大</div>
-        </button>
+        <div className={s.qrArea}>
+          <button
+            type="button"
+            className={s.qrTrigger}
+            onClick={() => setIsQrExpanded(true)}
+            aria-label="QRコードを拡大表示"
+          >
+            <div className={s.qrLabel}>入場用 QRコード</div>
+            <TicketQr className={s.qrSvg} />
+            <div className={s.qrHint}>タップして拡大</div>
+          </button>
+          <CopyBookingNumber value={booking.bookingNumber} className={s.ref} />
+        </div>
       </div>
 
       <div className={s.actions}>
@@ -153,7 +156,7 @@ export default function TicketCard({ booking }: { booking: BookingView }) {
               {booking.bookingSeats.map((seat) => `${seat.seat.rowLabel}${seat.seat.seatNumber}`).join(' ')}
             </div>
             <TicketQr className={s.overlayQrSvg} />
-            <div className={s.ref}>{booking.bookingNumber}</div>
+            <CopyBookingNumber value={booking.bookingNumber} className={s.ref} />
           </div>
         </div>
       )}

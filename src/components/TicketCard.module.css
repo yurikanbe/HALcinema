@@ -107,7 +107,6 @@
 .qrArea {
   background: white;
   margin: 0 16px 20px;
-  border: none;
   border-radius: 16px;
   padding: 18px;
   display: flex;
@@ -115,6 +114,18 @@
   align-items: center;
   gap: 10px;
   width: calc(100% - 32px);
+}
+
+.qrTrigger {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
   cursor: pointer;
   font: inherit;
 }
@@ -138,6 +149,7 @@
   font-size: 13px;
   letter-spacing: 0.2em;
   color: var(--ink-700);
+  justify-content: center;
 }
 
 .qrSvg {

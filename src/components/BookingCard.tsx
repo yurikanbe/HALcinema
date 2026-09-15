@@ -1,5 +1,6 @@
 import type { BookingView } from '@/lib/api/bookingTypes';
 import { formatYen } from '@/lib/reserveData';
+import CopyBookingNumber from './CopyBookingNumber';
 import s from './BookingCard.module.css';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -33,7 +34,7 @@ export default function BookingCard({ booking }: { booking: BookingView }) {
   return (
     <div className={s.card}>
       <div className={s.header}>
-        <span className={s.bookingNumber}>{booking.bookingNumber}</span>
+        <CopyBookingNumber value={booking.bookingNumber} className={s.bookingNumber} />
         <span className={s.status}>{STATUS_LABEL[booking.status] ?? booking.status}</span>
       </div>
 
