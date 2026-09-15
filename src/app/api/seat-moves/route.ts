@@ -84,6 +84,7 @@ export async function POST(request: Request) {
         targetBookingSeatId,
         requesterBookingId,
         targetBookingId: targetBookingSeat.bookingId,
+        screeningId: requesterBooking.screeningId,
         fee: FEE,
         cashbackAmount: CASHBACK,
         status: 'PENDING',

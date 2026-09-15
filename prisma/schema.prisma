@@ -276,6 +276,7 @@ model Screening {
   bookings           Booking[]
   bookingSeats       BookingSeat[]
   screeningSeatLocks ScreeningSeatLock[]
+  seatMoveRequests   SeatMoveRequest[]
 
   @@index([movieId, startTime])
   @@index([screenId, startTime, endTime])
@@ -398,6 +399,7 @@ model SeatMoveRequest {
   targetBookingSeatId    BigInt         @map("target_booking_seat_id")
   requesterBookingId     BigInt         @map("requester_booking_id")
   targetBookingId        BigInt         @map("target_booking_id")
+  screeningId            BigInt         @map("screening_id")
   fee                    Int            @default(100)
   cashbackAmount         Int            @map("cashback_amount")
   status                 SeatMoveStatus @default(PENDING)
@@ -408,6 +410,7 @@ model SeatMoveRequest {
   targetBookingSeat    BookingSeat  @relation("TargetBookingSeat", fields: [targetBookingSeatId], references: [id], onDelete: Cascade)
   requesterBooking     Booking      @relation("RequesterBooking", fields: [requesterBookingId], references: [id], onDelete: Cascade)
   targetBooking        Booking      @relation("TargetBooking", fields: [targetBookingId], references: [id], onDelete: Cascade)
+  screening            Screening    @relation(fields: [screeningId], references: [id], onDelete: Cascade)
 
   @@index([requesterBookingId, status])
   @@index([targetBookingId, status])
