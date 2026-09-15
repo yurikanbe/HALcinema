@@ -119,7 +119,7 @@ export default function SeatMoveFlow({ bookings, initialBookingId }: SeatMoveFlo
     return new Set(seatIds);
   }, [bookings, activeBooking]);
 
-  const outgoing = activeBooking?.requestedSeatMoves ?? [];
+  const outgoing = (activeBooking?.requestedSeatMoves ?? []).filter((item) => item.status !== 'APPROVED');
   const incoming = activeBooking?.targetedSeatMoves?.filter((item) => item.status === 'PENDING') ?? [];
   const pendingTargetSeatIds = useMemo(
     () =>
